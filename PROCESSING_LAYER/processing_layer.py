@@ -327,9 +327,15 @@ class MusicProcessor:
 class ProcessingLayer:
     """Main processing layer coordinating audio and music processing"""
     
-    def __init__(self, output_dir: str = "processed_output"):
-        self.output_dir = Path(output_dir)
-        self.output_dir.mkdir(exist_ok=True)
+    def __init__(self, data_dir: str = "data"):
+        self.data_dir = Path(data_dir)
+        self.data_dir.mkdir(exist_ok=True)
+        
+        # Create subdirectories for organization
+        self.original_dir = self.data_dir / "original"
+        self.processed_dir = self.data_dir / "processed"
+        self.original_dir.mkdir(exist_ok=True)
+        self.processed_dir.mkdir(exist_ok=True)
         
         self.audio_processor = AudioProcessor()
         self.music_processor = MusicProcessor()
@@ -347,51 +353,89 @@ class ProcessingLayer:
         """
         print(f"Starting processing for audio: {audio_path}, music: {music_path}")
         
+        # Create organized directory structure and copy input files
+        audio_filename = Path(audio_path).name
+        music_filename = Path(music_path).name
+        
+        # Copy input files to original data directory
+        import shutil
+        original_audio_path = self.original_dir / audio_filename
+        original_music_path = self.original_dir / music_filename
+        
+        if not original_audio_path.exists():
+            shutil.copy2(audio_path, original_audio_path)
+            print(f"Audio file copied to: {original_audio_path}")
+        
+        if not original_music_path.exists():
+            shutil.copy2(music_path, original_music_path)
+            print(f"Music file copied to: {original_music_path}")
+        
         # Validate input files
-        if not os.path.exists(audio_path):
-            raise FileNotFoundError(f"Audio file not found: {audio_path}")
-        if not os.path.exists(music_path):
-            raise FileNotFoundError(f"Music file not found: {music_path}")
+        if not original_audio_path.exists():
+            raise FileNotFoundError(f"Audio file not found: {original_audio_path}")
+        if not original_music_path.exists():
+            raise FileNotFoundError(f"Music file not found: {original_music_path}")
         
         # Check audio processing requirements
-        audio_analysis = self.audio_processor.check_audio_quality(audio_path)
+        audio_analysis = self.audio_processor.check_audio_quality(str(original_audio_path))
         print(f"Audio analysis: {audio_analysis}")
         
-        # Prepare output paths
+        # Prepare output paths (all in processed directory)
         base_name = Path(audio_path).stem
-        processed_audio_path = self.output_dir / f"{base_name}_processed.wav"
-        current_audio_path = audio_path
+        processed_audio_path = self.processed_dir / f"{base_name}_processed.wav"
+        current_audio_path = str(original_audio_path)
+        
+        # Track intermediate files for cleanup
+        intermediate_files = []
         
         # Apply audio processing steps as needed
         if audio_analysis['needs_noise_reduction']:
-            noise_reduced_path = self.output_dir / f"{base_name}_denoised.wav"
+            noise_reduced_path = self.processed_dir / f"{base_name}_denoised.wav"
             if self.audio_processor.reduce_noise(current_audio_path, str(noise_reduced_path)):
+                intermediate_files.append(str(noise_reduced_path))
                 current_audio_path = str(noise_reduced_path)
         
         if audio_analysis['needs_normalization']:
-            normalized_path = self.output_dir / f"{base_name}_normalized.wav"
+            normalized_path = self.processed_dir / f"{base_name}_normalized.wav"
             if self.audio_processor.normalize_audio(current_audio_path, str(normalized_path)):
+                intermediate_files.append(str(normalized_path))
                 current_audio_path = str(normalized_path)
         
-        # Copy final result to processed path if different
-        if current_audio_path != audio_path:
+        # Always save the final processed audio with a consistent name
+        final_processed_path = self.processed_dir / f"{base_name}_processed.wav"
+        if current_audio_path != str(original_audio_path):
+            # Audio was processed, copy to final location
             import shutil
-            shutil.copy2(current_audio_path, processed_audio_path)
+            shutil.copy2(current_audio_path, final_processed_path)
+            processed_audio_path = str(final_processed_path)
+            print(f"Final processed audio saved to: {processed_audio_path}")
         else:
-            processed_audio_path = audio_path
+            # No processing was needed, but still create a copy for consistency
+            import shutil
+            shutil.copy2(str(original_audio_path), final_processed_path)
+            processed_audio_path = str(final_processed_path)
+            print(f"Original audio copied to: {processed_audio_path}")
         
-        # Segment audio
+        # Clean up intermediate files automatically
+        for intermediate_file in intermediate_files:
+            try:
+                os.remove(intermediate_file)
+                print(f"Cleaned up intermediate file: {intermediate_file}")
+            except Exception as e:
+                print(f"Warning: Could not remove intermediate file {intermediate_file}: {e}")
+        
+        # Segment audio using the final processed version
         segments = []
         if audio_analysis['needs_segmentation']:
-            segments = self.audio_processor.segment_audio(str(processed_audio_path))
+            segments = self.audio_processor.segment_audio(processed_audio_path)
         
         # Extract music features
-        music_features = self.music_processor.extract_features(music_path)
+        music_features = self.music_processor.extract_features(str(original_music_path))
         
         # Create processing result
         result = ProcessingResult(
-            audio_path=audio_path,
-            music_path=music_path,
+            audio_path=str(original_audio_path),
+            music_path=str(original_music_path),
             processed_audio_path=str(processed_audio_path),
             audio_segments=segments,
             music_features=music_features,
@@ -407,33 +451,80 @@ class ProcessingLayer:
             }
         )
         
-        # Save result as JSON
-        self.save_result(result, base_name)
+        # Save results as separate JSON files
+        self.save_results(result, base_name)
         
         print("Processing completed successfully!")
         return result
     
-    def save_result(self, result: ProcessingResult, base_name: str):
-        """Save processing result to JSON file"""
-        output_file = self.output_dir / f"{base_name}_processing_result.json"
+    def save_results(self, result: ProcessingResult, base_name: str):
+        """Save processing results to separate JSON files"""
         
-        # Convert result to dict for JSON serialization
-        result_dict = asdict(result)
+        # Convert NumPy types to Python native types for JSON serialization
+        def convert_numpy_types(obj):
+            if isinstance(obj, np.integer):
+                return int(obj)
+            elif isinstance(obj, np.floating):
+                return float(obj)
+            elif isinstance(obj, np.bool_):
+                return bool(obj)
+            elif isinstance(obj, np.ndarray):
+                return obj.tolist()
+            elif isinstance(obj, dict):
+                return {key: convert_numpy_types(value) for key, value in obj.items()}
+            elif isinstance(obj, list):
+                return [convert_numpy_types(item) for item in obj]
+            return obj
+        
+        # 1. Save audio segments timing data
+        segments_file = self.processed_dir / f"{base_name}_audio_segments.json"
+        segments_data = {
+            "audio_path": result.audio_path,
+            "processed_audio_path": result.processed_audio_path,
+            "total_segments": len(result.audio_segments),
+            "audio_segments": convert_numpy_types([asdict(segment) for segment in result.audio_segments]),
+            "processing_metadata": {
+                "audio_analysis": convert_numpy_types(result.processing_metadata['audio_analysis']),
+                "processing_steps_applied": convert_numpy_types(result.processing_metadata['processing_steps_applied'])
+            }
+        }
         
         try:
-            with open(output_file, 'w', encoding='utf-8') as f:
-                json.dump(result_dict, f, indent=2, ensure_ascii=False)
-            print(f"Processing result saved to: {output_file}")
+            with open(segments_file, 'w', encoding='utf-8') as f:
+                json.dump(segments_data, f, indent=2, ensure_ascii=False)
+            print(f"Audio segments data saved to: {segments_file}")
         except Exception as e:
-            print(f"Error saving result: {e}")
+            print(f"Error saving segments data: {e}")
+        
+        # 2. Save music features data (from XML/MIDI)
+        music_file = self.processed_dir / f"{base_name}_music_features.json"
+        music_data = {
+            "music_path": result.music_path,
+            "music_features": asdict(result.music_features),
+            "extraction_metadata": {
+                "total_notes": len(result.music_features.notes),
+                "key_signature": result.music_features.key_signature,
+                "time_signature": result.music_features.time_signature,
+                "tempo": result.music_features.tempo,
+                "total_duration": result.music_features.total_duration,
+                "instruments": result.music_features.instruments
+            }
+        }
+        
+        try:
+            with open(music_file, 'w', encoding='utf-8') as f:
+                json.dump(music_data, f, indent=2, ensure_ascii=False)
+            print(f"Music features data saved to: {music_file}")
+        except Exception as e:
+            print(f"Error saving music features data: {e}")
 
 
 def main():
     """Example usage of the processing layer"""
     
     # Example file paths (replace with actual paths)
-    audio_file = "example_performance.wav"
-    music_file = "example_sheet.mid"  # or .xml
+    audio_file = "input.wav"
+    music_file = "xml_score.musicxml"  # or .xml
     
     if not os.path.exists(audio_file) or not os.path.exists(music_file):
         print("Example files not found. Please provide actual audio and music files.")
@@ -443,7 +534,7 @@ def main():
         return
     
     # Initialize processing layer
-    processor = ProcessingLayer(output_dir="processing_output")
+    processor = ProcessingLayer(data_dir="data")
     
     try:
         # Process files
@@ -465,6 +556,20 @@ def main():
         for step, applied in steps.items():
             status = "✓" if applied else "✗"
             print(f"  {status} {step.replace('_', ' ').title()}")
+        
+        print("\nOutput files created:")
+        print(f"  🎵 Processed audio: {Path(audio_file).stem}_processed.wav")
+        print(f"  📄 Audio segments: {Path(audio_file).stem}_audio_segments.json")
+        print(f"  🎼 Music features: {Path(audio_file).stem}_music_features.json")
+        print(f"  📁 Data directory: data/")
+        
+        # Display audio segments info
+        if result.audio_segments:
+            print(f"\nAudio segments detected:")
+            for i, segment in enumerate(result.audio_segments[:5]):  # Show first 5 segments
+                print(f"  Segment {i+1}: {segment.start_time:.2f}s - {segment.end_time:.2f}s ({segment.duration:.2f}s)")
+            if len(result.audio_segments) > 5:
+                print(f"  ... and {len(result.audio_segments) - 5} more segments")
         
     except Exception as e:
         print(f"Processing failed: {e}")
