@@ -1,0 +1,18 @@
+# Music Performance Evaluation System - Simple Requirements
+# Clean, minimal dependencies for direct Audiveris usage
+
+# Core audio processing (only essentials)
+librosa>=0.10.0
+soundfile>=0.12.0
+numpy>=1.21.0
+
+# Core dependencies (automatically installed with above)
+scipy>=1.7.0
+
+# That's it! No Docker, no pdf2image, no oemer, no complex dependencies
+# Just audio processing + direct Audiveris CLI calls
+
+# External requirement (install separately):
+# - Audiveris OMR software with CLI access
+#   Download from: https://github.com/Audiveris/audiveris/releases
+#   Choose the installer for your OS (Windows .msi, macOS .dmg, Linux .deb)
