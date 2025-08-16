@@ -1,0 +1,105 @@
+{
+  "audio_path": "data/original/input.wav",
+  "processed_audio_path": "data/processed/input_processed.wav",
+  "total_segments": 12,
+  "audio_segments": [
+    {
+      "start_time": 4.65,
+      "end_time": 14.65,
+      "duration": 10.0,
+      "confidence": 1.0,
+      "segment_type": "detected_audio"
+    },
+    {
+      "start_time": 14.65,
+      "end_time": 24.65,
+      "duration": 10.0,
+      "confidence": 1.0,
+      "segment_type": "detected_audio"
+    },
+    {
+      "start_time": 24.650000000000002,
+      "end_time": 34.650000000000006,
+      "duration": 10.0,
+      "confidence": 1.0,
+      "segment_type": "detected_audio"
+    },
+    {
+      "start_time": 34.65,
+      "end_time": 44.65,
+      "duration": 10.0,
+      "confidence": 1.0,
+      "segment_type": "detected_audio"
+    },
+    {
+      "start_time": 44.650000000000006,
+      "end_time": 54.650000000000006,
+      "duration": 10.0,
+      "confidence": 1.0,
+      "segment_type": "detected_audio"
+    },
+    {
+      "start_time": 54.650000000000006,
+      "end_time": 64.65,
+      "duration": 10.0,
+      "confidence": 1.0,
+      "segment_type": "detected_audio"
+    },
+    {
+      "start_time": 64.65,
+      "end_time": 74.65,
+      "duration": 10.0,
+      "confidence": 1.0,
+      "segment_type": "detected_audio"
+    },
+    {
+      "start_time": 74.65,
+      "end_time": 84.65,
+      "duration": 10.0,
+      "confidence": 1.0,
+      "segment_type": "detected_audio"
+    },
+    {
+      "start_time": 84.65,
+      "end_time": 94.65,
+      "duration": 10.0,
+      "confidence": 1.0,
+      "segment_type": "detected_audio"
+    },
+    {
+      "start_time": 94.65,
+      "end_time": 104.65,
+      "duration": 10.0,
+      "confidence": 1.0,
+      "segment_type": "detected_audio"
+    },
+    {
+      "start_time": 104.65,
+      "end_time": 114.65,
+      "duration": 10.0,
+      "confidence": 1.0,
+      "segment_type": "detected_audio"
+    },
+    {
+      "start_time": 114.65,
+      "end_time": 119.119,
+      "duration": 4.469,
+      "confidence": 1.0,
+      "segment_type": "detected_audio"
+    }
+  ],
+  "processing_metadata": {
+    "audio_analysis": {
+      "needs_noise_reduction": false,
+      "needs_normalization": true,
+      "needs_segmentation": true,
+      "current_db_level": -8.95022201538086,
+      "noise_estimate": 0.022183891385793686
+    },
+    "processing_steps_applied": {
+      "noise_reduction": false,
+      "normalization": true,
+      "segmentation": true
+    }
+  }
+}

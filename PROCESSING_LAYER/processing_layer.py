@@ -327,15 +327,25 @@ class MusicProcessor:
 class ProcessingLayer:
     """Main processing layer coordinating audio and music processing"""
     
-    def __init__(self, data_dir: str = "data"):
+    def __init__(self, data_dir: str = "data", shared_output_dir: str = "../shared_data"):
         self.data_dir = Path(data_dir)
         self.data_dir.mkdir(exist_ok=True)
+        
+        # Create shared output directory for inter-layer communication
+        self.shared_output_dir = Path(shared_output_dir)
+        self.shared_output_dir.mkdir(exist_ok=True)
         
         # Create subdirectories for organization
         self.original_dir = self.data_dir / "original"
         self.processed_dir = self.data_dir / "processed"
         self.original_dir.mkdir(exist_ok=True)
         self.processed_dir.mkdir(exist_ok=True)
+        
+        # Create shared subdirectories
+        self.shared_original_dir = self.shared_output_dir / "original"
+        self.shared_processed_dir = self.shared_output_dir / "processed"
+        self.shared_original_dir.mkdir(exist_ok=True)
+        self.shared_processed_dir.mkdir(exist_ok=True)
         
         self.audio_processor = AudioProcessor()
         self.music_processor = MusicProcessor()
@@ -370,6 +380,18 @@ class ProcessingLayer:
             shutil.copy2(music_path, original_music_path)
             print(f"Music file copied to: {original_music_path}")
         
+        # Also copy to shared directory for other layers to access
+        shared_audio_path = self.shared_original_dir / audio_filename
+        shared_music_path = self.shared_original_dir / music_filename
+        
+        if not shared_audio_path.exists():
+            shutil.copy2(audio_path, shared_audio_path)
+            print(f"Audio file copied to shared directory: {shared_audio_path}")
+        
+        if not shared_music_path.exists():
+            shutil.copy2(music_path, shared_music_path)
+            print(f"Music file copied to shared directory: {shared_music_path}")
+        
         # Validate input files
         if not original_audio_path.exists():
             raise FileNotFoundError(f"Audio file not found: {original_audio_path}")
@@ -403,18 +425,24 @@ class ProcessingLayer:
         
         # Always save the final processed audio with a consistent name
         final_processed_path = self.processed_dir / f"{base_name}_processed.wav"
+        shared_processed_audio_path = self.shared_processed_dir / f"{base_name}_processed.wav"
+        
         if current_audio_path != str(original_audio_path):
             # Audio was processed, copy to final location
             import shutil
             shutil.copy2(current_audio_path, final_processed_path)
+            shutil.copy2(current_audio_path, shared_processed_audio_path)
             processed_audio_path = str(final_processed_path)
             print(f"Final processed audio saved to: {processed_audio_path}")
+            print(f"Final processed audio saved to shared directory: {shared_processed_audio_path}")
         else:
             # No processing was needed, but still create a copy for consistency
             import shutil
             shutil.copy2(str(original_audio_path), final_processed_path)
+            shutil.copy2(str(original_audio_path), shared_processed_audio_path)
             processed_audio_path = str(final_processed_path)
             print(f"Original audio copied to: {processed_audio_path}")
+            print(f"Original audio copied to shared directory: {shared_processed_audio_path}")
         
         # Clean up intermediate files automatically
         for intermediate_file in intermediate_files:
@@ -478,6 +506,7 @@ class ProcessingLayer:
         
         # 1. Save audio segments timing data
         segments_file = self.processed_dir / f"{base_name}_audio_segments.json"
+        shared_segments_file = self.shared_processed_dir / f"{base_name}_audio_segments.json"
         segments_data = {
             "audio_path": result.audio_path,
             "processed_audio_path": result.processed_audio_path,
@@ -492,12 +521,16 @@ class ProcessingLayer:
         try:
             with open(segments_file, 'w', encoding='utf-8') as f:
                 json.dump(segments_data, f, indent=2, ensure_ascii=False)
+            with open(shared_segments_file, 'w', encoding='utf-8') as f:
+                json.dump(segments_data, f, indent=2, ensure_ascii=False)
             print(f"Audio segments data saved to: {segments_file}")
+            print(f"Audio segments data saved to shared directory: {shared_segments_file}")
         except Exception as e:
             print(f"Error saving segments data: {e}")
         
         # 2. Save music features data (from XML/MIDI)
         music_file = self.processed_dir / f"{base_name}_music_features.json"
+        shared_music_file = self.shared_processed_dir / f"{base_name}_music_features.json"
         music_data = {
             "music_path": result.music_path,
             "music_features": asdict(result.music_features),
@@ -514,7 +547,10 @@ class ProcessingLayer:
         try:
             with open(music_file, 'w', encoding='utf-8') as f:
                 json.dump(music_data, f, indent=2, ensure_ascii=False)
+            with open(shared_music_file, 'w', encoding='utf-8') as f:
+                json.dump(music_data, f, indent=2, ensure_ascii=False)
             print(f"Music features data saved to: {music_file}")
+            print(f"Music features data saved to shared directory: {shared_music_file}")
         except Exception as e:
             print(f"Error saving music features data: {e}")
 
