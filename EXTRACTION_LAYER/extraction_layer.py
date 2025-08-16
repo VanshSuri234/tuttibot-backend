@@ -13,13 +13,19 @@ Repository References:
 - pretty_midi (https://github.com/craffel/pretty-midi): MIDI processing utilities
 """
 
+import os
+# Suppress TensorFlow warnings about GPU/CUDA
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # 0=all, 1=info, 2=warnings, 3=errors only
+
 import json
 import numpy as np
 import warnings
-import os
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional, Union
 from dataclasses import dataclass, asdict
+
+# Suppress numpy deprecation warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 # Audio processing libraries
 try:
@@ -141,7 +147,7 @@ class AudioFeatureExtractor:
         with open(segments_file, 'r') as f:
             segments_data = json.load(f)
         
-        print(f"Loaded {len(segments_data.get('segments', []))} audio segments from JSON")
+        print(f"Loaded {len(segments_data.get('audio_segments', []))} audio segments from JSON")
         
         # Extract features using multiple methods
         features = {}
@@ -197,7 +203,7 @@ class AudioFeatureExtractor:
         """Extract features using segmentation information from JSON"""
         features = {}
         
-        segments = segments_data.get('segments', [])
+        segments = segments_data.get('audio_segments', [])
         
         # Extract segment-specific features
         segment_features = []
@@ -330,7 +336,7 @@ class AudioFeatureExtractor:
         beat_times = librosa.frames_to_time(beats, sr=sr,
                                           hop_length=self.hop_length)
         
-        features['tempo_bpm'] = float(tempo)
+        features['tempo_bpm'] = float(tempo.item() if hasattr(tempo, 'item') else tempo)
         features['beat_times'] = beat_times.tolist()
         features['tempo_confidence'] = 1.0  # librosa doesn't provide confidence
         
@@ -338,12 +344,17 @@ class AudioFeatureExtractor:
         if essentia is not None:
             try:
                 rhythm_extractor = es.RhythmExtractor2013()
-                bpm, beats_es, _, _ = rhythm_extractor(y.astype(np.float32))
+                result = rhythm_extractor(y.astype(np.float32))
                 
-                # Use essentia if confidence is higher (simple heuristic)
-                if abs(bpm - tempo) < 20:  # Similar tempos
-                    features['tempo_bpm'] = float(bpm)
-                    features['tempo_confidence'] = 0.9
+                # Handle different return formats from essentia
+                if len(result) >= 2:
+                    bpm = result[0]
+                    beats_es = result[1]
+                    
+                    # Use essentia if confidence is higher (simple heuristic)
+                    if abs(bpm - tempo) < 20:  # Similar tempos
+                        features['tempo_bpm'] = float(bpm)
+                        features['tempo_confidence'] = 0.9
                     
             except Exception as e:
                 print(f"Essentia tempo extraction failed: {e}")
@@ -458,7 +469,7 @@ class ScoreFeatureExtractor:
             
         return self._build_score_features(features, existing_features)
     
-    def _extract_pretty_midi_features(self, midi_data: pretty_midi.PrettyMIDI) -> Dict:
+    def _extract_pretty_midi_features(self, midi_data) -> Dict:
         """Extract features using pretty_midi"""
         features = {}
         
@@ -714,6 +725,22 @@ class ExtractionLayer:
         self.audio_extractor = AudioFeatureExtractor(sample_rate, hop_length)
         self.score_extractor = ScoreFeatureExtractor()
         
+    def _convert_numpy_types(self, obj):
+        """Convert numpy types for JSON serialization"""
+        if isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, np.bool_):
+            return bool(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        elif isinstance(obj, dict):
+            return {key: self._convert_numpy_types(value) for key, value in obj.items()}
+        elif isinstance(obj, list):
+            return [self._convert_numpy_types(item) for item in obj]
+        return obj
+        
     def process_performance_data(self, audio_file: str, segments_file: str,
                                output_dir: str = "data/extracted") -> str:
         """Process live performance data and extract features"""
@@ -727,8 +754,9 @@ class ExtractionLayer:
         output_path.mkdir(parents=True, exist_ok=True)
         
         performance_file = output_path / "performance_features.json"
+        
         with open(performance_file, 'w') as f:
-            json.dump(asdict(performance_features), f, indent=2)
+            json.dump(self._convert_numpy_types(asdict(performance_features)), f, indent=2)
         
         print(f"Performance features saved to: {performance_file}")
         return str(performance_file)
@@ -747,7 +775,7 @@ class ExtractionLayer:
         
         score_file_out = output_path / "score_features.json"
         with open(score_file_out, 'w') as f:
-            json.dump(asdict(score_features), f, indent=2)
+            json.dump(self._convert_numpy_types(asdict(score_features)), f, indent=2)
         
         print(f"Score features saved to: {score_file_out}")
         return str(score_file_out)
@@ -792,11 +820,11 @@ class ExtractionLayer:
 def main():
     """Example usage of the extraction layer"""
     
-    # Example file paths (adjust as needed)
-    audio_file = "data/processed/input_processed.wav"
-    segments_file = "data/processed/input_audio_segments.json"
-    score_file = "data/original/xml_score.musicxml"  # or .mid file
-    score_json_file = "data/processed/input_music_features.json"
+    # Use shared data directory that all layers can access
+    audio_file = "../shared_data/processed/input_processed.wav"
+    segments_file = "../shared_data/processed/input_audio_segments.json"
+    score_file = "../shared_data/original/xml_score.musicxml"  # or .mid file
+    score_json_file = "../shared_data/processed/input_music_features.json"
     
     # Initialize extraction layer
     extractor = ExtractionLayer()
