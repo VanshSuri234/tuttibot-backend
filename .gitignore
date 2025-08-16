@@ -1,0 +1,74 @@
+# TuttiBot .gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# TuttiBot output directories
+tuttibot_output_*/
+*_audiveris_output/
+*.omr
+
+# Temporary files
+*.tmp
+*.temp
+*_converted.*
+*_processed.*
+*_normalized.*
+
+# Audio files (typically too large for git)
+*.wav
+*.mp3
+*.flac
+*.aac
+*.ogg
+
+# Score files that might be large
+*.pdf
+
+# Log files
+*.log
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Keep example/test files if they're small
+!example_*.wav
+!test_*.xml
+!sample_*.mid

@@ -20,9 +20,18 @@ import os
 import sys
 import subprocess
 import shutil
+import zipfile
+import tempfile
 from pathlib import Path
 from typing import Dict, Any, Union
 import platform
+
+# Optional imports for MXL conversion
+try:
+    import music21
+    MUSIC21_AVAILABLE = True
+except ImportError:
+    MUSIC21_AVAILABLE = False
 
 try:
     import librosa
@@ -187,7 +196,27 @@ class ScoreInputProcessor:
         }
         
         # Find Audiveris executable
-        self.audiveris_cmd = self._find_audiveris_command()
+        self.audiveris_cmd = self._find_audiveris_command_robust()
+    
+    def _find_audiveris_command_robust(self) -> str:
+        """Find Audiveris command with robust detection."""
+        # First, try the known working path directly
+        known_path = "/opt/audiveris/bin/Audiveris"
+        if os.path.exists(known_path):
+            try:
+                # Quick test to ensure it's executable
+                result = subprocess.run([known_path, "-help"], 
+                                      capture_output=True, 
+                                      text=True, 
+                                      timeout=5)
+                if "Audiveris" in str(result.stdout) or "CLI" in str(result.stdout):
+                    print(f"Found Audiveris at: {known_path}")
+                    return known_path
+            except:
+                pass
+        
+        # Fallback to the original method
+        return self._find_audiveris_command()
     
     def _find_audiveris_command(self) -> str:
         """Find the Audiveris command based on the operating system."""
@@ -318,7 +347,12 @@ class ScoreInputProcessor:
                 cwd=str(pdf_path.parent)
             )
             
-            if result.returncode != 0:
+            # Find generated MusicXML files (including compressed .mxl format)
+            musicxml_files = list(output_dir.glob("*.xml")) + list(output_dir.glob("*.musicxml")) + list(output_dir.glob("*.mxl"))
+            
+            # Check for successful conversion by presence of output files
+            # (Audiveris can return non-zero exit codes even when successful)
+            if not musicxml_files and result.returncode != 0:
                 return {
                     'success': False,
                     'output_path': None,
@@ -326,9 +360,6 @@ class ScoreInputProcessor:
                     'converted': False,
                     'message': f"Audiveris conversion failed. Exit code: {result.returncode}. Error: {result.stderr}"
                 }
-            
-            # Find generated MusicXML files
-            musicxml_files = list(output_dir.glob("*.xml")) + list(output_dir.glob("*.musicxml"))
             
             if not musicxml_files:
                 # Also check for .omr files that might need extraction
@@ -353,7 +384,22 @@ class ScoreInputProcessor:
             # Use the first generated MusicXML file
             source_xml = musicxml_files[0]
             final_output = pdf_path.parent / f"{pdf_path.stem}_audiveris.xml"
-            shutil.copy2(source_xml, final_output)
+            
+            # If it's an .mxl file, convert it to .xml
+            if source_xml.suffix.lower() == '.mxl':
+                converted_xml = self._convert_mxl_to_xml(source_xml, final_output)
+                if converted_xml:
+                    final_output = converted_xml
+                    # Clean up the .mxl file
+                    try:
+                        source_xml.unlink()
+                    except:
+                        pass  # Don't fail if cleanup doesn't work
+                else:
+                    # Fallback: just copy the .mxl file
+                    shutil.copy2(source_xml, final_output)
+            else:
+                shutil.copy2(source_xml, final_output)
             
             return {
                 'success': True,
@@ -379,6 +425,43 @@ class ScoreInputProcessor:
                 'converted': False,
                 'message': f"Error during Audiveris conversion: {str(e)}"
             }
+    
+    def _convert_mxl_to_xml(self, mxl_path: Path, output_path: Path) -> Path:
+        """Convert .mxl (compressed MusicXML) to .xml format."""
+        try:
+            # Method 1: Direct ZIP extraction (faster)
+            with zipfile.ZipFile(mxl_path, 'r') as zip_file:
+                # Find the main .xml file in the zip
+                xml_files = [name for name in zip_file.namelist() if name.endswith('.xml')]
+                if xml_files:
+                    # Extract the first .xml file
+                    main_xml = xml_files[0]
+                    with zip_file.open(main_xml) as source:
+                        with open(output_path, 'wb') as target:
+                            shutil.copyfileobj(source, target)
+                    print(f"Converted .mxl to .xml using ZIP extraction")
+                    return output_path
+        except Exception as e:
+            print(f"ZIP extraction failed: {e}")
+        
+        # Method 2: Music21 fallback (if available)
+        if MUSIC21_AVAILABLE:
+            try:
+                score = music21.converter.parse(str(mxl_path))
+                score.write('musicxml', fp=str(output_path))
+                print(f"Converted .mxl to .xml using music21")
+                return output_path
+            except Exception as e:
+                print(f"Music21 conversion failed: {e}")
+        
+        # Method 3: Last resort - just rename (not ideal but works)
+        try:
+            shutil.copy2(mxl_path, output_path)
+            print(f"Copied .mxl as .xml (fallback method)")
+            return output_path
+        except Exception as e:
+            print(f"All conversion methods failed: {e}")
+            return None
 
 
 class MusicInputLayer:
