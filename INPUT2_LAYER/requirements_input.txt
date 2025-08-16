@@ -1,0 +1,38 @@
+# Music Performance Evaluation System - Input Layer Requirements (Updated)
+
+# Core audio processing
+librosa>=0.10.0
+soundfile>=0.12.0
+numpy>=1.21.0
+
+# PDF to image conversion (primary method)
+pdf2image>=1.16.0
+
+# Docker support for Audiveris (recommended for best PDF conversion)
+docker>=6.0.0
+
+# MusicXML processing and validation
+music21>=9.1.0
+
+# Backup OMR solution (fallback for PDF conversion)
+oemer>=0.1.7
+
+# Core dependencies (usually installed with above packages)
+scipy>=1.7.0
+scikit-learn>=1.0.0
+Pillow>=9.0.0
+
+# System dependencies notes:
+# For pdf2image, you also need to install poppler:
+# - Ubuntu/Debian: sudo apt-get install poppler-utils
+# - macOS: brew install poppler
+# - Windows: Download poppler binaries and add to PATH
+
+# For Docker + Audiveris (best PDF conversion):
+# 1. Install Docker Desktop
+# 2. Pull the image: docker pull toprock/audiveris
+# 3. The code will automatically detect and use it
+
+# Optional: For TensorFlow version of oemer (more accurate but larger)
+# tensorflow>=2.8.0
+# oemer[tf]>=0.1.7
