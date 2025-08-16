@@ -1,0 +1,26 @@
+# requirements.txt
+# Core audio processing
+noisereduce>=3.0.3
+scipy>=1.7.0
+librosa>=0.9.0
+soundfile>=0.10.0
+
+# Audio normalization (requires ffmpeg)
+ffmpeg-normalize>=1.26.0
+
+# Audio segmentation
+auditok>=0.2.0
+pydub>=0.25.0
+matplotlib>=3.5.0
+tqdm>=4.62.0
+
+# Music notation processing
+music21>=8.0.0
+
+# Utilities
+numpy>=1.21.0
+pathlib2>=2.3.0
+
+# Optional dependencies for enhanced functionality
+# pyaudio  # For microphone input (optional)
+# pyfluidsynth  # For audio synthesis (optional)
