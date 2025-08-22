@@ -1,0 +1,45 @@
+{
+  "input_files": {
+    "score_graph": "./Pipeline_Test_Output/tuttibotv02_output_20250822_124619/block_0_scoregraph/scoregraph.json",
+    "performance_midi": null
+  },
+  "alignment": {
+    "time_mapping": [
+      {
+        "score_time": 0.0,
+        "perf_time": 0.0,
+        "score_frame": 0,
+        "perf_frame": 0
+      }
+    ],
+    "warping_path": [
+      [
+        0,
+        0
+      ]
+    ],
+    "dtw_distance": NaN,
+    "confidence": 0.0,
+    "score_duration": 0.0,
+    "perf_duration": 0.0,
+    "feature_shapes": {
+      "score_chroma": [
+        12,
+        1
+      ],
+      "perf_chroma": [
+        12,
+        1
+      ]
+    }
+  },
+  "metadata": {
+    "aligner_params": {
+      "sr": 22050,
+      "hop_length": 512,
+      "n_bins": 84,
+      "bins_per_octave": 12,
+      "fmin": 55.0
+    }
+  }
+}

@@ -1,68 +1,54 @@
-#!/usr/bin/env python3
-"""
-Block 0: ScoreGraph Builder with Repeat Expansion (Final Version)
-
-Enhanced version of the original build_scoregraph.py with proper repeat expansion.
-Same interface, same output format, but with full repeat support.
-
-Usage: python build_scoregraph.py --score score.musicxml --meta score_meta.json [--seg segmentation.json]
-"""
-
 import argparse
 import json
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any
 
-def build_scoregraph(score_path: str, meta_path: str, seg_path: Optional[str] = None) -> Dict[str, Any]:
-    """
-    Build ScoreGraph from MusicXML with repeat expansion
-    
-    This is the enhanced version of the original function that adds repeat expansion
-    while maintaining the same interface and output format.
-    """
+def build_scoregraph(score_path, meta_path, seg_path=None):
+    """Build ScoreGraph using music21 with full repeat expansion"""
     
     try:
         from music21 import converter, meter, stream
     except ImportError:
         raise ImportError("music21 library is required. Install with: pip install music21")
     
-    # Load score (MusicXML)
+    # Parse the MusicXML file
     score = converter.parse(score_path)
     
-    # ✅ CRITICAL ENHANCEMENT: Expand repeats before processing
+    # ✅ CRITICAL: Expand all repeats using music21's built-in functionality
     try:
-        score = score.expandRepeats()
+        expanded_score = score.expandRepeats()
         print("✅ Repeat expansion successful")
     except:
         print("ℹ️  No repeats to expand or expansion failed, using original score")
+        expanded_score = score
     
-    # Load meta info (same as original)
+    # Load meta info
     with open(meta_path, 'r') as f:
         meta = json.load(f)
     
-    # Optionally load segmentation (same as original)
+    # Optionally load segmentation
     segmentation = None
     if seg_path:
         with open(seg_path, 'r') as f:
             segmentation = json.load(f)
     
     # Get the first part
-    if hasattr(score, 'parts') and score.parts:
-        part = score.parts[0]
+    if hasattr(expanded_score, 'parts') and expanded_score.parts:
+        part = expanded_score.parts[0]
     else:
-        part = score
+        part = expanded_score
     
-    # Build bars and nodes (same logic as original, but now with expanded repeats)
+    # Build bars and nodes
     bars = []
     nodes = []
     abs_beat = 0.0
     
-    # Get all measures from the expanded score
+    # Get all measures from the expanded part
     measures = part.getElementsByClass(stream.Measure)
     if not measures:
-        measures = score.getElementsByClass(stream.Measure)
+        measures = expanded_score.getElementsByClass(stream.Measure)
     
-    for i, measure in enumerate(measures):
-        bar_num = measure.number if measure.number is not None else i + 1
+    for measure in measures:
+        bar_num = measure.number if measure.number is not None else len(bars) + 1
         
         # Get time signature for this measure
         time_sigs = measure.getElementsByClass(meter.TimeSignature)
@@ -85,10 +71,10 @@ def build_scoregraph(score_path: str, meta_path: str, seg_path: Optional[str] = 
         # Create nodes for each beat in the measure
         for beat in range(1, numerator + 1):
             node_id = f"{bar_num}_{beat}"
-            D_beats = 1.0  # Duration in beats (can be refined)
+            D_beats = 1.0  # Duration in beats
             flags = []
             
-            # Attach flags from meta or segmentation (same as original)
+            # Attach flags from meta or segmentation
             if 'fermatas' in meta and node_id in meta['fermatas']:
                 flags.append('fermata')
             if segmentation and 'cadences' in segmentation and node_id in segmentation['cadences']:
@@ -105,18 +91,17 @@ def build_scoregraph(score_path: str, meta_path: str, seg_path: Optional[str] = 
             nodes.append(node)
             abs_beat += D_beats
     
-    # Tempo marks, key signature, tuning (same as original)
+    # Extract tempo, key signature, tuning
     tempo_marks = meta.get('tempo_marks', [])
     key_signature = meta.get('key_signature', None)
     tuning_hz = meta.get('tuning_hz', 440)
     
-    # Mapping helpers (same as original)
+    # Mapping helpers
     maps = {
         'bar_beat_to_abs_beat': {f"{n['bar']},{n['beat']}": n['abs_beat'] for n in nodes},
         'abs_beat_to_bar_beat': {str(n['abs_beat']): (n['bar'], n['beat']) for n in nodes}
     }
     
-    # Build scoregraph (same format as original)
     scoregraph = {
         'bars': bars,
         'nodes': nodes,
@@ -129,7 +114,7 @@ def build_scoregraph(score_path: str, meta_path: str, seg_path: Optional[str] = 
     return scoregraph
 
 def main():
-    parser = argparse.ArgumentParser(description='Build ScoreGraph from MusicXML and meta info with repeat expansion')
+    parser = argparse.ArgumentParser(description='Build ScoreGraph with repeat expansion using music21')
     parser.add_argument('--score', required=True, help='Path to score.musicxml')
     parser.add_argument('--meta', required=True, help='Path to score_meta.json')
     parser.add_argument('--seg', help='Path to segmentation.json (optional)')
@@ -147,11 +132,15 @@ def main():
     if len(scoregraph['nodes']) > 10:
         print('\nFirst 10 nodes:')
         for node in scoregraph['nodes'][:10]:
-            print(f"  {node['id']}: bar {node['bar']}, beat {node['beat']}, abs_beat {node['abs_beat']}")
+            print(f"  {node['id']}: beat {node['beat']}, abs_beat {node['abs_beat']}")
+        
+        print('\nLast 10 nodes:')
+        for node in scoregraph['nodes'][-10:]:
+            print(f"  {node['id']}: beat {node['beat']}, abs_beat {node['abs_beat']}")
     else:
         print('\nAll nodes:')
         for node in scoregraph['nodes']:
-            print(f"  {node['id']}: bar {node['bar']}, beat {node['beat']}, abs_beat {node['abs_beat']}")
+            print(f"  {node['id']}: beat {node['beat']}, abs_beat {node['abs_beat']}")
 
 if __name__ == '__main__':
     main()

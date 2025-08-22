@@ -1,0 +1,41 @@
+{
+  "notes": [
+    {
+      "onset_time": 0.11609977324263039,
+      "offset_time": 1.3467573696145125,
+      "duration": 1.2306575963718822,
+      "pitch_midi": 72,
+      "pitch_hz": 523.2511306011972,
+      "velocity": 73,
+      "confidence": 1.0
+    },
+    {
+      "onset_time": 0.16253968253968254,
+      "offset_time": 1.3351473922902495,
+      "duration": 1.172607709750567,
+      "pitch_midi": 69,
+      "pitch_hz": 440.0,
+      "velocity": 70,
+      "confidence": 1.0
+    }
+  ],
+  "metadata": {
+    "total_notes": 2,
+    "total_duration_s": 1.3467573696145125,
+    "pitch_range": {
+      "min_midi": 69,
+      "max_midi": 72
+    },
+    "duration_stats": {
+      "min_duration": 1.172607709750567,
+      "max_duration": 1.2306575963718822,
+      "avg_duration": 1.2016326530612247
+    },
+    "transcription_method": "basic_pitch_cli",
+    "version": "1.0",
+    "source_files": {
+      "csv": "Pipeline_Test_Output/tuttibotv02_output_20250822_124619/block_1_amt/test_audio_basic_pitch.csv",
+      "midi": "Pipeline_Test_Output/tuttibotv02_output_20250822_124619/block_1_amt/test_audio_basic_pitch.mid"
+    }
+  }
+}

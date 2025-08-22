@@ -1,6 +1,29 @@
-# Block 1 — AMT: Audio to Symbolic (MIDI) for the Performance
+# Block 1: Automatic Music Transcription (AMT)
 
-This module transcribes performance audio (`perf.wav`) into symbolic note events (MIDI and JSON). You can choose from several open-source AMT models. For general instruments, Basic Pitch is recommended; for piano, Onsets & Frames; for multi-instrument, Omnizart.
+This block handles automatic transcription of audio to MIDI and structured note events using Basic Pitch.
+
+## 📁 Final File Structure
+
+```
+Block_1_AMT/
+├── transcribe_audio.py         # Original basic version
+├── transcribe_audio_fixed.py   # Final working version ✅
+├── README.md                   # This documentation
+├── test_audio.wav             # Test audio file
+├── transcription.json         # Sample output
+└── output/                    # Basic Pitch output directory
+    ├── test_audio_basic_pitch.mid
+    └── test_audio_basic_pitch.csv
+```
+
+## 🎯 Which File to Use
+
+**Use `transcribe_audio_fixed.py`** - This is the final working version that:
+- ✅ Works end-to-end reliably
+- ✅ Uses Basic Pitch CLI for stability
+- ✅ Handles malformed data gracefully
+- ✅ Outputs standardized JSON format
+- ✅ Includes comprehensive error handling
 
 ## References
 - Basic Pitch: https://github.com/spotify/basic-pitch

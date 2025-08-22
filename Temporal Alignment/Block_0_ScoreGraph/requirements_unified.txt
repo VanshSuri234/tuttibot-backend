@@ -1,0 +1,13 @@
+# Requirements for build_scoregraph_unified.py
+
+# For music21 method (recommended for MusicXML)
+music21>=9.1.0
+
+# For pretty_midi method (for MIDI files)
+pretty_midi>=0.2.10
+
+# Standard libraries (already included in Python)
+# - argparse
+# - json
+# - xml.etree.ElementTree
+# - typing
