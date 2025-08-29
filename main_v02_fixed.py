@@ -6,6 +6,13 @@ Main execution script for the enhanced temporal alignment system
 Simplified Pipeline Flow:
 Input Layer → Block 0 (ScoreGraph) → Block 1 (AMT) → Block 2 (Alignment) → Output
 
+Features:
+- Automatic GPU detection and management
+- CPU fallback with warnings
+- HPC/SLURM environment detection
+- Multi-GPU support with selection
+- GPU memory monitoring and cleanup
+
 Author: TuttiBot Team
 Version: 2.0.1
 """
@@ -24,6 +31,9 @@ from datetime import datetime
 project_root = Path(__file__).parent
 sys.path.append(str(project_root))
 
+# Import GPU manager
+from gpu_manager import GPUManager
+
 # Import our enhanced temporal alignment blocks
 temporal_alignment_path = project_root / "Temporal Alignment"
 sys.path.append(str(temporal_alignment_path / "Block_0_ScoreGraph"))
@@ -40,8 +50,8 @@ except ImportError as e:
     print(f"Looking in: {temporal_alignment_path}")
     sys.exit(1)
 
-def setup_logging(output_dir):
-    """Setup logging configuration"""
+def setup_logging(output_dir, gpu_manager):
+    """Setup logging configuration with GPU status"""
     log_file = os.path.join(output_dir, 'tuttibotv02.log')
     logging.basicConfig(
         level=logging.INFO,
@@ -51,7 +61,22 @@ def setup_logging(output_dir):
             logging.StreamHandler(sys.stdout)
         ]
     )
-    return logging.getLogger(__name__)
+    logger = logging.getLogger(__name__)
+    
+    # Log GPU configuration
+    device_info = gpu_manager.get_device_info()
+    logger.info("=" * 60)
+    logger.info("SYSTEM CONFIGURATION")
+    logger.info("=" * 60)
+    logger.info(f"Environment: {'HPC/SLURM' if device_info['environment']['is_slurm'] else 'Local'}")
+    logger.info(f"Device: {'GPU' if device_info['device_config']['use_gpu'] else 'CPU'}")
+    if device_info['device_config']['use_gpu']:
+        logger.info(f"GPU ID: {device_info['device_config']['device_id']}")
+    logger.info(f"TensorFlow: {'Available' if device_info['libraries']['tensorflow'] else 'Not installed'}")
+    logger.info(f"PyTorch: {'Available' if device_info['libraries']['pytorch'] else 'Not installed'}")
+    logger.info("=" * 60)
+    
+    return logger
 
 def create_output_structure(base_output_dir):
     """Create output directory structure"""
@@ -193,9 +218,9 @@ def block_0_scoregraph(musicxml_path, output_dir, logger):
         logger.error(traceback.format_exc())
         raise
 
-def block_1_amt(audio_path, output_dir, logger):
+def block_1_amt(audio_path, output_dir, gpu_manager, logger):
     """
-    Block 1: Automatic Music Transcription
+    Block 1: Automatic Music Transcription with GPU support
     """
     logger.info("=" * 60)
     logger.info("STARTING BLOCK 1 - AMT")
@@ -204,14 +229,34 @@ def block_1_amt(audio_path, output_dir, logger):
     try:
         block1_output_dir = os.path.join(output_dir, 'block_1_amt')
         
+        # Log GPU status for AMT
+        if gpu_manager.device_config['use_gpu']:
+            memory_info = gpu_manager.monitor_gpu_memory()
+            if memory_info:
+                logger.info(f"GPU Memory before AMT: {memory_info['used_memory_mb']}/{memory_info['total_memory_mb']} MB")
+        
         logger.info(f"Transcribing audio: {audio_path}")
-        # Use the stable transcribe_audio_fixed function
-        transcription_result = transcribe_audio_basic_pitch(audio_path, block1_output_dir)
+        logger.info(f"Device: {'GPU' if gpu_manager.device_config['use_gpu'] else 'CPU'}")
+        
+        # Use the stable transcribe_audio_fixed function with GPU support
+        transcription_result = transcribe_audio_basic_pitch(
+            audio_path, 
+            block1_output_dir,
+            gpu_manager=gpu_manager
+        )
         
         # Save transcription JSON
         transcription_json_path = os.path.join(block1_output_dir, 'transcription.json')
         with open(transcription_json_path, 'w') as f:
             json.dump(transcription_result, f, indent=2)
+        
+        # Log GPU status after AMT
+        if gpu_manager.device_config['use_gpu']:
+            memory_info = gpu_manager.monitor_gpu_memory()
+            if memory_info:
+                logger.info(f"GPU Memory after AMT: {memory_info['used_memory_mb']}/{memory_info['total_memory_mb']} MB")
+            # Cleanup GPU memory after intensive operation
+            gpu_manager.cleanup_gpu_memory()
         
         logger.info(f"✅ Block 1 completed successfully")
         logger.info(f"   Notes detected: {len(transcription_result.get('notes', []))}")
@@ -227,11 +272,14 @@ def block_1_amt(audio_path, output_dir, logger):
     except Exception as e:
         logger.error(f"❌ Block 1 failed: {str(e)}")
         logger.error(traceback.format_exc())
+        # Cleanup on error
+        if gpu_manager.device_config['use_gpu']:
+            gpu_manager.cleanup_gpu_memory()
         raise
 
-def block_2_alignment(scoregraph_path, transcription_result, output_dir, logger):
+def block_2_alignment(scoregraph_path, transcription_result, output_dir, gpu_manager, logger):
     """
-    Block 2: Symbolic Alignment using Enhanced Block 2
+    Block 2: Symbolic Alignment using Enhanced Block 2 with GPU support
     """
     logger.info("=" * 60)
     logger.info("STARTING BLOCK 2 - SYMBOLIC ALIGNMENT")
@@ -246,9 +294,16 @@ def block_2_alignment(scoregraph_path, transcription_result, output_dir, logger)
         logger.info(f"Performing symbolic alignment...")
         logger.info(f"   Score graph: {scoregraph_path}")
         logger.info(f"   Performance MIDI: {midi_path}")
+        logger.info(f"   Device: {'GPU' if gpu_manager.device_config['use_gpu'] else 'CPU'}")
         
-        # Initialize Enhanced Aligner
-        aligner = EnhancedSymbolicAligner()
+        # Log GPU status before alignment
+        if gpu_manager.device_config['use_gpu']:
+            memory_info = gpu_manager.monitor_gpu_memory()
+            if memory_info:
+                logger.info(f"GPU Memory before alignment: {memory_info['used_memory_mb']}/{memory_info['total_memory_mb']} MB")
+        
+        # Initialize Enhanced Aligner with GPU support
+        aligner = EnhancedSymbolicAligner(gpu_manager=gpu_manager)
         
         # Perform alignment using the correct method
         alignment_result = aligner.align_score_performance(
@@ -261,6 +316,14 @@ def block_2_alignment(scoregraph_path, transcription_result, output_dir, logger)
         alignment_json_path = os.path.join(block2_output_dir, 'alignment_results.json')
         with open(alignment_json_path, 'w') as f:
             json.dump(alignment_result, f, indent=2)
+        
+        # Log GPU status after alignment
+        if gpu_manager.device_config['use_gpu']:
+            memory_info = gpu_manager.monitor_gpu_memory()
+            if memory_info:
+                logger.info(f"GPU Memory after alignment: {memory_info['used_memory_mb']}/{memory_info['total_memory_mb']} MB")
+            # Cleanup GPU memory after intensive operation
+            gpu_manager.cleanup_gpu_memory()
         
         logger.info(f"✅ Block 2 completed successfully")
         logger.info(f"   Alignment confidence: {alignment_result.get('confidence', 'N/A')}")
@@ -276,6 +339,9 @@ def block_2_alignment(scoregraph_path, transcription_result, output_dir, logger)
     except Exception as e:
         logger.error(f"❌ Block 2 failed: {str(e)}")
         logger.error(traceback.format_exc())
+        # Cleanup on error
+        if gpu_manager.device_config['use_gpu']:
+            gpu_manager.cleanup_gpu_memory()
         raise
 
 def create_final_output(output_dir, scoregraph, transcription, alignment, logger):
@@ -345,6 +411,12 @@ def main():
     parser.add_argument('--audio', required=True, help='Path to input audio performance')
     parser.add_argument('--output', default='./Output', help='Output directory (default: ./Output)')
     
+    # GPU control options
+    parser.add_argument('--cpu-only', action='store_true', 
+                       help='Force CPU-only mode (disable GPU acceleration)')
+    parser.add_argument('--gpu-id', type=int, 
+                       help='Specific GPU ID to use (0, 1, 2, etc.)')
+    
     args = parser.parse_args()
     
     # Validate inputs
@@ -356,17 +428,30 @@ def main():
         print(f"❌ Error: Audio file not found: {args.audio}")
         sys.exit(1)
     
+    # Initialize GPU Manager
+    gpu_manager = GPUManager(force_cpu=args.cpu_only, gpu_id=args.gpu_id)
+    
+    # Setup TensorFlow and PyTorch
+    gpu_manager.setup_tensorflow()
+    gpu_manager.setup_pytorch()
+    
+    # Print system status
+    gpu_manager.print_status()
+    
     # Create output structure
     output_dir = create_output_structure(args.output)
-    logger = setup_logging(output_dir)
+    logger = setup_logging(output_dir, gpu_manager)
     
     # Print header
     print("\n" + "=" * 70)
-    print("🎼 TuttiBot v02 - Temporal Alignment Pipeline (Fixed)")
+    print("🎼 TuttiBot v02 - Temporal Alignment Pipeline (GPU-Ready)")
     print("=" * 70)
     print(f"Input PDF: {args.pdf}")
     print(f"Input Audio: {args.audio}")
     print(f"Output Directory: {output_dir}")
+    print(f"Processing Mode: {'GPU' if gpu_manager.device_config['use_gpu'] else 'CPU'}")
+    if gpu_manager.device_config['use_gpu']:
+        print(f"GPU Device: {gpu_manager.device_config['device_id']}")
     print("=" * 70 + "\n")
     
     try:
@@ -383,18 +468,20 @@ def main():
             logger
         )
         
-        # Block 1: AMT
+        # Block 1: AMT with GPU support
         block1_results = block_1_amt(
             input_results['audio_path'],
             output_dir,
+            gpu_manager,
             logger
         )
         
-        # Block 2: Alignment
+        # Block 2: Alignment with GPU support
         block2_results = block_2_alignment(
             block0_results['scoregraph_path'],
             block1_results['transcription'],
             output_dir,
+            gpu_manager,
             logger
         )
         
@@ -407,12 +494,23 @@ def main():
             logger
         )
         
+        # Final GPU cleanup
+        gpu_manager.cleanup_gpu_memory()
+        
         # Success summary
         print("\n" + "=" * 70)
         print("🎉 TuttiBot v02 Pipeline Completed Successfully!")
         print("=" * 70)
         print(f"📁 Results saved to: {output_dir}")
         print(f"📊 Final results: {final_output_path}")
+        print(f"⚡ Processing mode: {'GPU' if gpu_manager.device_config['use_gpu'] else 'CPU'}")
+        
+        # Final GPU memory status
+        if gpu_manager.device_config['use_gpu']:
+            memory_info = gpu_manager.monitor_gpu_memory()
+            if memory_info:
+                print(f"🎮 Final GPU memory: {memory_info['used_memory_mb']}/{memory_info['total_memory_mb']} MB")
+        
         print("=" * 70 + "\n")
         
         logger.info("🎉 TuttiBot v02 Pipeline completed successfully!")
@@ -421,6 +519,13 @@ def main():
         print(f"\n❌ Pipeline failed: {str(e)}")
         logger.error(f"Pipeline failed: {str(e)}")
         logger.error(traceback.format_exc())
+        
+        # Cleanup GPU on failure
+        try:
+            gpu_manager.cleanup_gpu_memory()
+        except:
+            pass
+        
         sys.exit(1)
 
 if __name__ == '__main__':

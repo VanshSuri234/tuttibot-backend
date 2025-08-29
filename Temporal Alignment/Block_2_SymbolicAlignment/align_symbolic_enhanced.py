@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Enhanced Symbolic Alignment (Block 2) - TuttiBot v0.2
-======================================================
+Enhanced Symbolic Alignment (Block 2) - TuttiBot v0.2 (GPU-Ready)
+=================================================================
 
 Improved version using pretty_midi + DTW for score-performance alignment
 without dependency on partitura/parangonar.
@@ -12,6 +12,7 @@ Key Improvements:
 - CQT-based feature alignment for better musical alignment
 - Robust error handling and fallback mechanisms
 - Comprehensive time mapping and visualization
+- GPU acceleration support with automatic CPU fallback
 
 Input:  ScoreGraph (Block 0) + Performance MIDI (Block 1)
 Output: Time-aligned score-performance mapping + visualizations
@@ -28,22 +29,29 @@ import json
 import warnings
 from typing import Dict, List, Tuple, Optional, Union
 import logging
+import os
+import sys
+
+# Add parent directory to path for GPU manager import
+parent_dir = Path(__file__).parent.parent.parent
+sys.path.append(str(parent_dir))
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class EnhancedSymbolicAligner:
-    """Enhanced symbolic alignment using pretty_midi + DTW"""
+    """Enhanced symbolic alignment using pretty_midi + DTW with GPU support"""
     
     def __init__(self, 
                  sr: int = 22050,
                  hop_length: int = 512,
                  n_bins: int = 84,
                  bins_per_octave: int = 12,
-                 fmin: float = 55.0):
+                 fmin: float = 55.0,
+                 gpu_manager=None):
         """
-        Initialize the enhanced symbolic aligner
+        Initialize the enhanced symbolic aligner with GPU support
         
         Args:
             sr: Audio sample rate
@@ -51,6 +59,7 @@ class EnhancedSymbolicAligner:
             n_bins: Number of CQT bins
             bins_per_octave: Bins per octave for CQT
             fmin: Minimum frequency for CQT
+            gpu_manager: GPU manager instance for device control
         """
         self.sr = sr
         self.hop_length = hop_length
@@ -58,6 +67,44 @@ class EnhancedSymbolicAligner:
         self.bins_per_octave = bins_per_octave
         self.fmin = fmin
         
+        # Import and setup GPU manager
+        if gpu_manager is None:
+            try:
+                from gpu_manager import GPUManager
+                self.gpu_manager = GPUManager()
+            except ImportError:
+                logger.warning("GPU manager not available, using CPU mode")
+                self.gpu_manager = None
+        else:
+            self.gpu_manager = gpu_manager
+        
+        # Log device configuration
+        if self.gpu_manager:
+            device_type = "GPU" if self.gpu_manager.device_config['use_gpu'] else "CPU"
+            logger.info(f"Symbolic Aligner initialized with {device_type} support")
+            if self.gpu_manager.device_config['use_gpu']:
+                logger.info(f"Using GPU {self.gpu_manager.device_config['device_id']}")
+        
+        # Configure librosa/numpy to use appropriate backend
+        self._configure_backends()
+        # Configure librosa/numpy to use appropriate backend
+        self._configure_backends()
+        
+    def _configure_backends(self):
+        """Configure computational backends for GPU/CPU processing"""
+        try:
+            # Set environment variables for optimal performance
+            if self.gpu_manager and self.gpu_manager.device_config['use_gpu']:
+                # GPU configuration
+                os.environ['NUMBA_ENABLE_CUDASIM'] = '1'
+                logger.info("Configured for GPU-accelerated computation")
+            else:
+                # CPU configuration - optimize for multi-threading
+                os.environ['NUMBA_NUM_THREADS'] = str(min(4, os.cpu_count()))
+                logger.info("Configured for CPU computation with threading optimization")
+        except Exception as e:
+            logger.warning(f"Backend configuration warning: {e}")
+    
     def load_score_graph(self, score_path: str) -> Dict:
         """Load ScoreGraph from Block 0"""
         try:

@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-Block 1: PROPERLY WORKING AMT with Basic Pitch
+Block 1: PROPERLY WORKING AMT with Basic Pitch (GPU-Ready)
 
 This version uses the correct Basic Pitch API and properly handles the output format.
+Enhanced with GPU detection, automatic fallback, and memory management.
 Based on successful CLI testing, this should work end-to-end.
 """
 
@@ -14,13 +15,41 @@ import pandas as pd
 from pathlib import Path
 import tempfile
 import shutil
+import os
+import sys
 
-def transcribe_audio_basic_pitch(audio_path: str, output_dir: str = None) -> dict:
+# Add parent directory to path for GPU manager import
+parent_dir = Path(__file__).parent.parent.parent
+sys.path.append(str(parent_dir))
+
+def transcribe_audio_basic_pitch(audio_path: str, output_dir: str = None, gpu_manager=None) -> dict:
     """
     Transcribe audio using Basic Pitch CLI (which we know works)
+    Enhanced with GPU support and automatic device selection
     Then parse the output files to get structured data
     """
     print(f"🚀 Starting Basic Pitch transcription of {audio_path}")
+    
+    # Import GPU manager if not provided
+    if gpu_manager is None:
+        try:
+            from gpu_manager import GPUManager
+            gpu_manager = GPUManager()
+        except ImportError:
+            print("⚠️ GPU manager not available, using default settings")
+            gpu_manager = None
+    
+    # Log device configuration
+    if gpu_manager:
+        device_type = "GPU" if gpu_manager.device_config['use_gpu'] else "CPU"
+        print(f"🎯 AMT Device: {device_type}")
+        if gpu_manager.device_config['use_gpu']:
+            print(f"📱 GPU ID: {gpu_manager.device_config['device_id']}")
+            
+            # Monitor GPU memory before transcription
+            memory_info = gpu_manager.monitor_gpu_memory()
+            if memory_info:
+                print(f"💾 GPU Memory: {memory_info['used_memory_mb']}/{memory_info['total_memory_mb']} MB")
     
     # Create temporary directory if no output specified
     if output_dir is None:
@@ -32,7 +61,7 @@ def transcribe_audio_basic_pitch(audio_path: str, output_dir: str = None) -> dic
         Path(output_dir).mkdir(parents=True, exist_ok=True)
     
     try:
-        # Run Basic Pitch CLI
+        # Prepare Basic Pitch command
         print("🎵 Running Basic Pitch CLI...")
         cmd = [
             'basic-pitch', 
@@ -42,11 +71,25 @@ def transcribe_audio_basic_pitch(audio_path: str, output_dir: str = None) -> dic
             '--save-note-events'
         ]
         
+        # Add GPU/device specific options if available
+        if gpu_manager and gpu_manager.device_config['use_gpu']:
+            # Set environment variables for GPU usage
+            env = os.environ.copy()
+            env['CUDA_VISIBLE_DEVICES'] = str(gpu_manager.device_config['device_id'])
+            # Basic Pitch should automatically use GPU if available
+            print(f"🎮 Using GPU {gpu_manager.device_config['device_id']} for transcription")
+        else:
+            env = os.environ.copy()
+            # Force CPU mode if needed
+            env['CUDA_VISIBLE_DEVICES'] = ''
+            print("💻 Using CPU for transcription")
+        
         result = subprocess.run(
             cmd,
             capture_output=True,
             text=True,
-            timeout=120  # 2 minute timeout
+            timeout=300,  # Increased timeout for GPU operations
+            env=env
         )
         
         if result.returncode != 0:
