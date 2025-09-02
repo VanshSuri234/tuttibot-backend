@@ -204,9 +204,14 @@ def block_0_scoregraph(musicxml_path, output_dir, logger):
             json.dump(scoregraph, f, indent=2)
         
         logger.info(f"✅ Block 0 completed successfully")
-        logger.info(f"   Total measures: {scoregraph.get('total_measures', 'N/A')}")
-        logger.info(f"   Total beats: {scoregraph.get('total_beats', 'N/A')}")
+        logger.info(f"   Total measures: {scoregraph.get('metadata', {}).get('total_measures', len(scoregraph.get('bars', [])))}")
+        logger.info(f"   Total beat nodes: {len(scoregraph.get('nodes', []))}")
+        logger.info(f"   Total note nodes: {len(scoregraph.get('musical_notes', []))}")
+        logger.info(f"   Total nodes: {len(scoregraph.get('nodes', [])) + len(scoregraph.get('musical_notes', []))}")
         logger.info(f"   ScoreGraph saved: {scoregraph_path}")
+        if scoregraph.get('musical_notes'):
+            sample_note = scoregraph['musical_notes'][0]
+            logger.info(f"   Sample notes: {sample_note.get('pitch_name', 'Unknown')} (MIDI {sample_note.get('pitch', 0)}) at {sample_note.get('offset_seconds', 0):.3f}s")
         
         return {
             'scoregraph_path': scoregraph_path,
@@ -263,9 +268,18 @@ def block_1_amt(audio_path, output_dir, gpu_manager, logger):
         logger.info(f"   Duration: {transcription_result.get('total_duration', 'N/A')}s")
         logger.info(f"   Transcription saved: {transcription_json_path}")
         
+        # Extract MIDI path from metadata if available
+        midi_path = transcription_result.get('midi_path')
+        if not midi_path and 'metadata' in transcription_result:
+            metadata = transcription_result['metadata']
+            if 'source_files' in metadata and 'midi' in metadata['source_files']:
+                midi_path = metadata['source_files']['midi']
+        
+        logger.info(f"   🎹 MIDI path extracted: {midi_path}")
+        
         return {
             'transcription_json_path': transcription_json_path,
-            'midi_path': transcription_result.get('midi_path'),
+            'midi_path': midi_path,
             'transcription': transcription_result
         }
         
@@ -290,6 +304,16 @@ def block_2_alignment(scoregraph_path, transcription_result, output_dir, gpu_man
         
         # Get MIDI path from transcription result
         midi_path = transcription_result.get('midi_path')
+        
+        # Debug the transcription result structure
+        logger.info(f"   🎹 Debug - transcription_result keys: {list(transcription_result.keys())}")
+        logger.info(f"   🎹 Debug - midi_path from transcription: {transcription_result.get('midi_path')}")
+        if 'transcription' in transcription_result:
+            transcription_metadata = transcription_result['transcription']
+            logger.info(f"   🎹 Debug - transcription metadata keys: {list(transcription_metadata.keys())}")
+            if 'metadata' in transcription_metadata:
+                meta = transcription_metadata['metadata']
+                logger.info(f"   🎹 Debug - metadata has source_files: {meta.get('source_files', {})}")
         
         logger.info(f"Performing symbolic alignment...")
         logger.info(f"   Score graph: {scoregraph_path}")
@@ -479,7 +503,7 @@ def main():
         # Block 2: Alignment with GPU support
         block2_results = block_2_alignment(
             block0_results['scoregraph_path'],
-            block1_results['transcription'],
+            block1_results,  # Pass the full Block 1 results, not just transcription
             output_dir,
             gpu_manager,
             logger

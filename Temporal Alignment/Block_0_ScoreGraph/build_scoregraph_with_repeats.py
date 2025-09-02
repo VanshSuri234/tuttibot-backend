@@ -2,6 +2,64 @@ import argparse
 import json
 from typing import Dict, List, Any
 
+def extract_musical_notes(part, tempo=120.0):
+    """Extract musical notes with precise timing from music21 part"""
+    notes = []
+    
+    try:
+        from music21 import note, chord, duration, tempo as music21_tempo
+    except ImportError:
+        return notes
+    
+    # Get tempo marking if available
+    tempo_markings = part.flat.getElementsByClass(music21_tempo.TempoIndication)
+    if tempo_markings:
+        tempo = tempo_markings[0].number
+    
+    def beats_to_seconds(beats, tempo_bpm):
+        """Convert beats to seconds using tempo"""
+        return (beats * 60.0) / tempo_bpm
+    
+    # Extract notes and chords
+    for element in part.flat.notesAndRests:
+        if isinstance(element, note.Note):
+            # Single note
+            offset_beats = float(element.offset)
+            duration_beats = float(element.duration.quarterLength)
+            
+            note_data = {
+                'type': 'note',
+                'pitch': element.pitch.midi,
+                'pitch_name': str(element.pitch),
+                'offset_beats': offset_beats,
+                'offset_seconds': beats_to_seconds(offset_beats, tempo),
+                'duration_beats': duration_beats,
+                'duration_seconds': beats_to_seconds(duration_beats, tempo),
+                'velocity': 64  # Default velocity
+            }
+            notes.append(note_data)
+            
+        elif isinstance(element, chord.Chord):
+            # Chord - create one entry per note
+            offset_beats = float(element.offset)
+            duration_beats = float(element.duration.quarterLength)
+            
+            for pitch in element.pitches:
+                note_data = {
+                    'type': 'chord_note',
+                    'pitch': pitch.midi,
+                    'pitch_name': str(pitch),
+                    'offset_beats': offset_beats,
+                    'offset_seconds': beats_to_seconds(offset_beats, tempo),
+                    'duration_beats': duration_beats,
+                    'duration_seconds': beats_to_seconds(duration_beats, tempo),
+                    'velocity': 64,  # Default velocity
+                    'chord_size': len(element.pitches)
+                }
+                notes.append(note_data)
+    
+    return notes
+
 def build_scoregraph(score_path, meta_path, seg_path=None):
     """Build ScoreGraph using music21 with full repeat expansion"""
     
@@ -96,6 +154,9 @@ def build_scoregraph(score_path, meta_path, seg_path=None):
     key_signature = meta.get('key_signature', None)
     tuning_hz = meta.get('tuning_hz', 440)
     
+    # Extract musical notes with timing information
+    musical_notes = extract_musical_notes(part)
+    
     # Mapping helpers
     maps = {
         'bar_beat_to_abs_beat': {f"{n['bar']},{n['beat']}": n['abs_beat'] for n in nodes},
@@ -103,8 +164,15 @@ def build_scoregraph(score_path, meta_path, seg_path=None):
     }
     
     scoregraph = {
+        'metadata': {
+            'total_measures': len(bars),
+            'total_notes': len(musical_notes),
+            'key_signature': key_signature,
+            'tuning_hz': tuning_hz
+        },
         'bars': bars,
         'nodes': nodes,
+        'musical_notes': musical_notes,
         'tempo_marks': tempo_marks,
         'key_signature': key_signature,
         'tuning_hz': tuning_hz,
@@ -125,9 +193,11 @@ def main():
     with open('scoregraph.json', 'w') as f:
         json.dump(scoregraph, f, indent=2)
     
-    print(f'✅ ScoreGraph built with repeat expansion!')
+    print(f'✅ ScoreGraph built with {len(scoregraph["bars"])} bars, {len(scoregraph["nodes"])} beats, {len(scoregraph.get("musical_notes", []))} notes')
     print(f'Total measures: {len(scoregraph["bars"])}')
-    print(f'Total nodes: {len(scoregraph["nodes"])}')
+    print(f'Total beat nodes: {len(scoregraph["nodes"])}')
+    print(f'Total note nodes: {len(scoregraph.get("musical_notes", []))}')
+    print(f'Total nodes: {len(scoregraph["nodes"]) + len(scoregraph.get("musical_notes", []))}')
     
     if len(scoregraph['nodes']) > 10:
         print('\nFirst 10 nodes:')
