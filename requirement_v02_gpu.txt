@@ -2,7 +2,7 @@
 # Install with: pip install -r requirement_v02_gpu.txt
 
 # Core Dependencies
-numpy>=1.21.0
+numpy>=1.21.0,<2.0.0  # Compatible with TensorFlow and opencv
 scipy>=1.7.0
 pandas>=1.3.0
 
@@ -42,6 +42,10 @@ argparse>=1.4.0
 # pytest>=6.0.0
 # jupyter>=1.0.0
 
+# PDF Processing (for direct PDF score input)
+pdf2image>=1.16.0  # PDF to image conversion
+oemer>=0.1.8       # Optical Music Recognition (OMR)
+
 # GPU-specific optimizations (optional but recommended)
 # CUDA-accelerated libraries (will use CPU versions if CUDA not available)
 numba>=0.56.0  # For GPU-accelerated numerical computations
@@ -51,3 +55,5 @@ numba>=0.56.0  # For GPU-accelerated numerical computations
 # - CPU versions will be used as fallback if no GPU is detected
 # - All libraries are compatible with both local systems and HPC environments
 # - For SLURM/HPC: ensure CUDA modules are loaded before installation
+# - For PDF processing: requires poppler-utils (install: sudo apt install poppler-utils)
+# - Recommended: Use Python 3.11 for best compatibility with all dependencies

@@ -233,10 +233,14 @@ def input_layer(score_path, score_type, audio_path, output_dir, logger):
                             ], capture_output=True, text=True)
                             
                             if result.returncode == 0:
-                                # Find generated MusicXML
-                                generated_files = glob.glob(os.path.join(os.path.dirname(musicxml_output_path), "*.musicxml"))
-                                if generated_files:
-                                    shutil.copy2(generated_files[0], musicxml_output_path)
+                                # Find generated MusicXML files (both .xml and .musicxml)
+                                import glob as glob_module
+                                output_dir = os.path.dirname(musicxml_output_path)
+                                xml_files = glob_module.glob(os.path.join(output_dir, "*.musicxml"))
+                                xml_files.extend(glob_module.glob(os.path.join(output_dir, "*.xml")))
+                                
+                                if xml_files:
+                                    shutil.copy2(xml_files[0], musicxml_output_path)
                                     pdf_converted = True
                                     logger.info(f"✅ PDF converted using oemer: {score_path} -> {musicxml_output_path}")
                                 else:

@@ -2,7 +2,7 @@ import argparse
 import json
 from typing import Dict, List, Any
 
-def extract_musical_notes(part, tempo=120.0):
+def extract_musical_notes(part, default_tempo=120.0):
     """Extract musical notes with precise timing from music21 part"""
     notes = []
     
@@ -11,10 +11,15 @@ def extract_musical_notes(part, tempo=120.0):
     except ImportError:
         return notes
     
-    # Get tempo marking if available
+    # Get tempo marking if available, default to 120 BPM
+    tempo = default_tempo  # Default tempo
     tempo_markings = part.flat.getElementsByClass(music21_tempo.TempoIndication)
     if tempo_markings:
         tempo = tempo_markings[0].number
+    
+    # Ensure tempo is not None
+    if tempo is None:
+        tempo = default_tempo
     
     def beats_to_seconds(beats, tempo_bpm):
         """Convert beats to seconds using tempo"""
