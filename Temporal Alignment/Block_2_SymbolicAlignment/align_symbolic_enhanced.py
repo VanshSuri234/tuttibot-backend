@@ -133,17 +133,32 @@ class EnhancedSymbolicAligner:
             midi = pretty_midi.PrettyMIDI()
             instrument = pretty_midi.Instrument(program=0)  # Piano
             
-            # Extract notes from score graph
-            for node in score_graph.get('nodes', []):
-                if 'pitch' in node and 'start_time' in node and 'duration' in node:
-                    # Create note
-                    note = pretty_midi.Note(
-                        velocity=80,
-                        pitch=int(node['pitch']),
-                        start=float(node['start_time']),
-                        end=float(node['start_time'] + node['duration'])
-                    )
-                    instrument.notes.append(note)
+            # Extract notes from musical_notes section of score graph
+            musical_notes = score_graph.get('musical_notes', [])
+            if not musical_notes:
+                logger.warning("No musical_notes found in score_graph, trying nodes")
+                # Fallback to old method for backward compatibility
+                for node in score_graph.get('nodes', []):
+                    if 'pitch' in node and 'start_time' in node and 'duration' in node:
+                        note = pretty_midi.Note(
+                            velocity=80,
+                            pitch=int(node['pitch']),
+                            start=float(node['start_time']),
+                            end=float(node['start_time'] + node['duration'])
+                        )
+                        instrument.notes.append(note)
+            else:
+                # Use musical_notes from Block 0
+                for musical_note in musical_notes:
+                    if 'pitch' in musical_note and 'offset_seconds' in musical_note and 'duration_seconds' in musical_note:
+                        # Create note using the correct field names
+                        note = pretty_midi.Note(
+                            velocity=musical_note.get('velocity', 80),
+                            pitch=int(musical_note['pitch']),
+                            start=float(musical_note['offset_seconds']),
+                            end=float(musical_note['offset_seconds'] + musical_note['duration_seconds'])
+                        )
+                        instrument.notes.append(note)
             
             midi.instruments.append(instrument)
             logger.info(f"Converted ScoreGraph to MIDI with {len(instrument.notes)} notes")

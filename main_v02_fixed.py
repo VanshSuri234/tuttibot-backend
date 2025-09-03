@@ -24,6 +24,7 @@ import argparse
 import logging
 import traceback
 import shutil
+import glob
 from pathlib import Path
 from datetime import datetime
 
@@ -97,9 +98,10 @@ def create_output_structure(base_output_dir):
     
     return output_dir
 
-def input_layer(pdf_path, audio_path, output_dir, logger):
+def input_layer(score_path, score_type, audio_path, output_dir, logger):
     """
-    Input Layer: Convert PDF to MusicXML and prepare inputs for processing
+    Input Layer: Convert score to MusicXML and prepare inputs for processing
+    Supports PDF, MusicXML, and MIDI inputs
     """
     logger.info("=" * 60)
     logger.info("STARTING INPUT LAYER")
@@ -108,58 +110,167 @@ def input_layer(pdf_path, audio_path, output_dir, logger):
     try:
         input_output_dir = os.path.join(output_dir, 'input_layer')
         
-        # Convert PDF to MusicXML (simplified approach for now)
-        # For this demo, we'll copy an existing MusicXML file as a placeholder
-        # In a full implementation, this would use Audiveris or similar OMR
+        # Process score based on type
+        musicxml_output_path = os.path.join(input_output_dir, "converted_score.musicxml")
         
-        # Look for an existing MusicXML file to use as converted result
-        test_musicxml = os.path.join(project_root, "test.musicxml")
-        if os.path.exists(test_musicxml):
-            musicxml_filename = "converted_score.musicxml"
-            musicxml_output_path = os.path.join(input_output_dir, musicxml_filename)
-            shutil.copy2(test_musicxml, musicxml_output_path)
-            logger.info(f"📄 PDF conversion simulated: {pdf_path} -> {musicxml_output_path}")
-        else:
-            # Fallback: create a minimal MusicXML file
-            musicxml_output_path = os.path.join(input_output_dir, "minimal_score.musicxml")
-            minimal_musicxml = '''<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.1 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">
-<score-partwise version="3.1">
-  <part-list>
-    <score-part id="P1">
-      <part-name>Piano</part-name>
-    </score-part>
-  </part-list>
-  <part id="P1">
-    <measure number="1">
-      <attributes>
-        <divisions>1</divisions>
-        <key>
-          <fifths>0</fifths>
-        </key>
-        <time>
-          <beats>4</beats>
-          <beat-type>4</beat-type>
-        </time>
-        <clef>
-          <sign>G</sign>
-          <line>2</line>
-        </clef>
-      </attributes>
-      <note>
-        <pitch>
-          <step>C</step>
-          <octave>4</octave>
-        </pitch>
-        <duration>4</duration>
-        <type>whole</type>
-      </note>
-    </measure>
-  </part>
-</score-partwise>'''
-            with open(musicxml_output_path, 'w') as f:
-                f.write(minimal_musicxml)
-            logger.info(f"📄 Created minimal MusicXML as PDF conversion placeholder")
+        if score_type == 'musicxml':
+            # Direct copy for MusicXML files
+            shutil.copy2(score_path, musicxml_output_path)
+            logger.info(f"📄 MusicXML file copied: {score_path} -> {musicxml_output_path}")
+            
+        elif score_type == 'midi':
+            # Convert MIDI to MusicXML using music21
+            try:
+                import music21
+                logger.info(f"🎹 Converting MIDI to MusicXML: {score_path}")
+                midi_stream = music21.converter.parse(score_path)
+                midi_stream.write('musicxml', fp=musicxml_output_path)
+                logger.info(f"✅ MIDI converted to MusicXML: {score_path} -> {musicxml_output_path}")
+            except ImportError:
+                raise Exception("music21 library required for MIDI conversion. Please install: pip install music21")
+            except Exception as e:
+                logger.error(f"❌ MIDI conversion failed: {e}")
+                raise Exception(f"Cannot process MIDI file: {e}. Please check the MIDI file format.")
+                
+        elif score_type == 'pdf':
+            # PDF conversion using available OMR tools
+            logger.info(f"🔄 Converting PDF to MusicXML: {score_path}")
+            
+            # Try multiple methods in order of preference
+            pdf_converted = False
+            conversion_error = None
+            
+            # Method 1: Docker + Audiveris (most reliable)
+            try:
+                import docker
+                client = docker.from_env()
+                
+                # Check if Audiveris image is available
+                try:
+                    client.images.get('toprock/audiveris')
+                    logger.info("📦 Using Docker + Audiveris for PDF conversion")
+                    
+                    # Create temporary directories
+                    import tempfile
+                    input_dir = tempfile.mkdtemp(prefix="audiveris_input_")
+                    output_dir = tempfile.mkdtemp(prefix="audiveris_output_")
+                    
+                    try:
+                        # Copy PDF to input directory
+                        input_pdf = os.path.join(input_dir, os.path.basename(score_path))
+                        shutil.copy2(score_path, input_pdf)
+                        
+                        # Run Audiveris container
+                        logger.info(f"Running Audiveris on {os.path.basename(score_path)}")
+                        container = client.containers.run(
+                            'toprock/audiveris',
+                            command=f"-batch -export /input/{os.path.basename(score_path)}",
+                            volumes={
+                                input_dir: {'bind': '/input', 'mode': 'ro'},
+                                output_dir: {'bind': '/output', 'mode': 'rw'}
+                            },
+                            remove=True,
+                            detach=False
+                        )
+                        logger.info("Audiveris container execution completed")
+                        
+                        # Find generated MusicXML files
+                        import glob
+                        mxl_files = glob.glob(os.path.join(output_dir, "*.mxl")) + glob.glob(os.path.join(output_dir, "*.xml"))
+                        logger.info(f"Audiveris output directory contents: {os.listdir(output_dir)}")
+                        logger.info(f"Found MusicXML files: {mxl_files}")
+                        
+                        if mxl_files:
+                            # Copy the first MusicXML file to target location
+                            shutil.copy2(mxl_files[0], musicxml_output_path)
+                            pdf_converted = True
+                            logger.info(f"✅ PDF converted using Docker + Audiveris: {score_path} -> {musicxml_output_path}")
+                        else:
+                            conversion_error = "Audiveris did not generate any MusicXML files"
+                            
+                    finally:
+                        # Cleanup temporary directories
+                        shutil.rmtree(input_dir, ignore_errors=True)
+                        shutil.rmtree(output_dir, ignore_errors=True)
+                        client.close()
+                        
+                except docker.errors.ImageNotFound:
+                    logger.warning("Audiveris Docker image not found, trying to pull...")
+                    try:
+                        client.images.pull('toprock/audiveris')
+                        logger.info("✅ Audiveris image pulled successfully, retrying conversion...")
+                        # Could retry the conversion here, but for simplicity, fall through to next method
+                        conversion_error = "Audiveris image was just pulled, please retry the command"
+                    except Exception as pull_error:
+                        conversion_error = f"Failed to pull Audiveris image: {pull_error}"
+                        
+            except ImportError:
+                conversion_error = "Docker not available (install: pip install docker)"
+            except Exception as docker_error:
+                conversion_error = f"Docker + Audiveris failed: {docker_error}"
+            
+            # Method 2: oemer (fallback)
+            if not pdf_converted:
+                try:
+                    logger.info("📦 Trying oemer for PDF conversion...")
+                    
+                    # Convert PDF to image first
+                    try:
+                        from pdf2image import convert_from_path
+                        images = convert_from_path(score_path, dpi=300)
+                        
+                        if images:
+                            # Save first page as image
+                            temp_image = os.path.join(os.path.dirname(musicxml_output_path), "temp_page.png")
+                            images[0].save(temp_image, 'PNG')
+                            
+                            # Run oemer on the image
+                            import subprocess
+                            result = subprocess.run([
+                                'oemer', temp_image, 
+                                '-o', os.path.dirname(musicxml_output_path),
+                                '--use-tf'  # Use TensorFlow instead of ONNX (may be more stable)
+                            ], capture_output=True, text=True)
+                            
+                            if result.returncode == 0:
+                                # Find generated MusicXML
+                                generated_files = glob.glob(os.path.join(os.path.dirname(musicxml_output_path), "*.musicxml"))
+                                if generated_files:
+                                    shutil.copy2(generated_files[0], musicxml_output_path)
+                                    pdf_converted = True
+                                    logger.info(f"✅ PDF converted using oemer: {score_path} -> {musicxml_output_path}")
+                                else:
+                                    conversion_error = "oemer did not generate MusicXML file"
+                            else:
+                                conversion_error = f"oemer failed: {result.stderr}"
+                            
+                            # Cleanup temp image
+                            if os.path.exists(temp_image):
+                                os.remove(temp_image)
+                        else:
+                            conversion_error = "Failed to convert PDF to images"
+                            
+                    except ImportError:
+                        conversion_error = "pdf2image not available (install: pip install pdf2image)"
+                        
+                except Exception as oemer_error:
+                    conversion_error = f"oemer conversion failed: {oemer_error}"
+            
+            # If all methods failed
+            if not pdf_converted:
+                logger.error(f"❌ PDF conversion failed: {conversion_error}")
+                raise Exception(
+                    f"PDF conversion failed. Error: {conversion_error}\n\n"
+                    f"To enable PDF conversion:\n"
+                    f"1. Install Docker + Audiveris: docker pull toprock/audiveris\n"
+                    f"2. Or install oemer: pip install pdf2image oemer\n"
+                    f"3. Or convert PDF to MusicXML manually using MuseScore\n"
+                    f"Current PDF file: {score_path}"
+                )
+        
+        # Verify the conversion was successful
+        if not os.path.exists(musicxml_output_path):
+            raise Exception(f"Score conversion failed - no MusicXML output generated from {score_path}")
         
         # Copy audio file to output structure
         audio_filename = os.path.basename(audio_path)
@@ -167,14 +278,15 @@ def input_layer(pdf_path, audio_path, output_dir, logger):
         shutil.copy2(audio_path, audio_output_path)
         
         logger.info(f"✅ Input Layer completed successfully")
-        logger.info(f"   PDF: {pdf_path}")
+        logger.info(f"   Score ({score_type.upper()}): {score_path}")
         logger.info(f"   MusicXML: {musicxml_output_path}")
         logger.info(f"   Audio: {audio_output_path}")
         
         return {
             'musicxml_path': musicxml_output_path,
             'audio_path': audio_output_path,
-            'original_pdf_path': pdf_path
+            'original_score_path': score_path,
+            'score_type': score_type
         }
         
     except Exception as e:
@@ -350,9 +462,16 @@ def block_2_alignment(scoregraph_path, transcription_result, output_dir, gpu_man
             gpu_manager.cleanup_gpu_memory()
         
         logger.info(f"✅ Block 2 completed successfully")
-        logger.info(f"   Alignment confidence: {alignment_result.get('confidence', 'N/A')}")
-        logger.info(f"   DTW distance: {alignment_result.get('dtw_distance', 'N/A')}")
-        logger.info(f"   Path length: {len(alignment_result.get('alignment_path', []))}")
+        
+        # Extract alignment metrics from the nested structure
+        alignment_data = alignment_result.get('alignment', {})
+        confidence = alignment_data.get('confidence', 'N/A')
+        dtw_distance = alignment_data.get('dtw_distance', 'N/A')
+        warping_path = alignment_data.get('warping_path', [])
+        
+        logger.info(f"   Alignment confidence: {confidence}")
+        logger.info(f"   DTW distance: {dtw_distance}")
+        logger.info(f"   Path length: {len(warping_path)}")
         logger.info(f"   Alignment saved: {alignment_json_path}")
         
         return {
@@ -385,12 +504,12 @@ def create_final_output(output_dir, scoregraph, transcription, alignment, logger
             'pipeline_version': '2.0.1',
             'status': 'completed',
             'summary': {
-                'total_measures': scoregraph.get('total_measures', 0),
-                'total_score_beats': scoregraph.get('total_beats', 0),
+                'total_measures': scoregraph.get('metadata', {}).get('total_measures', len(scoregraph.get('bars', []))),
+                'total_score_beats': len(scoregraph.get('nodes', [])),
                 'detected_notes': len(transcription.get('notes', [])),
-                'alignment_confidence': alignment.get('confidence', 0.0),
-                'dtw_distance': alignment.get('dtw_distance', float('inf')),
-                'alignment_path_length': len(alignment.get('alignment_path', []))
+                'alignment_confidence': alignment.get('alignment', {}).get('confidence', 0.0),
+                'dtw_distance': alignment.get('alignment', {}).get('dtw_distance', float('inf')),
+                'alignment_path_length': len(alignment.get('alignment', {}).get('warping_path', []))
             },
             'scoregraph': scoregraph,
             'transcription': transcription,
@@ -431,7 +550,13 @@ def create_final_output(output_dir, scoregraph, transcription, alignment, logger
 
 def main():
     parser = argparse.ArgumentParser(description='TuttiBot v02 - Temporal Alignment Pipeline (Fixed Version)')
-    parser.add_argument('--pdf', required=True, help='Path to input PDF score')
+    
+    # Score input - make mutually exclusive
+    score_group = parser.add_mutually_exclusive_group(required=True)
+    score_group.add_argument('--pdf', help='Path to input PDF score')
+    score_group.add_argument('--musicxml', help='Path to input MusicXML score')
+    score_group.add_argument('--midi', help='Path to input MIDI score')
+    
     parser.add_argument('--audio', required=True, help='Path to input audio performance')
     parser.add_argument('--output', default='./Output', help='Output directory (default: ./Output)')
     
@@ -443,9 +568,23 @@ def main():
     
     args = parser.parse_args()
     
+    # Determine score file and type
+    score_file = None
+    score_type = None
+    
+    if args.pdf:
+        score_file = args.pdf
+        score_type = 'pdf'
+    elif args.musicxml:
+        score_file = args.musicxml
+        score_type = 'musicxml'
+    elif args.midi:
+        score_file = args.midi
+        score_type = 'midi'
+    
     # Validate inputs
-    if not os.path.exists(args.pdf):
-        print(f"❌ Error: PDF file not found: {args.pdf}")
+    if not os.path.exists(score_file):
+        print(f"❌ Error: Score file not found: {score_file}")
         sys.exit(1)
     
     if not os.path.exists(args.audio):
@@ -470,7 +609,7 @@ def main():
     print("\n" + "=" * 70)
     print("🎼 TuttiBot v02 - Temporal Alignment Pipeline (GPU-Ready)")
     print("=" * 70)
-    print(f"Input PDF: {args.pdf}")
+    print(f"Input Score ({score_type.upper()}): {score_file}")
     print(f"Input Audio: {args.audio}")
     print(f"Output Directory: {output_dir}")
     print(f"Processing Mode: {'GPU' if gpu_manager.device_config['use_gpu'] else 'CPU'}")
@@ -482,8 +621,8 @@ def main():
         # Execute pipeline
         logger.info("🚀 Starting TuttiBot v02 Pipeline")
         
-        # Input Layer - Convert PDF to MusicXML
-        input_results = input_layer(args.pdf, args.audio, output_dir, logger)
+        # Input Layer - Process score to MusicXML
+        input_results = input_layer(score_file, score_type, args.audio, output_dir, logger)
         
         # Block 0: ScoreGraph
         block0_results = block_0_scoregraph(
