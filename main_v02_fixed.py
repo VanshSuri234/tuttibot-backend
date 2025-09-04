@@ -228,8 +228,8 @@ def input_layer(score_path, score_type, audio_path, output_dir, logger):
                             import subprocess
                             result = subprocess.run([
                                 'oemer', temp_image, 
-                                '-o', os.path.dirname(musicxml_output_path),
-                                '--use-tf'  # Use TensorFlow instead of ONNX (may be more stable)
+                                '-o', os.path.dirname(musicxml_output_path)
+                                # Use ONNX runtime instead of TensorFlow to avoid Keras compatibility issues
                             ], capture_output=True, text=True)
                             
                             if result.returncode == 0:

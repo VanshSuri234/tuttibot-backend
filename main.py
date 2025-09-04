@@ -95,6 +95,7 @@ class TuttiBotPipeline:
             print(f"✅ Audio processed: {results['audio']['message']}")
             print(f"✅ Score processed: {results['score']['message']}")
             print(f"📁 Results saved to: {self.input_dir}")
+            print(f"⏱️  Input layer processing time: Fast direct CLI method")
             
             return str(audio_output), str(score_output)
             

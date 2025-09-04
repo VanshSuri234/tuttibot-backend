@@ -182,9 +182,21 @@ class AudioProcessor:
     def segment_audio(self, audio_path: str) -> List[AudioSegment]:
         """Segment audio using energy-based detection with auditok"""
         try:
-            # Use auditok for audio activity detection
+            # Convert audio to a format auditok can handle reliably
+            import tempfile
+            import soundfile as sf
+            
+            # Read audio with soundfile and resave in a clean format
+            data, sr = sf.read(audio_path)
+            
+            # Create a temporary file with clean WAV format
+            with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as tmp_file:
+                sf.write(tmp_file.name, data, sr, format='WAV', subtype='PCM_16')
+                clean_audio_path = tmp_file.name
+            
+            # Use auditok for audio activity detection on the clean file
             audio_events = auditok.split(
-                audio_path,
+                clean_audio_path,
                 min_dur=0.2,  # Minimum duration: 200ms
                 max_dur=10.0,  # Maximum duration: 10s
                 max_silence=0.5,  # Max silence within segment: 500ms
@@ -201,6 +213,10 @@ class AudioProcessor:
                     segment_type="detected_audio"
                 )
                 segments.append(segment)
+            
+            # Clean up temporary file
+            import os
+            os.unlink(clean_audio_path)
             
             print(f"Audio segmentation completed: {len(segments)} segments found")
             return segments
@@ -222,9 +238,22 @@ class MusicProcessor:
             # Parse the music file
             score = converter.parse(music_path)
             
-            # Extract notes
+            # Extract notes using the proper music21 method
             notes_list = []
-            for element in score.flatten().notesAndRests:
+            
+            # Use the correct music21 approach to get all notes and rests
+            # First, check if score has parts (multi-part score)
+            if hasattr(score, 'parts') and len(score.parts) > 0:
+                # Multi-part score - flatten each part and combine
+                all_elements = []
+                for part in score.parts:
+                    part_elements = part.flat.notesAndRests
+                    all_elements.extend(part_elements)
+            else:
+                # Single part score - use flat directly
+                all_elements = score.flat.notesAndRests
+            
+            for element in all_elements:
                 if hasattr(element, 'pitch'):  # It's a note
                     note_data = {
                         'pitch': element.pitch.name,
@@ -234,7 +263,7 @@ class MusicProcessor:
                         'offset': float(element.offset),
                         'velocity': getattr(element, 'velocity', 64) if hasattr(element, 'velocity') else 64
                     }
-                elif element.isRest:  # It's a rest
+                elif hasattr(element, 'isRest') and element.isRest:  # It's a rest
                     note_data = {
                         'pitch': 'rest',
                         'midi_number': -1,

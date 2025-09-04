@@ -168,6 +168,32 @@ mdurl~=0.1  # Required by markdown-it-py
 # =============
 # pip install -r requirement_v02_gpu_fixed.txt
 
+# Additional dependencies for main.py (complete pipeline)
+# ========================================================
+
+# Audio processing and noise reduction
+noisereduce>=3.0.3  # Noise reduction for processing layer
+
+# Audio normalization (requires FFmpeg)
+ffmpeg-normalize>=1.26.0  # Audio normalization
+
+# Audio segmentation and detection
+auditok>=0.2.0  # Audio activity detection and segmentation
+pydub>=0.25.0  # Audio manipulation
+
+# Advanced audio analysis
+aubio>=0.4.9  # Audio onset detection, pitch detection
+essentia-tensorflow>=2.1b6.dev1034  # Advanced audio analysis (INSTALLED: 2.1b6.dev1389)
+
+# Data visualization
+matplotlib>=3.5.0  # Plotting and visualization
+
+# Progress bars
+tqdm>=4.62.0  # Progress bars
+
+# Additional utilities
+pretty-midi>=0.2.10  # MIDI file handling
+
 # VERIFICATION:
 # =============
 # python -c "import tensorflow as tf; import torch; import librosa; import music21; print('✅ All packages imported successfully')"
