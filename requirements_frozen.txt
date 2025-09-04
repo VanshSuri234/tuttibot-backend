@@ -1,0 +1,45 @@
+# FROZEN VERSIONS - TESTED ON PYTHON 3.10.12
+# DO NOT CHANGE UNLESS TESTING THOROUGHLY
+# Generated: September 4, 2025
+
+# Core - INSTALL FIRST (Critical order!)
+numpy==1.26.4
+scipy==1.14.1
+
+# ML Framework - INSTALL SECOND  
+tensorflow==2.15.0
+tensorflow-estimator==2.15.0
+tensorflow-io-gcs-filesystem==0.37.1
+
+# Audio Processing - INSTALL THIRD
+librosa==0.10.2.post1
+soundfile==0.12.1
+basic-pitch==0.4.0
+
+# Music Processing
+music21==5.7.2
+pretty_midi==0.2.10
+
+# Scientific Computing
+pandas==1.5.3
+scikit-learn==1.5.0
+matplotlib==3.6.2
+
+# System Integration
+docker==7.1.0
+oemer==0.1.8
+requests==2.31.0
+
+# Utilities
+tqdm==4.66.4
+PyYAML==6.0.1
+
+# Optional but recommended for development
+jupyter==1.0.0
+opencv-python==4.11.0.86
+
+# NOTES:
+# - This combination tested and working on Ubuntu 20.04+ with Python 3.10.12
+# - For Python 3.11+: May have conflicts, use Docker or downgrade to Python 3.10
+# - For macOS ARM64: Use conda-forge versions instead
+# - Install order matters! Core first, then ML, then audio processing

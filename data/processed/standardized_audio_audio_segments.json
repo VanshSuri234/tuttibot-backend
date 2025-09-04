@@ -1,0 +1,42 @@
+{
+  "audio_path": "data/original/standardized_audio.wav",
+  "processed_audio_path": "data/processed/standardized_audio_processed.wav",
+  "total_segments": 3,
+  "audio_segments": [
+    {
+      "start_time": 0.0,
+      "end_time": 10.0,
+      "duration": 10.0,
+      "confidence": 1.0,
+      "segment_type": "detected_audio"
+    },
+    {
+      "start_time": 10.0,
+      "end_time": 20.0,
+      "duration": 10.0,
+      "confidence": 1.0,
+      "segment_type": "detected_audio"
+    },
+    {
+      "start_time": 20.0,
+      "end_time": 21.0,
+      "duration": 1.0,
+      "confidence": 1.0,
+      "segment_type": "detected_audio"
+    }
+  ],
+  "processing_metadata": {
+    "audio_analysis": {
+      "needs_noise_reduction": false,
+      "needs_normalization": true,
+      "needs_segmentation": true,
+      "current_db_level": -7.95959542462029,
+      "noise_estimate": 0.28162150382995604
+    },
+    "processing_steps_applied": {
+      "noise_reduction": false,
+      "normalization": true,
+      "segmentation": true
+    }
+  }
+}
