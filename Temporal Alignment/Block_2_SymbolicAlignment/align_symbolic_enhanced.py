@@ -196,6 +196,9 @@ class EnhancedSymbolicAligner:
                 fmin=self.fmin
             )
             
+            # Normalize and handle zero frames to prevent NaN
+            chroma = librosa.util.normalize(chroma + 1e-8, axis=0)
+            
             logger.info(f"Extracted chromagram: {chroma.shape}")
             return chroma
             
@@ -218,33 +221,44 @@ class EnhancedSymbolicAligner:
             chroma_bin = pitch % 12
             chroma[chroma_bin, :] += piano_roll[pitch, :]
         
-        # Normalize
-        chroma = librosa.util.normalize(chroma, axis=0)
+        # Normalize with safety epsilon to prevent NaN
+        chroma = librosa.util.normalize(chroma + 1e-8, axis=0)
         
         return chroma
     
     def dtw_alignment(self, X: np.ndarray, Y: np.ndarray, 
-                      metric: str = 'cosine') -> Tuple[np.ndarray, float]:
+                      metric: str = 'cosine',
+                      use_constraints: bool = True,
+                      band_radius: float = 0.25) -> Tuple[np.ndarray, float]:
         """
-        Perform DTW alignment using librosa
+        Perform DTW alignment with Sakoe-Chiba band constraints
         
         Args:
             X: Score features [n_features, n_frames_score]
             Y: Performance features [n_features, n_frames_perf]
             metric: Distance metric for DTW
+            use_constraints: Enable Sakoe-Chiba band for faster alignment
+            band_radius: Band radius as fraction of sequence length
             
         Returns:
             wp: Warping path array [n_path, 2]
             distance: DTW distance
         """
         try:
-            # Use librosa's DTW implementation
-            D, wp = librosa.sequence.dtw(X=X.T, Y=Y.T, metric=metric)
+            # Use librosa's DTW implementation with band constraint
+            D, wp = librosa.sequence.dtw(
+                X=X.T, 
+                Y=Y.T, 
+                metric=metric,
+                global_constraints=use_constraints,
+                band_rad=band_radius
+            )
             
             # Extract final distance
             distance = D[-1, -1]
             
-            logger.info(f"DTW completed: path length={len(wp)}, distance={distance:.4f}")
+            constraint_str = f"with band constraint (radius={band_radius})" if use_constraints else "unconstrained"
+            logger.info(f"DTW {constraint_str}: path length={len(wp)}, distance={distance:.4f}")
             return wp, distance
             
         except Exception as e:
@@ -291,14 +305,153 @@ class EnhancedSymbolicAligner:
         
         return wp, distance
     
-    def enhanced_alignment(self, score_midi: pretty_midi.PrettyMIDI,
-                          perf_midi: pretty_midi.PrettyMIDI) -> Dict:
+    def dtw_alignment_with_cost(self, C: np.ndarray,
+                                use_constraints: bool = True,
+                                band_radius: float = 0.25,
+                                weights_mul: Optional[np.ndarray] = None) -> Tuple[np.ndarray, float]:
         """
-        Perform enhanced alignment with multiple feature types
+        Perform DTW with precomputed cost matrix and optional step weights
+        
+        Args:
+            C: Precomputed cost matrix [N, M]
+            use_constraints: Enable Sakoe-Chiba band constraint
+            band_radius: Band radius as fraction of sequence length
+            weights_mul: Step weights [diagonal, horizontal, vertical]
+            
+        Returns:
+            wp: Warping path array [n_path, 2]
+            distance: DTW distance
+        """
+        try:
+            kwargs = {'C': C, 'backtrack': True}
+            
+            if use_constraints:
+                kwargs['global_constraints'] = True
+                kwargs['band_rad'] = band_radius
+            
+            if weights_mul is not None:
+                kwargs['weights_mul'] = weights_mul
+            
+            D, wp = librosa.sequence.dtw(**kwargs)
+            distance = D[-1, -1]
+            
+            logger.info(f"DTW with cost matrix: path length={len(wp)}, distance={distance:.4f}")
+            if weights_mul is not None:
+                logger.info(f"  Using adaptive weights: {weights_mul}")
+            
+            return wp, distance
+            
+        except Exception as e:
+            logger.error(f"DTW with cost matrix failed: {e}")
+            raise
+    
+    def _compute_beat_weighted_cost(self, X: np.ndarray, Y: np.ndarray,
+                                     beats_json: List[Dict]) -> np.ndarray:
+        """
+        Compute cost matrix weighted by beat confidence scores.
+        High-confidence beats receive lower cost, making them preferred alignment points.
+        
+        Args:
+            X: Score chroma features [12, N]
+            Y: Performance chroma features [12, M]
+            beats_json: List of beat dictionaries with 't' and 'confidence'
+            
+        Returns:
+            C: Weighted cost matrix [N, M]
+        """
+        # Check for NaN in input chromagrams
+        if np.isnan(X).any():
+            logger.warning("Score chromagram contains NaN values, replacing with zeros")
+            X = np.nan_to_num(X, nan=0.0)
+        if np.isnan(Y).any():
+            logger.warning("Performance chromagram contains NaN values, replacing with zeros")
+            Y = np.nan_to_num(Y, nan=0.0)
+        
+        # Compute base cost matrix (cosine distance)
+        C = cdist(X.T, Y.T, metric='cosine')
+        
+        # Check for NaN in cost matrix
+        if np.isnan(C).any():
+            logger.warning("Cost matrix contains NaN values, replacing with 1.0 (max cost)")
+            C = np.nan_to_num(C, nan=1.0)
+        
+        # Extract beat times and confidences
+        beat_times = [b['t'] for b in beats_json if 't' in b]
+        beat_confidences = [b.get('confidence', 1.0) for b in beats_json]
+        
+        # Convert beat times to frame indices
+        beat_frames = librosa.time_to_frames(
+            beat_times,
+            sr=self.sr,
+            hop_length=self.hop_length
+        )
+        
+        # Create confidence weighting mask for performance axis
+        conf_weight = np.ones(Y.shape[1])
+        
+        for frame, conf in zip(beat_frames, beat_confidences):
+            if 0 <= frame < len(conf_weight):
+                # Apply weighting in a small window around each beat
+                window_size = 2
+                start = max(0, frame - window_size)
+                end = min(len(conf_weight), frame + window_size + 1)
+                
+                # Higher confidence reduces cost (makes alignment prefer this region)
+                weight_factor = 1.0 / (1.0 + conf)
+                conf_weight[start:end] = np.minimum(conf_weight[start:end], weight_factor)
+        
+        # Apply weights to cost matrix
+        C = C * conf_weight[np.newaxis, :]
+        
+        logger.info(f"Applied beat weighting: {len(beat_frames)} beats used")
+        return C
+    
+    def _compute_adaptive_weights(self, n_frames: int, 
+                                   nodes: List[Dict]) -> Optional[np.ndarray]:
+        """
+        Compute adaptive DTW step weights based on fermata and cadence markings.
+        Reduces penalties near expressive moments to allow timing flexibility.
+        
+        Args:
+            n_frames: Number of frames in score
+            nodes: List of score nodes with potential 'flags' field
+            
+        Returns:
+            weights_mul: Array [3] for [diagonal, horizontal, vertical] step costs
+                        or None if no special markings found
+        """
+        # Count expressive markings
+        fermata_count = sum(1 for n in nodes if 'fermata' in n.get('flags', []))
+        cadence_count = sum(1 for n in nodes if 'cadence' in n.get('flags', []))
+        
+        if fermata_count == 0 and cadence_count == 0:
+            return None
+        
+        # Default step weights: [diagonal, horizontal, vertical]
+        weights = np.array([1.0, 1.0, 1.0])
+        
+        # Reduce horizontal and vertical penalties to allow more flexibility
+        flexibility_factor = 0.7
+        weights[1] *= flexibility_factor  # Allow performance stretching
+        weights[2] *= flexibility_factor  # Allow performance compression
+        
+        logger.info(f"Adaptive weights: {fermata_count} fermatas, {cadence_count} cadences")
+        logger.info(f"Step weights: diagonal={weights[0]:.2f}, horiz={weights[1]:.2f}, vert={weights[2]:.2f}")
+        
+        return weights
+    
+    def enhanced_alignment(self, score_midi: pretty_midi.PrettyMIDI,
+                          perf_midi: pretty_midi.PrettyMIDI,
+                          beats_json: Optional[List[Dict]] = None,
+                          score_graph: Optional[Dict] = None) -> Dict:
+        """
+        Perform enhanced alignment with beat weighting and fermata awareness
         
         Args:
             score_midi: Score MIDI data
             perf_midi: Performance MIDI data
+            beats_json: Optional beat detections with confidence scores
+            score_graph: Optional score graph with fermata/cadence flags
             
         Returns:
             Alignment results with time mapping and confidence scores
@@ -315,8 +468,39 @@ class EnhancedSymbolicAligner:
             score_chroma = self.midi_to_chroma(score_midi, max_duration)
             perf_chroma = self.midi_to_chroma(perf_midi, max_duration)
             
-            # Perform DTW alignment
-            wp, distance = self.dtw_alignment(score_chroma, perf_chroma)
+            # Determine alignment strategy based on available data
+            use_beat_weighting = beats_json is not None and len(beats_json) > 0
+            use_adaptive_weights = score_graph is not None and 'nodes' in score_graph
+            
+            # Perform DTW alignment with optional enhancements
+            if use_beat_weighting:
+                logger.info("Using beat-weighted cost matrix")
+                cost_matrix = self._compute_beat_weighted_cost(
+                    score_chroma, perf_chroma, beats_json
+                )
+                
+                # Get adaptive weights if available
+                adaptive_weights = None
+                if use_adaptive_weights:
+                    adaptive_weights = self._compute_adaptive_weights(
+                        score_chroma.shape[1],
+                        score_graph['nodes']
+                    )
+                
+                # Use combined cost matrix + adaptive weights
+                wp, distance = self.dtw_alignment_with_cost(
+                    cost_matrix,
+                    use_constraints=True,
+                    band_radius=0.25,
+                    weights_mul=adaptive_weights
+                )
+            else:
+                # Standard DTW with band constraints
+                wp, distance = self.dtw_alignment(
+                    score_chroma, perf_chroma,
+                    use_constraints=True,
+                    band_radius=0.25
+                )
             
             # Create time mapping
             score_times = librosa.frames_to_time(
@@ -353,6 +537,11 @@ class EnhancedSymbolicAligner:
                 'feature_shapes': {
                     'score_chroma': list(score_chroma.shape),
                     'perf_chroma': list(perf_chroma.shape)
+                },
+                'alignment_metadata': {
+                    'beat_weighting_used': use_beat_weighting,
+                    'adaptive_weights_used': use_adaptive_weights,
+                    'band_constraint_radius': 0.25
                 }
             }
             
@@ -481,34 +670,48 @@ class EnhancedSymbolicAligner:
     
     def align_score_performance(self, score_graph_path: str, 
                                performance_midi_path: str,
+                               beats_json_path: Optional[str] = None,
                                output_dir: str = "block_2_enhanced_output") -> Dict:
         """
-        Main alignment pipeline
+        Main alignment pipeline with optional beat weighting
         
         Args:
             score_graph_path: Path to ScoreGraph JSON from Block 0
             performance_midi_path: Path to performance MIDI from Block 1
+            beats_json_path: Optional path to beats JSON from Block 4
             output_dir: Output directory for results
             
         Returns:
             Complete alignment results
         """
         try:
-            logger.info("=== Enhanced Symbolic Alignment (Block 2) ===")
+            logger.info("Enhanced Symbolic Alignment (Block 2)")
             
             # Load inputs
             score_graph = self.load_score_graph(score_graph_path)
             perf_midi = self.load_performance_midi(performance_midi_path)
             
+            # Load optional beats data
+            beats_json = None
+            if beats_json_path and Path(beats_json_path).exists():
+                with open(beats_json_path, 'r') as f:
+                    beats_json = json.load(f)
+                logger.info(f"Loaded {len(beats_json)} beats with confidence scores")
+            
             # Convert score to MIDI
             score_midi = self.score_to_midi(score_graph)
             
-            # Perform alignment
-            alignment_results = self.enhanced_alignment(score_midi, perf_midi)
+            # Perform alignment with optional enhancements
+            alignment_results = self.enhanced_alignment(
+                score_midi, 
+                perf_midi,
+                beats_json=beats_json,
+                score_graph=score_graph
+            )
             
             # Create output directory
             output_path = Path(output_dir)
-            output_path.mkdir(exist_ok=True)
+            output_path.mkdir(exist_ok=True, parents=True)
             
             # Save intermediate MIDI files for inspection
             score_midi_path = output_path / "score_from_graph.mid"
@@ -522,7 +725,8 @@ class EnhancedSymbolicAligner:
             final_results = {
                 'input_files': {
                     'score_graph': score_graph_path,
-                    'performance_midi': performance_midi_path
+                    'performance_midi': performance_midi_path,
+                    'beats_json': beats_json_path if beats_json_path else None
                 },
                 'alignment': alignment_results,
                 'metadata': {
@@ -540,7 +744,7 @@ class EnhancedSymbolicAligner:
             with open(results_file, 'w') as f:
                 json.dump(final_results, f, indent=2)
             
-            logger.info(f"=== Alignment Complete! Results in {output_path} ===")
+            logger.info(f"Alignment Complete! Results in {output_path}")
             return final_results
             
         except Exception as e:
@@ -554,6 +758,7 @@ def main():
     parser = argparse.ArgumentParser(description='Enhanced Symbolic Alignment (Block 2)')
     parser.add_argument('score_graph', help='Path to ScoreGraph JSON from Block 0')
     parser.add_argument('performance_midi', help='Path to performance MIDI from Block 1')
+    parser.add_argument('--beats', help='Path to beats JSON from Block 4 (optional)')
     parser.add_argument('--output', '-o', default='block_2_enhanced_output',
                        help='Output directory')
     parser.add_argument('--sr', type=int, default=22050, help='Sample rate')
@@ -572,18 +777,26 @@ def main():
         results = aligner.align_score_performance(
             args.score_graph,
             args.performance_midi,
-            args.output
+            beats_json_path=args.beats,
+            output_dir=args.output
         )
         
-        print(f"\n✅ Enhanced alignment completed successfully!")
-        print(f"📊 Confidence: {results['alignment']['confidence']:.3f}")
-        print(f"📏 DTW Distance: {results['alignment']['dtw_distance']:.4f}")
-        print(f"⏱️  Score Duration: {results['alignment']['score_duration']:.2f}s")
-        print(f"🎵 Performance Duration: {results['alignment']['perf_duration']:.2f}s")
-        print(f"📁 Results saved to: {args.output}")
+        print("\nEnhanced alignment completed successfully")
+        print(f"Confidence: {results['alignment']['confidence']:.3f}")
+        print(f"DTW Distance: {results['alignment']['dtw_distance']:.4f}")
+        print(f"Score Duration: {results['alignment']['score_duration']:.2f}s")
+        print(f"Performance Duration: {results['alignment']['perf_duration']:.2f}s")
+        
+        metadata = results['alignment'].get('alignment_metadata', {})
+        if metadata.get('beat_weighting_used'):
+            print("Beat weighting: ENABLED")
+        if metadata.get('adaptive_weights_used'):
+            print("Fermata/cadence adaptation: ENABLED")
+        
+        print(f"Results saved to: {args.output}")
         
     except Exception as e:
-        print(f"❌ Alignment failed: {e}")
+        print(f"Alignment failed: {e}")
         return 1
     
     return 0

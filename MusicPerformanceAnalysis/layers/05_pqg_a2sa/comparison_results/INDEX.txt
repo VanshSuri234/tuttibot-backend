@@ -1,0 +1,78 @@
+======================================================================
+BACH10 COMPARISON RESULTS INDEX
+Baseline DTW vs PQG-A2SA
+======================================================================
+
+Total Pieces Processed: 5
+Successful: 5
+Failed: 0
+
+======================================================================
+FILE LISTING
+======================================================================
+
+✅ 01-AchGottundHerr
+   Audio: 01-AchGottundHerr.wav
+   Score: 01-AchGottundHerr.mid
+   Output files:
+     - 01-AchGottundHerr_dtw_cost_matrix.png
+     - 01-AchGottundHerr_error_histograms.png
+     - 01-AchGottundHerr_error_lines.png
+     - 01-AchGottundHerr_alignment_scatter.png
+     - 01-AchGottundHerr_alignment_rates.png
+     - 01-AchGottundHerr_summary.png
+     - 01-AchGottundHerr_summary.txt
+   Processing time: 13.0s
+
+✅ 02-AchLiebenChristen1
+   Audio: 02-AchLiebenChristen(1).wav
+   Score: 02-AchLiebenChristen.mid
+   Output files:
+     - 02-AchLiebenChristen1_dtw_cost_matrix.png
+     - 02-AchLiebenChristen1_error_histograms.png
+     - 02-AchLiebenChristen1_error_lines.png
+     - 02-AchLiebenChristen1_alignment_scatter.png
+     - 02-AchLiebenChristen1_alignment_rates.png
+     - 02-AchLiebenChristen1_summary.png
+     - 02-AchLiebenChristen1_summary.txt
+   Processing time: 16.1s
+
+✅ 03-ChristederdubistTagundLicht
+   Audio: 03-ChristederdubistTagundLicht.wav
+   Score: 03-ChristederdubistTagundLicht.mid
+   Output files:
+     - 03-ChristederdubistTagundLicht_dtw_cost_matrix.png
+     - 03-ChristederdubistTagundLicht_error_histograms.png
+     - 03-ChristederdubistTagundLicht_error_lines.png
+     - 03-ChristederdubistTagundLicht_alignment_scatter.png
+     - 03-ChristederdubistTagundLicht_alignment_rates.png
+     - 03-ChristederdubistTagundLicht_summary.png
+     - 03-ChristederdubistTagundLicht_summary.txt
+   Processing time: 10.0s
+
+✅ 04-ChristeDuBeistand
+   Audio: 04-ChristeDuBeistand.wav
+   Score: 04-ChristeDuBeistand.mid
+   Output files:
+     - 04-ChristeDuBeistand_dtw_cost_matrix.png
+     - 04-ChristeDuBeistand_error_histograms.png
+     - 04-ChristeDuBeistand_error_lines.png
+     - 04-ChristeDuBeistand_alignment_scatter.png
+     - 04-ChristeDuBeistand_alignment_rates.png
+     - 04-ChristeDuBeistand_summary.png
+     - 04-ChristeDuBeistand_summary.txt
+   Processing time: 14.8s
+
+✅ 05-DieNacht
+   Audio: 05-DieNacht.wav
+   Score: 05-DieNacht.mid
+   Output files:
+     - 05-DieNacht_dtw_cost_matrix.png
+     - 05-DieNacht_error_histograms.png
+     - 05-DieNacht_error_lines.png
+     - 05-DieNacht_alignment_scatter.png
+     - 05-DieNacht_alignment_rates.png
+     - 05-DieNacht_summary.png
+     - 05-DieNacht_summary.txt
+   Processing time: 13.4s
+

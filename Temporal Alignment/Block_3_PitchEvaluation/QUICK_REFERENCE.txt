@@ -1,0 +1,151 @@
+================================================================================
+PITCH EVALUATION - QUICK REFERENCE GUIDE
+================================================================================
+
+WHAT IT DOES:
+Compares musical score (XML file) with audio recording (WAV file) to measure
+pitch accuracy note-by-note.
+
+
+QUICK START:
+python evaluate_pitch.py --score piece.xml --audio recording.wav
+
+
+KEY METRICS TO CHECK (in order):
+
+1. MEASUREMENT RATE
+   Where: Look for "Measurement Rate:" in report
+   What: Percentage of notes successfully detected in audio
+   Good: > 80%
+   Warning: < 50% (audio may not match score or has poor quality)
+
+2. ACCURACY SCORE
+   Where: Look for "Accuracy Score: X/100"
+   What: Overall pitch accuracy (0-100 scale)
+   Excellent: > 80
+   Good: 60-80
+   Fair: 40-60
+   Poor: < 40
+
+3. MEAN ABSOLUTE CENTS ERROR (MACE)
+   Where: Look for "Mean Absolute Error: X cents"
+   What: Average pitch deviation
+   Reference: 100 cents = 1 semitone, 50 cents = quarter tone
+   Excellent: < 10 cents
+   Very Good: 10-25 cents
+   Acceptable: 25-50 cents
+   Problematic: > 50 cents
+
+4. SYSTEMATIC BIAS
+   Where: Look for "Bias Detected: YES/NO"
+   What: Consistent tendency to play sharp (high) or flat (low)
+   Detected when average error > 10 cents in one direction
+
+
+FILES GENERATED:
+
+Essential Files:
+- EVALUATION_SUMMARY.txt - Complete technical report
+- MUSICIAN_REPORT.txt - Simplified for performers
+- note_by_note_comparison.csv - Spreadsheet with all notes
+
+Detailed Files:
+- pitch_evaluation.json - All metrics in JSON format
+- score_pitches.json - Notes extracted from score
+- audio_pitches.json - Frequencies detected from audio
+- comparison_results.json - Complete comparison data
+
+
+HOW TO READ CSV FILE:
+
+Open note_by_note_comparison.csv in Excel/LibreOffice:
+
+Columns:
+- note_index: Note number (1, 2, 3...)
+- note_name: Musical note (C4, A4, etc.)
+- onset_time: When note starts (seconds)
+- duration: How long note lasts (seconds)
+- expected_frequency: What score says (Hz)
+- measured_frequency: What was played (Hz)
+- cents_error: Difference in cents
+- measured: Was this note detected? (true/false)
+
+Sort by "cents_error" to find worst notes.
+
+
+INTERPRETING RESULTS:
+
+Scenario 1: Low Measurement Rate (< 50%)
+Problem: Most notes not detected
+Likely Cause: Audio doesn't match score, or audio is silent/quiet
+Action: Verify correct audio file, check volume
+
+Scenario 2: High Error (MACE > 100 cents)
+Problem: Notes are very wrong (more than 1 semitone off)
+Likely Cause: Audio is transposed, instrument out of tune, wrong file
+Action: Check if audio is in same key as score, verify tuning
+
+Scenario 3: Systematic Bias (> 20 cents)
+Problem: Consistently sharp or flat
+Likely Cause: Instrument tuning, transposition issue
+Action: Check tuning standard (A4 = 440 Hz?), verify transposition
+
+Scenario 4: Good Measurement Rate but High Error
+Problem: All notes detected but many are wrong
+Interpretation: Performance captured but pitch accuracy needs work
+Action: Review CSV file to identify problem sections
+
+
+CENTS REFERENCE:
+
+0 cents = Perfect (in tune)
+5 cents = Just barely noticeable
+10 cents = Clearly noticeable
+25 cents = Quarter tone (significantly off)
+50 cents = Half semitone (very noticeable)
+100 cents = Full semitone (wrong note by one key)
+200 cents = Whole tone (wrong note by two keys)
+
+
+COMMON FREQUENCIES:
+
+Middle C (C4) = 261.6 Hz
+A4 (tuning reference) = 440.0 Hz
+A5 (octave higher) = 880.0 Hz
+
+Each semitone up multiplies frequency by 1.05946
+
+
+TROUBLESHOOTING:
+
+"Could not export since transcription did not complete successfully"
+→ PDF to XML conversion failed (complex score, try simpler segment)
+
+"Only X% of notes measured"
+→ Audio quality issue or wrong audio file
+
+"MACE > 1000 cents"
+→ Likely wrong audio file for this score
+
+"Bias detected: FLAT, Magnitude: 100 cents"
+→ Audio is 1 semitone lower than score (transposition issue)
+
+
+BATCH PROCESSING:
+
+To process multiple files:
+cd /path/to/Data_Pitch
+./evaluate_all_segments.sh
+
+
+FOR MORE DETAILS:
+
+See PITCH_EVALUATION_DOCUMENTATION.txt for complete explanation of:
+- All formulas and calculations
+- System architecture
+- Detailed examples
+- Frequency reference tables
+- FAQ
+
+
+================================================================================

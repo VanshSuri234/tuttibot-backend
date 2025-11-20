@@ -1,0 +1,599 @@
+================================================================================
+PITCH EVALUATION SYSTEM - COMPLETE DOCUMENTATION
+================================================================================
+
+Date Created: November 3, 2025
+System Version: 1.0
+Purpose: Automated pitch accuracy assessment for musical performances
+
+
+================================================================================
+OVERVIEW
+================================================================================
+
+This system automatically evaluates pitch accuracy by comparing a musical score
+(MusicXML file) with an audio recording (WAV file) of a performance. It 
+measures how accurately the performed pitches match the written notes.
+
+Key Features:
+- Extracts expected pitches from musical scores
+- Detects actual pitches from audio recordings
+- Compares note-by-note and calculates error metrics
+- Generates technical reports and statistics
+- Requires only score and audio files as input
+
+
+================================================================================
+SYSTEM ARCHITECTURE
+================================================================================
+
+The evaluation pipeline consists of 5 main components:
+
+1. Score Pitch Extractor (score_pitch_extractor.py)
+   - Reads MusicXML or MIDI files
+   - Extracts note information: pitch, onset time, duration
+   
+2. Audio Pitch Extractor (audio_pitch_extractor.py)
+   - Processes audio files (WAV, MP3, etc.)
+   - Detects fundamental frequency (F0) over time
+   
+3. Pitch Comparator (pitch_comparator.py)
+   - Matches score notes to audio frames by timing
+   - Calculates pitch deviation in cents
+   
+4. Pitch Grader (pitch_grader.py)
+   - Computes statistical metrics
+   - Generates accuracy scores
+   
+5. Pitch Visualizer (pitch_visualizer.py)
+   - Creates graphs and charts
+   - Visual representation of results
+
+Main Pipeline Script: evaluate_pitch.py
+- Orchestrates all components
+- Manages data flow between modules
+- Generates final reports
+
+
+================================================================================
+DETAILED TECHNICAL PROCESS
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP 1: SCORE PITCH EXTRACTION
+--------------------------------------------------------------------------------
+
+Library Used: music21 (Python library for music analysis)
+
+Process:
+1. Parse the MusicXML/MIDI file
+2. Extract all notes from the score
+3. For each note, record:
+   - Pitch (as MIDI note number)
+   - Onset time (when note starts, in seconds)
+   - Duration (how long note lasts, in seconds)
+
+Pitch to Frequency Conversion:
+Formula: f = 440 × 2^((m - 69) / 12)
+
+Where:
+- f = frequency in Hz
+- m = MIDI note number
+- 69 = MIDI number for A4 (440 Hz reference)
+
+Examples:
+- MIDI 60 (C4, Middle C): f = 440 × 2^((60-69)/12) = 261.63 Hz
+- MIDI 69 (A4): f = 440 × 2^((69-69)/12) = 440.00 Hz
+- MIDI 81 (A5): f = 440 × 2^((81-69)/12) = 880.00 Hz
+
+Output: JSON file with list of all notes and their properties
+
+
+--------------------------------------------------------------------------------
+STEP 2: AUDIO PITCH EXTRACTION
+--------------------------------------------------------------------------------
+
+Method Used: pYIN (Probabilistic YIN algorithm)
+Implementation: librosa.pyin() from librosa library
+
+Process:
+1. Load audio file
+2. Resample to 22,050 Hz (standard for pitch detection)
+3. Run pYIN algorithm on audio frames
+4. Extract fundamental frequency (F0) for each frame
+5. Apply voicing detection (filter out non-pitched sounds)
+
+Frame-by-Frame Analysis:
+- Frame size: Typically 2048 samples (~93ms at 22,050 Hz)
+- Hop size: 512 samples (~23ms)
+- Each frame yields one F0 measurement
+
+pYIN Algorithm Details:
+- Autocorrelation-based pitch detector
+- Probabilistic: assigns confidence to each pitch estimate
+- Good for monophonic (single note) audio
+- CPU-efficient (no GPU required)
+
+Voicing Detection:
+- Confidence threshold: Typically 0.1-0.5
+- Filters out silence, noise, percussion
+- Only keeps frames with detected pitch
+
+Output: 
+- Time-series of F0 values (frequency in Hz over time)
+- Voicing flags (pitched vs unpitched)
+- Stored in JSON format
+
+
+--------------------------------------------------------------------------------
+STEP 3: TEMPORAL ALIGNMENT AND COMPARISON
+--------------------------------------------------------------------------------
+
+Matching Process:
+1. For each note in the score:
+   - Find its onset time (when it should start)
+   - Find its offset time (when it should end)
+   
+2. Look for corresponding audio frames:
+   - Get all F0 frames between onset and offset
+   - Filter only voiced (pitched) frames
+   
+3. Extract representative pitch:
+   - Calculate median F0 from matched frames
+   - Median is robust to outliers
+   
+4. Calculate pitch deviation
+
+Cents Deviation Formula:
+Δ cents = 1200 × log₂(f_measured / f_expected)
+
+Where:
+- f_measured = frequency detected from audio (Hz)
+- f_expected = frequency from score (Hz)
+- log₂ = logarithm base 2
+- 1200 = cents per octave (100 cents per semitone)
+
+Understanding Cents:
+- 1 octave = 1200 cents
+- 1 semitone = 100 cents
+- Quarter tone = 50 cents
+- Just noticeable difference ≈ 5-10 cents
+
+Examples:
+- If expected = 440 Hz, measured = 440 Hz: Δ = 0 cents (perfect)
+- If expected = 440 Hz, measured = 441 Hz: Δ ≈ +3.9 cents (slightly sharp)
+- If expected = 440 Hz, measured = 466 Hz: Δ ≈ +100 cents (1 semitone sharp)
+- If expected = 440 Hz, measured = 415 Hz: Δ ≈ -100 cents (1 semitone flat)
+
+Sign Convention:
+- Positive (+) = Sharp (higher than expected)
+- Negative (-) = Flat (lower than expected)
+
+Output: CSV and JSON files with note-by-note comparison
+
+
+--------------------------------------------------------------------------------
+STEP 4: STATISTICAL ANALYSIS AND METRICS
+--------------------------------------------------------------------------------
+
+Core Metrics Calculated:
+
+1. Mean Absolute Cents Error (MACE)
+   Formula: MACE = (1/N) × Σ|Δᵢ|
+   
+   Where:
+   - N = number of measured notes
+   - Δᵢ = cents error for note i
+   - |...| = absolute value
+   
+   Interpretation:
+   - MACE < 10 cents: Excellent accuracy
+   - MACE 10-25 cents: Very good
+   - MACE 25-50 cents: Acceptable
+   - MACE > 50 cents: Problematic
+
+
+2. Mean Signed Cents Error
+   Formula: Mean = (1/N) × ΣΔᵢ
+   
+   Purpose: Detect systematic bias (consistently sharp or flat)
+   - Positive mean: Tendency to play sharp
+   - Negative mean: Tendency to play flat
+   - Near zero: No systematic bias
+
+
+3. Standard Deviation
+   Formula: σ = sqrt((1/N) × Σ(Δᵢ - mean)²)
+   
+   Interpretation:
+   - Low σ: Consistent pitch (all notes similar error)
+   - High σ: Inconsistent (some good, some bad notes)
+
+
+4. Median Cents Error
+   Formula: Middle value when all errors sorted
+   
+   Purpose: Robust to outliers, shows typical error
+
+
+5. Error Distribution Categories:
+   - Perfect: |Δ| < 10 cents
+   - Excellent: 10 ≤ |Δ| < 25 cents
+   - Good: 25 ≤ |Δ| < 50 cents
+   - Poor: |Δ| ≥ 50 cents
+   
+   Reported as percentages of measured notes
+
+
+6. Precision Thresholds:
+   - Within ±10 cents: % of notes
+   - Within ±25 cents: % of notes
+   - Within ±50 cents: % of notes
+
+
+7. Measurement Rate
+   Formula: (Measured Notes / Total Notes) × 100%
+   
+   Important quality indicator:
+   - Low rate (<50%) suggests:
+     * Audio doesn't match score
+     * Poor audio quality
+     * Mostly silence in recording
+     * Wrong audio file
+
+
+8. Systematic Bias Detection
+   Threshold: |Mean Error| > 10 cents
+   
+   If detected:
+   - Direction: "sharp" or "flat"
+   - Magnitude: Absolute value of mean error
+   - Interpretation: Tuning or transposition issue
+
+
+9. Accuracy Score (0-100)
+   Formula: Score = 100 × exp(-MACE / 25)
+   
+   This is exponential decay function:
+   - MACE = 0 cents → Score = 100
+   - MACE = 25 cents → Score = 36.8
+   - MACE = 50 cents → Score = 13.5
+   - MACE = 100 cents → Score = 1.8
+   
+   Properties:
+   - Heavily penalizes large errors
+   - Reflects perceptual importance
+   - 0-100 scale familiar to musicians
+
+
+--------------------------------------------------------------------------------
+STEP 5: REPORT GENERATION
+--------------------------------------------------------------------------------
+
+Three types of reports are generated:
+
+1. Technical Summary (EVALUATION_SUMMARY.txt)
+   - Complete calculation pipeline explained
+   - All statistical metrics
+   - Formulas and interpretations
+   - For technical users and analysis
+
+2. Musician Report (MUSICIAN_REPORT.txt)
+   - Simplified language
+   - Practical interpretation
+   - Context-aware feedback
+   - Note names instead of frequencies
+   - For performers and teachers
+
+3. Detailed Data Files:
+   - JSON files: Machine-readable complete data
+   - CSV file: Spreadsheet with all note comparisons
+   - For further analysis in Excel, Python, etc.
+
+
+================================================================================
+OUTPUT FILES STRUCTURE
+================================================================================
+
+After evaluation, the following directory structure is created:
+
+pitch_evaluation_YYYYMMDD_HHMMSS/
+├── data/
+│   ├── score_pitches.json          # Extracted notes from score
+│   ├── audio_pitches.json          # F0 time series from audio
+│   └── comparison_results.json     # Complete comparison data
+│
+├── reports/
+│   ├── pitch_evaluation.json       # Technical metrics (JSON)
+│   ├── note_by_note_comparison.csv # Spreadsheet format
+│   └── MUSICIAN_REPORT.txt         # Simplified for musicians
+│
+├── visualizations/                  # (if enabled)
+│   ├── pitch_curves.png            # Score vs audio F0 plot
+│   ├── error_distribution.png      # Histogram of errors
+│   └── accuracy_breakdown.png      # Pie chart
+│
+├── evaluation_summary.json         # Complete metadata
+└── EVALUATION_SUMMARY.txt          # Technical text summary
+
+
+================================================================================
+UNDERSTANDING THE RESULTS
+================================================================================
+
+Key Questions and Where to Find Answers:
+
+Q: How accurate was the performance overall?
+A: Check "Accuracy Score" (0-100) or "Mean Absolute Cents Error"
+   - Score > 80: Very good performance
+   - Score 50-80: Acceptable with issues
+   - Score < 50: Significant problems
+
+Q: Were all notes measured?
+A: Check "Measurement Rate"
+   - > 80%: Good audio quality, reliable results
+   - 50-80%: Some notes missed, results moderately reliable
+   - < 50%: Major issues, results may not be meaningful
+
+Q: Is there a tendency to play sharp or flat?
+A: Check "Systematic Bias Analysis"
+   - Bias detected: Yes/No
+   - Direction: Sharp (too high) or Flat (too low)
+   - Magnitude: How many cents on average
+
+Q: Which specific notes were problematic?
+A: Open "note_by_note_comparison.csv" in Excel/LibreOffice
+   - Sort by "cents_error" column to find worst notes
+   - Check "note_name" and "onset_time" to locate them in score
+
+Q: Was pitch consistent throughout?
+A: Check "Standard Deviation"
+   - Low (<20): Consistent accuracy
+   - High (>40): Variable (some sections good, others poor)
+
+
+================================================================================
+TECHNICAL SPECIFICATIONS
+================================================================================
+
+Software Requirements:
+- Python 3.7+
+- Libraries: music21, librosa, numpy, scipy, matplotlib
+
+Hardware Requirements:
+- CPU: Any modern processor (no GPU required)
+- RAM: 4GB minimum, 8GB recommended
+- Storage: ~100MB per evaluation (including audio)
+
+Performance:
+- Typical processing time: 30-60 seconds per minute of audio
+- Depends on: Audio length, score complexity, system speed
+
+Supported File Formats:
+- Score: MusicXML (.xml, .mxl), MIDI (.mid, .midi)
+- Audio: WAV, MP3, FLAC, OGG (anything librosa supports)
+
+Limitations:
+- Best for monophonic (single melody) audio
+- Polyphonic (chords, multiple parts) may reduce accuracy
+- Very fast passages may have lower measurement rates
+- Silent or very quiet notes may not be detected
+
+
+================================================================================
+USAGE EXAMPLES
+================================================================================
+
+Basic Command:
+python evaluate_pitch.py --score piece.xml --audio recording.wav
+
+Output will be in: ./pitch_evaluation_output/
+
+With Options:
+python evaluate_pitch.py \
+    --score piece.xml \
+    --audio recording.wav \
+    --output ./results \
+    --method pyin \
+    --reference-freq 440.0 \
+    --no-viz
+
+Options Explained:
+--output: Where to save results
+--method: pyin (faster) or crepe (slower, potentially more accurate)
+--reference-freq: A4 frequency (440 Hz standard, 442 Hz common in Europe)
+--no-viz: Skip generating graphs (faster processing)
+
+
+================================================================================
+INTERPRETING COMMON SCENARIOS
+================================================================================
+
+Scenario 1: Low Measurement Rate (< 30%)
+Possible Causes:
+- Audio file doesn't match the score (wrong recording)
+- Audio is mostly silent or very quiet
+- Poor recording quality (noise, distortion)
+- Instrument is very soft or percussive
+
+Action:
+- Verify you're analyzing the correct audio file
+- Check if audio volume is sufficient
+- Review audio quality
+
+
+Scenario 2: High MACE (> 100 cents)
+Possible Causes:
+- Audio is transposed (played in different key)
+- Instrument severely out of tune
+- Wrong audio file for this score
+- Pitch detection failed
+
+Action:
+- Check if audio is in same key as score
+- Verify instrument tuning
+- Confirm audio matches score
+
+
+Scenario 3: Large Systematic Bias (> 50 cents)
+Possible Causes:
+- Instrument tuned to different standard (e.g., A=442 instead of A=440)
+- Transposition not accounted for (e.g., Bb clarinet)
+- Speed/pitch variation in recording
+
+Action:
+- Check instrument tuning
+- Verify score matches instrument transposition
+- Consider using --reference-freq option
+
+
+Scenario 4: High Standard Deviation (> 50 cents)
+Interpretation:
+- Some notes accurate, others not
+- Certain passages more difficult
+- Inconsistent pitch control
+
+Action:
+- Review note_by_note_comparison.csv
+- Identify problematic sections
+- Target practice on difficult passages
+
+
+================================================================================
+CALCULATION EXAMPLES
+================================================================================
+
+Example 1: Perfect Note
+Expected: A4 = 440.00 Hz
+Measured: A4 = 440.00 Hz
+Cents Error = 1200 × log₂(440.00 / 440.00) = 1200 × log₂(1) = 1200 × 0 = 0¢
+
+
+Example 2: Slightly Sharp
+Expected: A4 = 440.00 Hz
+Measured: 443.00 Hz
+Cents Error = 1200 × log₂(443.00 / 440.00) = 1200 × log₂(1.0068) ≈ +11.8¢
+
+
+Example 3: One Semitone Flat
+Expected: A4 = 440.00 Hz
+Measured: G#4 = 415.30 Hz
+Cents Error = 1200 × log₂(415.30 / 440.00) = 1200 × log₂(0.944) ≈ -100¢
+
+
+Example 4: Quarter Tone Sharp
+Expected: C5 = 523.25 Hz
+Measured: 554.37 Hz (halfway to C#5)
+Cents Error = 1200 × log₂(554.37 / 523.25) = 1200 × log₂(1.059) ≈ +50¢
+
+
+Example 5: Calculating Accuracy Score
+If MACE = 15.5 cents:
+Score = 100 × exp(-15.5 / 25) = 100 × exp(-0.62) = 100 × 0.538 ≈ 53.8
+
+
+================================================================================
+FREQUENCY REFERENCE TABLE
+================================================================================
+
+Common Notes and Their Frequencies (A4 = 440 Hz standard):
+
+Octave 3:
+C3  = 130.81 Hz
+D3  = 146.83 Hz
+E3  = 164.81 Hz
+F3  = 174.61 Hz
+G3  = 196.00 Hz
+A3  = 220.00 Hz
+B3  = 246.94 Hz
+
+Octave 4:
+C4  = 261.63 Hz (Middle C)
+D4  = 293.66 Hz
+E4  = 329.63 Hz
+F4  = 349.23 Hz
+G4  = 392.00 Hz
+A4  = 440.00 Hz (Reference)
+B4  = 493.88 Hz
+
+Octave 5:
+C5  = 523.25 Hz
+D5  = 587.33 Hz
+E5  = 659.25 Hz
+F5  = 698.46 Hz
+G5  = 783.99 Hz
+A5  = 880.00 Hz
+B5  = 987.77 Hz
+
+Relationship:
+- Each octave doubles the frequency (A3=220 Hz, A4=440 Hz, A5=880 Hz)
+- Each semitone multiplies frequency by 2^(1/12) ≈ 1.05946
+
+
+================================================================================
+FREQUENTLY ASKED QUESTIONS
+================================================================================
+
+Q: Why use cents instead of Hz for error measurement?
+A: Cents represent perceptual distance. Our ears perceive pitch intervals
+   logarithmically. 50 cents sounds equally "wrong" whether it's around
+   200 Hz or 2000 Hz. In Hz, the same error would be different amounts.
+
+Q: What if my instrument transposes (like Bb clarinet)?
+A: The system compares written pitch to sounding pitch. Ensure your score
+   is in concert pitch (C), or the audio matches the transposed score.
+
+Q: Can this evaluate chords or harmony?
+A: Current system works best with monophonic (single melody) audio.
+   Polyphonic audio may work but with reduced accuracy. The pitch detector
+   will try to find the dominant fundamental frequency.
+
+Q: Why is measurement rate important?
+A: Low measurement rate means most notes weren't detected in the audio.
+   This makes all other metrics unreliable. Always check this first.
+
+Q: What's a "good" MACE value?
+A: Context-dependent, but general guidelines:
+   - Professional recording: < 20 cents
+   - Advanced student: 20-40 cents
+   - Intermediate student: 40-60 cents
+   - Beginner: May be > 60 cents
+   - Wrong audio file: Often > 500 cents
+
+Q: Can I use this for vocal performances?
+A: Yes! Works well for solo singing. Ensure audio is clear and not too
+   much reverberation or background noise.
+
+
+================================================================================
+CREDITS AND REFERENCES
+================================================================================
+
+Algorithms and Libraries:
+- pYIN: Mauch, M., & Dixon, S. (2014). "pYIN: A fundamental frequency 
+  estimator using probabilistic threshold distributions"
+- librosa: McFee, B., et al. (2015). "librosa: Audio and Music Signal 
+  Analysis in Python"
+- music21: Cuthbert, M.S., & Ariza, C. (2010). "music21: A Toolkit for 
+  Computer-Aided Musicology and Symbolic Music Data"
+
+Pitch Measurement Standards:
+- Cent (music): https://en.wikipedia.org/wiki/Cent_(music)
+- Piano key frequencies: https://en.wikipedia.org/wiki/Piano_key_frequencies
+- Equal temperament: https://en.wikipedia.org/wiki/Equal_temperament
+
+
+================================================================================
+CONTACT AND SUPPORT
+================================================================================
+
+For questions about this system or results interpretation:
+- Review this documentation
+- Check the MUSICIAN_REPORT.txt for simplified explanations
+- Examine the CSV file for note-by-note details
+- Consult the technical summary for complete metrics
+
+
+================================================================================
+END OF DOCUMENTATION
+================================================================================

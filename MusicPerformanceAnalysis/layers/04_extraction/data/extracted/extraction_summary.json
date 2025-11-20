@@ -1,0 +1,5 @@
+{
+  "performance_features": "data/extracted/performance_features.json",
+  "score_features": "data/extracted/score_features.json",
+  "extraction_complete": true
+}

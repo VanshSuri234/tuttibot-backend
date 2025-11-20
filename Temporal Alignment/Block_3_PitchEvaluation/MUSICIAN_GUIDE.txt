@@ -1,0 +1,315 @@
+================================================================================
+GUIDE FOR MUSICIANS - HOW TO READ YOUR PITCH EVALUATION RESULTS
+================================================================================
+
+Hello! This guide will help you understand your pitch evaluation results.
+No technical background needed - everything is explained in plain language.
+
+
+================================================================================
+WHAT WAS DONE
+================================================================================
+
+Your performance was analyzed by comparing:
+1. What the musical score says you should play (expected pitches)
+2. What the recording captured you actually playing (measured pitches)
+
+The system measured how close each note was to the written pitch.
+
+
+================================================================================
+WHERE TO START
+================================================================================
+
+You'll find several files in your results folder. Start here:
+
+1. FIRST: Open "MUSICIAN_REPORT.txt"
+   - Simple summary written specifically for musicians
+   - Easy-to-understand explanation of results
+   - No complex formulas or jargon
+
+2. SECOND: Open "note_by_note_comparison.csv" in Excel or LibreOffice
+   - Spreadsheet showing every single note
+   - Which notes were good, which need work
+   - Easy to sort and filter
+
+
+================================================================================
+UNDERSTANDING YOUR MUSICIAN REPORT
+================================================================================
+
+The report has several sections:
+
+Section 1: WHAT WAS MEASURED
+- How many notes in the score: Total number of notes to play
+- How many notes measured: How many the system could detect in your recording
+- Important: If less than 50% measured, there may be an audio problem
+
+Section 2: PITCH ACCURACY RESULTS
+- Accuracy Score (0-100): Like a test score, higher is better
+- Average Pitch Error: How many "cents" off on average
+  * Think of cents like millimeters for pitch
+  * 100 cents = 1 key on piano (1 semitone)
+  * 10 cents or less = very close (excellent!)
+  * 50 cents = halfway between two keys (noticeable)
+
+Section 3: DETAILED BREAKDOWN
+- Shows what percentage of notes were:
+  * Perfect (within 10 cents) - barely noticeable if off at all
+  * Very Good (10-25 cents) - slight deviation
+  * Acceptable (25-50 cents) - noticeable but not a full semitone
+  * Problematic (more than 50 cents) - clearly wrong
+
+Section 4: PITCH TENDENCY
+- Tells you if you tend to play sharp (too high) or flat (too low)
+- Helps identify if you need to adjust overall tuning
+
+
+================================================================================
+READING THE SPREADSHEET (CSV FILE)
+================================================================================
+
+Open "note_by_note_comparison.csv" - this is your detailed report card.
+
+What each column means:
+
+note_index: Just a count (1st note, 2nd note, 3rd note...)
+
+note_name: The musical note (like C4, A4, E5)
+- Number after letter is the octave
+- C4 is "Middle C"
+- Higher number = higher pitch
+
+onset_time: When this note starts in the recording (in seconds)
+- Helps you find the note in the audio
+- Example: 15.3 means 15.3 seconds into the recording
+
+expected_frequency: What pitch the score asked for (in Hz)
+- Hz = vibrations per second
+- Higher number = higher pitch
+
+measured_frequency: What pitch was actually played (in Hz)
+
+cents_error: THE KEY NUMBER - how far off the note was
+- 0 cents = perfect!
+- Positive (+) = played too sharp (high)
+- Negative (-) = played too flat (low)
+- Bigger number = more wrong
+
+measured: Was this note detected?
+- true = yes, we measured it
+- false = no (note was silent or unclear in recording)
+
+
+HOW TO USE THE SPREADSHEET:
+
+Find Your Problem Notes:
+1. Click the "cents_error" column header
+2. Click "Sort" (usually an icon with arrows)
+3. Sort by largest to smallest numbers
+4. The top rows are your most problematic notes
+
+Find Perfect Notes:
+1. Sort "cents_error" by absolute value (closest to 0)
+2. These notes show what you did well - keep it up!
+
+Find Missing Notes:
+1. Filter "measured" column to show "false"
+2. These notes weren't detected - were they too quiet?
+
+
+================================================================================
+WHAT THE NUMBERS MEAN FOR YOUR PLAYING
+================================================================================
+
+Accuracy Score:
+- 90-100: Excellent! Professional level accuracy
+- 80-89: Very good! Strong pitch control
+- 70-79: Good! Generally on target
+- 60-69: Fair - room for improvement
+- Below 60: Needs work on pitch accuracy
+
+Average Pitch Error (cents):
+- 0-10 cents: Outstanding! Nearly perfect intonation
+- 10-25 cents: Very good! Minor deviations
+- 25-50 cents: Acceptable - noticeable but not wrong notes
+- 50-100 cents: Problematic - approaching wrong notes
+- Over 100 cents: Major issues - more than a semitone off
+
+Measurement Rate:
+- Over 80%: Good! Most notes were clear in the recording
+- 50-80%: Fair - some notes were unclear or too soft
+- Under 50%: Problem - audio quality issue or wrong recording
+
+
+================================================================================
+COMMON SITUATIONS EXPLAINED
+================================================================================
+
+"I got a low score but I think I played it right!"
+
+Possible reasons:
+1. The audio file might not match this score
+   → Check: Did you analyze the right recording?
+   
+2. Your instrument might be out of tune
+   → Check: Is your instrument properly tuned to A=440 Hz?
+   
+3. The score might be in a different key
+   → Check: Is the score transposed? (common for Bb/Eb instruments)
+
+
+"My measurement rate is very low (under 50%)"
+
+This usually means:
+1. Audio file doesn't match this musical score
+2. Recording is mostly silent or very quiet
+3. Recording quality is poor (too much noise)
+
+Action: Verify you're analyzing the correct audio file
+
+
+"It says I play consistently sharp (or flat)"
+
+This is called "systematic bias" and means:
+- Sharp: You're playing a bit too high on all notes
+- Flat: You're playing a bit too low on all notes
+
+This is often easier to fix than random errors because:
+- It might just be a tuning adjustment
+- Your pitch control is consistent (good!)
+- You just need to shift everything slightly
+
+
+"Some notes are perfect, others are way off"
+
+This is actually good news! It means:
+- You CAN play accurately (the good notes prove it)
+- Some notes or passages are just more difficult
+- You know exactly which spots to practice
+
+Action: Look at the CSV, find the worst notes, practice those measures
+
+
+================================================================================
+USING RESULTS TO IMPROVE
+================================================================================
+
+Step 1: Identify Patterns
+- Are errors random or in specific sections?
+- Are certain pitch ranges harder (high notes, low notes)?
+- Are fast passages less accurate than slow ones?
+
+Step 2: Prioritize Practice
+- Focus on the measures with largest cents errors
+- Use the "onset_time" to find them in the recording
+- Practice these sections slowly with a tuner
+
+Step 3: Track Progress
+- Record again after practicing
+- Run another evaluation
+- Compare accuracy scores to see improvement
+- Goal: Reduce average cents error over time
+
+
+================================================================================
+TECHNICAL TERMS SIMPLIFIED
+================================================================================
+
+Frequency (Hz): 
+How many times per second something vibrates. Higher Hz = higher pitch.
+Example: A4 = 440 Hz (the tuning note)
+
+Cents: 
+A way to measure small pitch differences.
+- 100 cents = distance between two piano keys (1 semitone)
+- 50 cents = halfway between two keys (very noticeable)
+- 10 cents = small difference (just barely noticeable)
+- Like measuring height in millimeters instead of inches
+
+Semitone:
+The distance between adjacent piano keys (100 cents).
+Example: C to C# is one semitone.
+
+Systematic Bias:
+Consistent tendency to play sharp (high) or flat (low).
+Like a scale that's always 2 pounds off - consistent error.
+
+Measurement Rate:
+Percentage of notes where pitch was detected in the recording.
+Low rate suggests audio quality issues.
+
+
+================================================================================
+WHAT TO TELL YOUR TEACHER
+================================================================================
+
+Bring these files to your lesson:
+1. MUSICIAN_REPORT.txt (overview)
+2. note_by_note_comparison.csv (details)
+
+Key points to discuss:
+- Overall accuracy score and what it means
+- Specific problem notes or passages (from CSV)
+- Whether there's a systematic sharp/flat tendency
+- Sections that are accurate vs. sections needing work
+
+
+================================================================================
+FREQUENTLY ASKED QUESTIONS
+================================================================================
+
+Q: Is this system judging my musicality?
+A: No! This only measures pitch accuracy (right notes vs. wrong notes).
+   It doesn't evaluate rhythm, dynamics, expression, tone quality, or any
+   other musical aspects. It's just one tool for one specific skill.
+
+Q: Why are some notes missing (not measured)?
+A: Could be several reasons:
+   - Note was very quiet or short
+   - Background noise covered it
+   - Note was part of a chord (system works best with single melody)
+   - Audio quality issue at that moment
+
+Q: My accuracy score seems low but I thought I played well?
+A: Remember this is measuring pitch precision to within cents (very precise).
+   Even good performances may have small deviations. Context matters:
+   - Professional recording: might aim for 90+
+   - Student performance: 70+ is often very good
+   - Beginner: 50-60 can be acceptable progress
+
+Q: Can I improve my score?
+A: Absolutely! Regular practice with awareness of pitch issues helps.
+   Many musicians see scores improve by 10-20 points over a few weeks
+   when they focus on problematic sections identified by the analysis.
+
+Q: What if the audio file was recorded at a different pitch?
+A: If your recording is in a different key or transposed, the system will
+   show very large errors (100+ cents) because it's comparing different
+   notes entirely. Make sure audio and score match.
+
+
+================================================================================
+NEED MORE INFORMATION?
+================================================================================
+
+For complete technical details:
+→ Read: PITCH_EVALUATION_DOCUMENTATION.txt
+
+For quick reference:
+→ Read: QUICK_REFERENCE.txt
+
+For your specific results:
+→ Open: EVALUATION_SUMMARY.txt (in your results folder)
+
+
+================================================================================
+
+Remember: This is a tool to help you improve, not to judge your worth as a
+musician! Use it to identify specific areas to work on, track your progress
+over time, and celebrate improvements. Every musician can benefit from pitch
+accuracy work, from beginners to professionals.
+
+Good luck with your practice!
+
+================================================================================

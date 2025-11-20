@@ -1,0 +1,132 @@
+COMPARISON PLAN — Baseline DTW vs PQG-A2SA Algorithm
+
+Step 1 — Input setup (same for both)
+-----------------------------------
+Both methods use the same input data to ensure a fair comparison.
+
+Inputs:
+- Audio: single-instrument WAV or ensemble track.
+- Score: corresponding MusicXML or MIDI file.
+
+Feature extraction (identical for both methods):
+Compute chroma features for both score and audio:
+  audio_chroma = librosa.feature.chroma_cqt(y_audio, sr=sr)
+  score_chroma = make_score_chroma_from_xml(score_path)
+
+Both methods receive the same chroma matrices:
+- Y = audio chroma (frames × 12)
+- X = score chroma (events × 12)
+
+
+Step 2 — Run the two alignments
+-------------------------------
+
+(a) Baseline: Standard DTW
+- Use vanilla DTW from librosa.sequence.dtw.
+- Distance metric: cosine or Euclidean distance between chroma vectors.
+- No tempo or duration constraints.
+
+  from librosa.sequence import dtw
+  D, wp = dtw(X, Y, metric='cosine')
+
+Output: alignment path P_base = {(i, j)} mapping score frame i → audio frame j.
+Predicted onset time = first audio frame mapped to each score note.
+Predicted offset time = last audio frame mapped to that note.
+
+(b) PQG-A2SA (Our Method)
+- Stage 1: Variable-interval (tempo-free) DTW → chord-level alignment.
+- Stage 2: IOI-guided duration-constrained refinement (locally re-align segments).
+- Stage 3: Articulation-guided onset/offset detection (NMF + staccato/legato models).
+
+Output: refined τ_PQG(l_{n,j}^{on/off}) for every note n in each instrument.
+
+Both pipelines provide:
+  predicted_onsets_base[n], predicted_offsets_base[n]
+  predicted_onsets_pqg[n], predicted_offsets_pqg[n]
+
+
+Step 3 — Compute evaluation metrics (per note)
+----------------------------------------------
+For each note i with ground-truth onset/offset times:
+
+  E_i^{on,base} = |t_i^{GT,on} - t_i^{pred,on,base}|
+  E_i^{off,base} = |t_i^{GT,off} - t_i^{pred,off,base}|
+  E_i^{on,pqg} = |t_i^{GT,on} - t_i^{pred,on,pqg}|
+  E_i^{off,pqg} = |t_i^{GT,off} - t_i^{pred,off,pqg}|
+
+Mean values (averaged across all notes):
+  MNE_base = (1/N) * Σ E_i^{on,base}
+  MFE_base = (1/N) * Σ E_i^{off,base}
+  MNE_pqg  = (1/N) * Σ E_i^{on,pqg}
+  MFE_pqg  = (1/N) * Σ E_i^{off,pqg}
+
+Smaller values = better alignment.
+
+
+Step 4 — Compare quantitatively
+-------------------------------
+Compute improvement ratios:
+
+  Onset Improvement = ((MNE_base - MNE_pqg) / MNE_base) × 100%
+  Offset Improvement = ((MFE_base - MFE_pqg) / MFE_base) × 100%
+
+Example:
+  MNE_base = 0.132s, MNE_pqg = 0.119s → 9.8% improvement
+  MFE_base = 0.217s, MFE_pqg = 0.179s → 17.5% improvement
+
+
+Step 5 — Compare visually
+--------------------------
+
+(a) DTW cost matrix comparison
+Compute cost matrix D(i,j) for baseline DTW.
+Overlay both paths:
+
+  plt.imshow(D, origin='lower', cmap='gray_r')
+  plt.plot(path_base_j, path_base_i, 'r--', label='Baseline')
+  plt.plot(path_pqg_j, path_pqg_i, 'b-', label='PQG-A2SA')
+  plt.legend(); plt.xlabel('Audio frames'); plt.ylabel('Score frames');
+
+Interpretation:
+Blue PQG path should be smoother and closer to diagonal (better tempo consistency).
+
+(b) Onset/offset error histograms
+  plt.hist(E_on_base, bins=50, alpha=0.5, label='Baseline')
+  plt.hist(E_on_pqg, bins=50, alpha=0.5, label='PQG-A2SA')
+  plt.xlabel('Onset Error (s)'); plt.ylabel('Count'); plt.legend()
+
+PQG histogram should be tighter around 0.
+
+(c) Per-note error line plot
+  plt.plot(E_on_base, 'r--', label='Baseline')
+  plt.plot(E_on_pqg, 'b-', label='PQG-A2SA')
+  plt.ylabel('Onset Error (s)'); plt.legend()
+
+(d) Alignment scatter plot
+  Ground-truth onset vs predicted onset (ideal diagonal line).
+  PQG points cluster closer to diagonal.
+
+
+Step 6 — Interpretation
+-----------------------
+Baseline DTW often drifts during expressive passages (rubato, sustained notes).
+PQG-A2SA corrects local tempo (IOI-guided) and articulation timing → reduced onset/offset errors.
+Quantitatively: smaller MNE/MFE.
+Visually: PQG-A2SA path follows score diagonal more smoothly.
+
+
+Step 7 — Optional ensemble-level check
+--------------------------------------
+After alignment for all instruments:
+Compute ensemble synchrony metrics (inter-player onset std, tempo correlation).
+Improved alignment → smaller std and higher correlation.
+
+
+Summary of what to calculate and compare
+----------------------------------------
+| Stage | Metric | Baseline | PQG-A2SA | Improvement shows |
+|--------|---------|-----------|-----------|-------------------|
+| Note level | MNE, MFE | From simple DTW mapping | From refined PQG mapping | Tighter note-to-score alignment |
+| Visual | DTW path plot | Red path | Blue path closer to diagonal | Better tempo tracking |
+| Distribution | Error histogram | Wide spread | Narrow around 0 | Higher accuracy |
+| Ensemble | Onset std, tempo corr | Higher spread | Lower spread, higher corr | Improved synchrony |

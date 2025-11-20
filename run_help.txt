@@ -1,0 +1,313 @@
+QUICK COMMAND REFERENCE
+
+This file provides quick reference for running the Music Performance Analysis pipelines.
+
+SINGLE FILE ANALYSIS
+
+DTW-only Pipeline (faster, backward compatible):
+
+python3 MusicPerformanceAnalysis/pipeline.py \
+  --audio path/to/performance.wav \
+  --score path/to/score.xml \
+  --output Output/my_analysis
+
+PQG-Enhanced Pipeline (slower but more accurate):
+
+python3 MusicPerformanceAnalysis/pipeline_with_pqg.py \
+  --audio path/to/performance.wav \
+  --score path/to/score.xml \
+  --output Output/my_analysis_pqg
+
+Optional: Specify score part (soprano/alto/tenor/bass):
+
+python3 MusicPerformanceAnalysis/pipeline.py \
+  --audio path/to/performance.wav \
+  --score path/to/score.xml \
+  --output Output/my_analysis \
+  --part 0
+
+Parts are auto-detected from audio filename if it contains instrument names like violin, clarinet, etc.
+
+BATCH PROCESSING
+
+DTW-only batch processing:
+
+./run_analysis.sh
+
+This script processes all instruments in Bach_10_Dataset and generates:
+  Output/instrument_comparison/ - Individual analysis per instrument
+  Output/instrument_comparison/comparison_summary.txt - Overall results
+
+PQG-Enhanced batch processing:
+
+./run_analysis_with_pqg.sh
+
+Similar to DTW batch but uses PQG-A2SA for enhanced accuracy.
+Takes longer (2-3 minutes per file instead of 30 seconds).
+
+Example: DieSonne dataset only:
+
+./run_diesonne_with_pqg.sh
+
+Processes all 4 instruments from DieSonne piece with PQG enhancement.
+
+MODIFYING BATCH SCRIPTS
+
+To analyze different datasets, edit the script variables:
+
+DATASET_DIR="path/to/your/dataset"
+INSTRUMENTS=("violin" "clarinet" "bassoon" "saxophone")
+
+VIEWING RESULTS
+
+Check pipeline summary:
+
+cat Output/my_analysis/pipeline_summary.json
+
+For PQG pipeline:
+
+cat Output/my_analysis/pipeline_summary_enhanced.json
+
+View final grade:
+
+cat Output/my_analysis/07_grading/final_grade.json
+
+View detailed grading package:
+
+cat Output/my_analysis/05_inference_core/grading_package.json
+
+For PQG pipeline:
+
+cat Output/my_analysis/05_inference_core/grading_package_enhanced.json
+
+Check which metrics came from PQG vs DTW:
+
+cat Output/my_analysis/05_inference_core/metric_sources.json
+
+View performance report:
+
+cat Output/my_analysis/07_grading/performance_report.txt
+
+COMMON OPTIONS
+
+--audio PATH         Path to performance audio file (.wav)
+--score PATH         Path to score file (.xml or .mid)
+--output PATH        Output directory for results
+--part N             Score part index (0=soprano, 1=alto, 2=tenor, 3=bass)
+
+TROUBLESHOOTING
+
+If pipeline fails at beat detection:
+  This is normal. Beat detection is optional and pipeline continues without it.
+
+If PQG-A2SA takes too long:
+  PQG processing takes 90-120 seconds per file. This is expected.
+  Consider using DTW-only pipeline for faster results.
+
+If CUDA out of memory:
+  Reduce batch size in BasicPitch (edit amt_transcribe.py)
+  Or run on CPU (slower but works)
+
+If import errors:
+  Ensure all dependencies installed: pip install -r requirements.txt
+  Check Python version: python3 --version (must be 3.10+)
+
+OUTPUT DIRECTORY STRUCTURE
+
+Output/my_analysis/
+  01_input/                  Validated inputs
+  02_processing/             Processed audio (if used, optional)
+  03_temporal_alignment/     DTW alignment and score graph
+    scoregraph.json
+    transcription.json
+    performance.mid
+    alignment_output/
+      alignment_results.json
+  04_extraction/             Extracted features
+    performance_features.json
+    score_features.json
+  05_pqg_a2sa/              PQG alignment (enhanced pipeline only)
+    pqg_a2sa_results.json
+  05_inference_core/        Grading metrics
+    grading_package.json             (DTW-only)
+    grading_package_enhanced.json    (PQG-enhanced)
+    metric_sources.json              (PQG pipeline only)
+  07_grading/               Final results
+    final_grade.json
+    performance_report.txt
+  pipeline_summary.json              (DTW pipeline)
+  pipeline_summary_enhanced.json     (PQG pipeline)
+
+PERFORMANCE EXPECTATIONS
+
+DTW-only pipeline per file:
+  Input validation: 1-2 seconds
+  Audio transcription: 10-15 seconds
+  DTW alignment: 15-20 seconds
+  Feature extraction: 2-3 seconds
+  Inference and grading: 1-2 seconds
+  Total: 30-45 seconds per file
+
+PQG-enhanced pipeline per file:
+  All DTW steps: 30-45 seconds
+  PQG-A2SA alignment: 90-120 seconds
+  Enhanced inference: 1-2 seconds
+  Total: 2-3 minutes per file
+
+GRADING DIMENSIONS
+
+The system evaluates performance across 5 dimensions:
+
+1. Rhythm & Tempo (30% weight)
+   Onset timing accuracy, IOI correlation, tempo stability
+
+2. Sound Quality (20% weight)
+   Pitch accuracy, intonation
+
+3. Technical Virtuosity (20% weight)
+   Note accuracy, fluency, articulation precision
+
+4. Phrasing & Diction (15% weight)
+   Rubato variation, phrase boundaries, agogic expression
+
+5. Communicativeness (15% weight)
+   Musical structure, dramatic trajectory, climax positioning
+
+Scores range from 0-100 for each dimension, weighted to produce final score.
+
+PQG ENHANCEMENT
+
+PQG-A2SA enhances dimensions 1-3 (60% of total weight) with more precise onset/offset detection.
+
+Dimensions 4-5 remain DTW-based as they require score-level analysis beyond note timing.
+
+Check metric sources:
+
+python3 << 'EOF'
+import json
+gp = json.load(open('Output/my_analysis/05_inference_core/grading_package_enhanced.json'))
+for dim, source in gp['pqg_enhancement']['metric_sources'].items():
+    print(f"{dim}: {source}")
+EOF
+
+COMPARING DTW VS PQG
+
+Run both pipelines on same file:
+
+python3 MusicPerformanceAnalysis/pipeline.py \
+  --audio file.wav --score file.xml --output Output/dtw
+
+python3 MusicPerformanceAnalysis/pipeline_with_pqg.py \
+  --audio file.wav --score file.xml --output Output/pqg
+
+Compare scores:
+
+diff Output/dtw/05_inference_core/grading_package.json \
+     Output/pqg/05_inference_core/grading_package_enhanced.json
+
+DATASET ORGANIZATION
+
+Recommended structure:
+
+Dataset/
+  Piece1/
+    score.xml
+    score.mid (optional)
+    instrument1.wav
+    instrument2.wav
+  Piece2/
+    score.xml
+    instrument1.wav
+    instrument2.wav
+
+Audio filenames should contain instrument names (violin, clarinet, bassoon, saxophone, etc.) for automatic part detection.
+
+PYTHON API USAGE
+
+from MusicPerformanceAnalysis.pipeline import MusicPerformancePipeline
+
+pipeline = MusicPerformancePipeline(
+    audio_path='performance.wav',
+    score_path='score.xml',
+    output_dir='Output/analysis'
+)
+
+pipeline.run()
+
+For PQG-enhanced:
+
+from MusicPerformanceAnalysis.pipeline_with_pqg import MusicPerformancePipelineWithPQG
+
+pipeline = MusicPerformancePipelineWithPQG(
+    audio_path='performance.wav',
+    score_path='score.xml',
+    output_dir='Output/analysis_pqg'
+)
+
+pipeline.run()
+
+CHECKING SYSTEM REQUIREMENTS
+
+Python version:
+python3 --version
+
+Required: 3.10 or higher
+
+Check PyTorch:
+python3 -c "import torch; print(torch.__version__); print('CUDA:', torch.cuda.is_available())"
+
+Check TensorFlow:
+python3 -c "import tensorflow as tf; print(tf.__version__)"
+
+Check BasicPitch:
+python3 -c "from basic_pitch.inference import predict; print('BasicPitch OK')"
+
+Check core dependencies:
+python3 -c "import numpy, scipy, librosa, pretty_midi, music21; print('Core dependencies OK')"
+
+GETTING HELP
+
+For detailed architecture:
+cat LAYER_ARCHITECTURE_AND_GRADING_FORMULAS.txt
+
+For PQG integration details:
+cat PQG_INTEGRATION_SUCCESS.md
+
+For LLM feedback structure:
+cat LLM_FEEDBACK_DATA_REQUIREMENTS.txt
+
+For file organization:
+cat ESSENTIAL_FILES_FOR_PRODUCTION.txt
+
+EXAMPLE WORKFLOWS
+
+Quick test on single file:
+
+python3 MusicPerformanceAnalysis/pipeline.py \
+  --audio Bach_10_Dataset/DieSonne/06-DieSonne-violin.wav \
+  --score Bach_10_Dataset/DieSonne/06-DieSonne.xml \
+  --output Output/test_violin
+
+Full dataset analysis with PQG:
+
+./run_analysis_with_pqg.sh
+
+View summary:
+
+cat Output/instrument_comparison/comparison_summary.txt
+
+Compare specific instrument:
+
+cat Output/instrument_comparison/violin/05_inference_core/grading_package_enhanced.json | python3 -m json.tool
+
+NOTES
+
+Layer numbering has known inconsistency (05_inference_core should be 06_inference_core) but this does not affect functionality.
+
+Beat detection may fail gracefully. Pipeline continues without beat information.
+
+PQG-A2SA may not match all notes. System falls back to DTW for unmatched notes.
+
+Final grade in 07_grading/final_grade.json may show 0.0 due to grading layer bug. Check grading_package.json for actual scores.
+
+Output directories are created automatically. Do not create them manually.

@@ -1,0 +1,10 @@
+{
+  "meter": "4/4",
+  "key_signature": "C",
+  "tuning_hz": 440,
+  "tempo_marks": [
+    {"beat": 0, "bpm": 120}
+  ],
+  "fermatas": [],
+  "cadences": []
+}

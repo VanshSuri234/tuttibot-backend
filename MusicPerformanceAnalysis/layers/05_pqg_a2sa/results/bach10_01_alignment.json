@@ -1,0 +1,1084 @@
+{
+  "metadata": {
+    "audio_file": "../Bach_10_Dataset/01-AchGottundHerr.wav",
+    "midi_file": "../Bach_10_Dataset/01-AchGottundHerr.mid",
+    "config": {
+      "HOP_LENGTH": 1024,
+      "K_CL": 10,
+      "IOI_DELTA": 4,
+      "NMF_ITERATIONS": 150
+    }
+  },
+  "instruments": [
+    {
+      "name": "Instrument 1",
+      "index": 0,
+      "notes": [
+        {
+          "pitch": 72,
+          "onset": 1.9148969999999998,
+          "offset": 2.7399546485260773,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 71,
+          "onset": 2.553196,
+          "offset": 3.1914949999999997,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 69,
+          "onset": 3.1914949999999997,
+          "offset": 3.8297939999999997,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 67,
+          "onset": 3.8297939999999997,
+          "offset": 4.527891156462585,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 67,
+          "onset": 4.468093,
+          "offset": 4.9458503401360545,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 69,
+          "onset": 5.106392,
+          "offset": 5.944308390022676,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 71,
+          "onset": 5.7446909999999995,
+          "offset": 6.3829899999999995,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 72,
+          "onset": 6.3829899999999995,
+          "offset": 7.546485260770975,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 74,
+          "onset": 7.0212889999999994,
+          "offset": 7.659587999999999,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 72,
+          "onset": 7.659587999999999,
+          "offset": 8.297887,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 71,
+          "onset": 8.297887,
+          "offset": 8.936186,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 69,
+          "onset": 8.936186,
+          "offset": 9.404081632653062,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 71,
+          "onset": 9.574485,
+          "offset": 9.8936345,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 72,
+          "onset": 9.8936345,
+          "offset": 11.679637188208616,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 69,
+          "onset": 10.212784,
+          "offset": 11.331337868480725,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 67,
+          "onset": 11.489381999999999,
+          "offset": 12.07437641723356,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 72,
+          "onset": 12.127680999999999,
+          "offset": 12.49233560090703,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 71,
+          "onset": 12.765979999999999,
+          "offset": 13.444353741496599,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 72,
+          "onset": 13.404278999999999,
+          "offset": 14.233832199546486,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 74,
+          "onset": 14.042577999999999,
+          "offset": 14.79111111111111,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 74,
+          "onset": 14.680876999999999,
+          "offset": 15.51092970521542,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 76,
+          "onset": 15.319175999999999,
+          "offset": 15.957474999999999,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 74,
+          "onset": 15.957474999999999,
+          "offset": 16.2766245,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 72,
+          "onset": 16.2766245,
+          "offset": 16.595774,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 74,
+          "onset": 16.595774,
+          "offset": 17.205986394557822,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 67,
+          "onset": 17.234073,
+          "offset": 18.06512471655329,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 69,
+          "onset": 17.872372,
+          "offset": 18.3437641723356,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 71,
+          "onset": 18.510671,
+          "offset": 18.854603174603174,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 72,
+          "onset": 19.14897,
+          "offset": 19.667301587301587,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 74,
+          "onset": 19.4681195,
+          "offset": 19.969160997732427,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 76,
+          "onset": 19.787269,
+          "offset": 20.1064185,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 77,
+          "onset": 20.1064185,
+          "offset": 20.425568,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 74,
+          "onset": 20.425568,
+          "offset": 21.702166,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 72,
+          "onset": 21.702166,
+          "offset": 22.340465,
+          "articulation": "uncertain",
+          "velocity": 96
+        }
+      ]
+    },
+    {
+      "name": "Instrument 2",
+      "index": 1,
+      "notes": [
+        {
+          "pitch": 67,
+          "onset": 1.9148969999999998,
+          "offset": 3.3901133786848074,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 67,
+          "onset": 2.553196,
+          "offset": 3.1914949999999997,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 66,
+          "onset": 3.1914949999999997,
+          "offset": 3.8297939999999997,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 62,
+          "onset": 3.8297939999999997,
+          "offset": 4.527891156462585,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 64,
+          "onset": 4.468093,
+          "offset": 4.7872425,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 62,
+          "onset": 4.7872425,
+          "offset": 5.106392,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 60,
+          "onset": 5.106392,
+          "offset": 5.944308390022676,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 62,
+          "onset": 5.7446909999999995,
+          "offset": 6.3829899999999995,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 64,
+          "onset": 6.3829899999999995,
+          "offset": 7.0212889999999994,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 67,
+          "onset": 7.0212889999999994,
+          "offset": 7.659587999999999,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 67,
+          "onset": 7.659587999999999,
+          "offset": 7.978737499999999,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 66,
+          "onset": 7.978737499999999,
+          "offset": 8.777142857142858,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 67,
+          "onset": 8.297887,
+          "offset": 8.936186,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 66,
+          "onset": 8.936186,
+          "offset": 9.404081632653062,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 67,
+          "onset": 9.574485,
+          "offset": 11.029478458049887,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 67,
+          "onset": 10.212784,
+          "offset": 10.851083,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 66,
+          "onset": 10.851083,
+          "offset": 11.331337868480725,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 62,
+          "onset": 11.489381999999999,
+          "offset": 12.236916099773243,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 67,
+          "onset": 12.127680999999999,
+          "offset": 12.817414965986394,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 65,
+          "onset": 12.765979999999999,
+          "offset": 13.514013605442177,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 67,
+          "onset": 13.404278999999999,
+          "offset": 14.187392290249432,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 67,
+          "onset": 14.042577999999999,
+          "offset": 14.79111111111111,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 67,
+          "onset": 14.680876999999999,
+          "offset": 15.534149659863946,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 67,
+          "onset": 15.319175999999999,
+          "offset": 16.137868480725622,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 66,
+          "onset": 15.957474999999999,
+          "offset": 16.595774,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 67,
+          "onset": 16.595774,
+          "offset": 16.99700680272109,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 67,
+          "onset": 17.234073,
+          "offset": 17.786485260770974,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 62,
+          "onset": 17.872372,
+          "offset": 18.483083900226756,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 62,
+          "onset": 18.510671,
+          "offset": 19.29578231292517,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 60,
+          "onset": 19.14897,
+          "offset": 19.9459410430839,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 69,
+          "onset": 20.1064185,
+          "offset": 20.619319727891156,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 67,
+          "onset": 20.425568,
+          "offset": 21.408798185941045,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 65,
+          "onset": 21.3830165,
+          "offset": 21.702166,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 64,
+          "onset": 21.702166,
+          "offset": 22.340465,
+          "articulation": "uncertain",
+          "velocity": 96
+        }
+      ]
+    },
+    {
+      "name": "Instrument 3",
+      "index": 2,
+      "notes": [
+        {
+          "pitch": 64,
+          "onset": 1.9148969999999998,
+          "offset": 2.7399546485260773,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 62,
+          "onset": 2.553196,
+          "offset": 3.1914949999999997,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 62,
+          "onset": 3.1914949999999997,
+          "offset": 3.5106444999999997,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 60,
+          "onset": 3.5106444999999997,
+          "offset": 3.8297939999999997,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 59,
+          "onset": 3.8297939999999997,
+          "offset": 4.620770975056689,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 60,
+          "onset": 4.468093,
+          "offset": 4.7872425,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 58,
+          "onset": 4.7872425,
+          "offset": 5.106392,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 57,
+          "onset": 5.106392,
+          "offset": 5.4255415,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 55,
+          "onset": 5.4255415,
+          "offset": 5.944308390022676,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 53,
+          "onset": 5.7446909999999995,
+          "offset": 6.3829899999999995,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 55,
+          "onset": 6.3829899999999995,
+          "offset": 7.174965986394557,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 59,
+          "onset": 7.0212889999999994,
+          "offset": 7.659587999999999,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 60,
+          "onset": 7.659587999999999,
+          "offset": 8.297887,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 62,
+          "onset": 8.297887,
+          "offset": 9.032562358276644,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 62,
+          "onset": 8.936186,
+          "offset": 9.380861678004536,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 62,
+          "onset": 9.574485,
+          "offset": 11.354557823129252,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 64,
+          "onset": 10.212784,
+          "offset": 10.851083,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 62,
+          "onset": 10.851083,
+          "offset": 11.331337868480725,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 60,
+          "onset": 11.1702325,
+          "offset": 11.489381999999999,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 59,
+          "onset": 11.489381999999999,
+          "offset": 12.167256235827665,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 60,
+          "onset": 12.127680999999999,
+          "offset": 12.49233560090703,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 62,
+          "onset": 12.765979999999999,
+          "offset": 13.421133786848072,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 64,
+          "onset": 13.404278999999999,
+          "offset": 14.233832199546486,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 59,
+          "onset": 14.042577999999999,
+          "offset": 14.79111111111111,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 59,
+          "onset": 14.680876999999999,
+          "offset": 15.51092970521542,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 60,
+          "onset": 15.319175999999999,
+          "offset": 16.27718820861678,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 60,
+          "onset": 15.957474999999999,
+          "offset": 16.595774,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 59,
+          "onset": 16.595774,
+          "offset": 17.066666666666666,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 60,
+          "onset": 17.234073,
+          "offset": 17.740045351473924,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 60,
+          "onset": 17.872372,
+          "offset": 18.668843537414965,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 59,
+          "onset": 18.510671,
+          "offset": 18.854603174603174,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 64,
+          "onset": 19.14897,
+          "offset": 19.620861678004534,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 65,
+          "onset": 19.4681195,
+          "offset": 19.9459410430839,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 67,
+          "onset": 19.787269,
+          "offset": 20.1064185,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 60,
+          "onset": 20.1064185,
+          "offset": 20.712199546485262,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 60,
+          "onset": 20.425568,
+          "offset": 21.24625850340136,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 59,
+          "onset": 21.063867,
+          "offset": 21.702166,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 55,
+          "onset": 21.702166,
+          "offset": 22.340465,
+          "articulation": "uncertain",
+          "velocity": 96
+        }
+      ]
+    },
+    {
+      "name": "Instrument 4",
+      "index": 3,
+      "notes": [
+        {
+          "pitch": 48,
+          "onset": 1.9148969999999998,
+          "offset": 2.647074829931973,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 55,
+          "onset": 2.553196,
+          "offset": 3.1914949999999997,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 50,
+          "onset": 3.1914949999999997,
+          "offset": 3.8297939999999997,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 43,
+          "onset": 3.8297939999999997,
+          "offset": 4.504671201814059,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 48,
+          "onset": 4.468093,
+          "offset": 4.9458503401360545,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 53,
+          "onset": 5.106392,
+          "offset": 5.4255415,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 52,
+          "onset": 5.4255415,
+          "offset": 5.944308390022676,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 50,
+          "onset": 5.7446909999999995,
+          "offset": 6.3829899999999995,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 48,
+          "onset": 6.3829899999999995,
+          "offset": 7.198185941043084,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 43,
+          "onset": 7.0212889999999994,
+          "offset": 7.659587999999999,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 45,
+          "onset": 7.659587999999999,
+          "offset": 8.452063492063493,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 47,
+          "onset": 8.297887,
+          "offset": 8.6170365,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 48,
+          "onset": 8.6170365,
+          "offset": 9.032562358276644,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 50,
+          "onset": 8.936186,
+          "offset": 9.218321995464853,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 55,
+          "onset": 9.574485,
+          "offset": 10.216780045351474,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 48,
+          "onset": 10.212784,
+          "offset": 10.851083,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 50,
+          "onset": 10.851083,
+          "offset": 11.331337868480725,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 43,
+          "onset": 11.489381999999999,
+          "offset": 12.30657596371882,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 52,
+          "onset": 12.127680999999999,
+          "offset": 12.49233560090703,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 50,
+          "onset": 12.765979999999999,
+          "offset": 13.374693877551021,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 48,
+          "onset": 13.404278999999999,
+          "offset": 14.233832199546486,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 55,
+          "onset": 14.042577999999999,
+          "offset": 14.489251700680272,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 55,
+          "onset": 14.680876999999999,
+          "offset": 15.51092970521542,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 60,
+          "onset": 15.319175999999999,
+          "offset": 15.638325499999999,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 59,
+          "onset": 15.638325499999999,
+          "offset": 16.137868480725622,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 57,
+          "onset": 15.957474999999999,
+          "offset": 16.595774,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 55,
+          "onset": 16.595774,
+          "offset": 16.648707482993196,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 52,
+          "onset": 17.234073,
+          "offset": 17.716825396825396,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 54,
+          "onset": 17.872372,
+          "offset": 18.3437641723356,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 56,
+          "onset": 18.510671,
+          "offset": 18.854603174603174,
+          "articulation": "staccato",
+          "velocity": 96
+        },
+        {
+          "pitch": 57,
+          "onset": 19.14897,
+          "offset": 19.620861678004534,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 55,
+          "onset": 19.787269,
+          "offset": 20.1064185,
+          "articulation": "uncertain",
+          "velocity": 96
+        },
+        {
+          "pitch": 53,
+          "onset": 20.1064185,
+          "offset": 20.48,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 55,
+          "onset": 20.425568,
+          "offset": 21.13015873015873,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 43,
+          "onset": 21.063867,
+          "offset": 21.571337868480725,
+          "articulation": "legato",
+          "velocity": 96
+        },
+        {
+          "pitch": 48,
+          "onset": 21.702166,
+          "offset": 22.340465,
+          "articulation": "uncertain",
+          "velocity": 96
+        }
+      ]
+    }
+  ],
+  "chord_onsets": [
+    0.0,
+    1.18421768707483,
+    3.297233560090703,
+    4.527891156462585,
+    4.922630385487528,
+    6.176507936507937,
+    7.801904761904762,
+    8.614603174603175,
+    9.032562358276644,
+    9.380861678004536,
+    11.00625850340136,
+    11.261678004535147,
+    11.865396825396825,
+    12.167256235827665,
+    12.469115646258503,
+    12.654875283446712,
+    12.817414965986394,
+    13.049614512471654,
+    13.421133786848072,
+    13.305034013605443,
+    13.444353741496599,
+    13.815873015873017,
+    14.187392290249432,
+    14.79111111111111,
+    15.534149659863946,
+    16.27718820861678,
+    16.99700680272109,
+    17.740045351473924,
+    18.483083900226756,
+    18.854603174603174,
+    19.22612244897959,
+    19.59764172335601,
+    19.969160997732427,
+    20.712199546485262,
+    21.24625850340136,
+    21.501678004535147,
+    22.244716553287983,
+    22.6162358276644,
+    22.987755102040815,
+    23.359274376417233,
+    23.73079365079365,
+    24.473832199546486,
+    24.845351473922904,
+    25.193650793650793
+  ],
+  "statistics": {
+    "total_notes": 142,
+    "total_staccato": 29,
+    "total_legato": 60,
+    "n_chords": 44
+  }
+}

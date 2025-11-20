@@ -1,0 +1,50 @@
+======================================================================
+PITCH ACCURACY EVALUATION SUMMARY
+======================================================================
+
+Date: 2025-11-02 12:13:11
+Score: Twinkle_pdf_audiveris.xml
+Audio: twinkle_full.wav
+
+FINAL GRADE
+----------------------------------------------------------------------
+Letter Grade: F
+Numeric Score: 0.0/100
+Quality: Failing
+
+KEY METRICS
+----------------------------------------------------------------------
+Mean Absolute Error: 276.5 cents
+Measured Notes: 28/28 (100%)
+Within ±10 cents: 32.1%
+Within ±25 cents: 32.1%
+Within ±50 cents: 35.7%
+
+ACCURACY BREAKDOWN
+----------------------------------------------------------------------
+Perfect (<10¢):      32.1%  (9 notes)
+Excellent (10-25¢):   0.0%  (0 notes)
+Good (25-50¢):        3.6%  (1 notes)
+Poor (≥50¢):         64.3%  (18 notes)
+
+STRENGTHS
+----------------------------------------------------------------------
+1. Clear, well-articulated notes throughout performance
+
+AREAS FOR IMPROVEMENT
+----------------------------------------------------------------------
+1. Focus on overall pitch accuracy - consider using a tuner during practice
+2. Only 36% of notes within acceptable range - practice slow scales
+3. 64% of notes have significant pitch issues - review problem areas
+4. Tendency to play sharp (average +44.6 cents) - lower pitch slightly
+5. Pitch consistency varies - focus on maintaining steady intonation
+
+OVERALL FEEDBACK
+----------------------------------------------------------------------
+Pitch control needs substantial work before performance-ready. Successfully measured 28/28 notes (100%). Average deviation: 276.5 cents.
+
+======================================================================
+For detailed results, see:
+  - JSON summary: evaluation_summary.json
+  - CSV data: note_by_note_comparison.csv
+======================================================================

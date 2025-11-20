@@ -1,0 +1,369 @@
+PRODUCTION BRANCH PREPARATION GUIDE
+
+This document lists exactly what files/folders to include in your production branch for a clean, working repository.
+
+STEP 1: FILES TO INCLUDE
+
+Core System Files (Required):
+
+MusicPerformanceAnalysis/
+  __init__.py
+  pipeline.py
+  pipeline_with_pqg.py
+  
+  layers/
+    01_input/
+      __init__.py
+      input_layer.py
+    
+    02_processing/
+      __init__.py
+      processing_layer.py
+    
+    03_temporal_alignment/
+      block_0_scoregraph/
+        generate_scoregraph.py
+      block_1_amt/
+        amt_transcribe.py
+      block_2_alignment_grading/
+        context_alignment_dag.py
+        grading_metrics.py
+      block_4_beats/
+        estimate_beats_beatnet.py
+    
+    04_extraction/
+      __init__.py
+      extraction_layer.py
+      requirements_extraction.py
+    
+    05_pqg_a2sa/
+      src/
+        __init__.py
+        pipeline.py
+        config.py
+        features.py
+        nmf.py
+        vidtw.py
+        ioi_gm.py
+        baseline_dtw.py
+        articulation.py
+        evaluation.py
+      evaluate_bach10.py
+      compare_algorithms.py
+    
+    06_inference/
+      __init__.py
+      inference_core.py
+      inference_core_with_pqg.py
+      data_collector.py
+      pqg_metrics_recomputer.py
+      analyzers/
+        __init__.py
+        rhythm_tempo.py
+        sound_quality.py
+        technical_virtuosity.py
+        phrasing_diction.py
+        communicativeness.py
+      utils/
+        __init__.py
+        metrics_extractor.py
+        scoring_functions.py
+        data_utils.py
+        metric_utils.py
+    
+    07_grading/
+      __init__.py
+      grading_layer.py
+
+Execution Scripts (Required):
+
+run_analysis.sh
+run_analysis_with_pqg.sh
+run_diesonne_with_pqg.sh (optional, for examples)
+
+Documentation Files (Recommended):
+
+requirements.txt
+run_help.txt
+ESSENTIAL_FILES_FOR_PRODUCTION.txt
+README.md (create if not exists)
+
+Additional Documentation (Optional but Useful):
+
+LAYER_ARCHITECTURE_AND_GRADING_FORMULAS.txt
+LLM_FEEDBACK_DATA_REQUIREMENTS.txt
+PQG_INTEGRATION_SUCCESS.md
+DieSonne_PQG_Results_Summary.txt
+
+Dataset (For Testing):
+
+Bach_10_Dataset/
+  (Include if you want test data in repo, otherwise exclude and provide separately)
+
+STEP 2: FILES TO EXCLUDE
+
+Exclude all Output directories:
+
+Output/
+Output_*/
+*.pyc
+__pycache__/
+.pytest_cache/
+*.log
+nohup.out
+
+Exclude development documentation:
+
+COMPLETE_*.md
+CURRENT_STATUS_*.md
+IMPLEMENTATION_PLAN_*.md
+EVALUATION_*.md
+HYBRID_*.md
+INFERENCE_CORE_*.md
+CONTEXT_*.md
+DTW_*.md
+ENHANCED_*.md (except PQG_INTEGRATION_SUCCESS.md)
+FINAL_*.md
+GPU_*.md
+GRADING_*.md (except core grading docs)
+DEPENDENCY_*.md
+CONSOLIDATION_*.md
+HANDOFF_*.md
+
+Exclude temporary scripts:
+
+deploy_*.sh
+docker_setup.sh
+install_*.sh (except if you create final install.sh)
+test_*.sh (unless you want to keep for testing)
+hpc_compatibility_check.py
+gpu_manager.py
+
+Exclude workspace clutter:
+
+=0.2.0/
+=0.2.10/
+=0.25.0/
+=0.4.9/
+=1.26.0/
+=3.0.3/
+=4.62.0/
+Grading_Rubric/ (if it's a directory with old files)
+
+Exclude comparison/evaluation scripts (unless needed):
+
+compare_*.py (except in 05_pqg_a2sa if needed)
+generate_*.py
+evaluate_*.py (except in 05_pqg_a2sa if needed)
+
+STEP 3: CREATE .gitignore
+
+Create .gitignore in repository root:
+
+Output/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.log
+nohup.out
+.pytest_cache/
+.coverage
+.venv/
+venv/
+env/
+.DS_Store
+Thumbs.db
+
+STEP 4: VERIFY CRITICAL FILES
+
+Check all __init__.py files exist:
+
+find MusicPerformanceAnalysis -type d -name "__pycache__" -prune -o -type d -exec test -e {}/__init__.py \; -print
+
+Should show all package directories have __init__.py.
+
+Check no missing imports:
+
+python3 -c "from MusicPerformanceAnalysis.pipeline import MusicPerformancePipeline; print('DTW pipeline OK')"
+python3 -c "from MusicPerformanceAnalysis.pipeline_with_pqg import MusicPerformancePipelineWithPQG; print('PQG pipeline OK')"
+
+STEP 5: TEST BEFORE PUSHING
+
+Run quick test on DTW pipeline:
+
+python3 MusicPerformanceAnalysis/pipeline.py \
+  --audio Bach_10_Dataset/DieSonne/06-DieSonne-violin.wav \
+  --score Bach_10_Dataset/DieSonne/06-DieSonne.xml \
+  --output Output/test_dtw
+
+Check results:
+
+cat Output/test_dtw/pipeline_summary.json
+
+Run quick test on PQG pipeline:
+
+python3 MusicPerformanceAnalysis/pipeline_with_pqg.py \
+  --audio Bach_10_Dataset/DieSonne/06-DieSonne-violin.wav \
+  --score Bach_10_Dataset/DieSonne/06-DieSonne.xml \
+  --output Output/test_pqg
+
+Check results:
+
+cat Output/test_pqg/pipeline_summary_enhanced.json | grep pqg_enhanced
+
+Should show "pqg_enhanced": true
+
+STEP 6: BRANCH STRATEGY
+
+Option A: Clean main branch
+
+Create new production branch from current state:
+
+git checkout -b production-clean
+git add <files from STEP 1>
+git commit -m "Production-ready code with PQG-A2SA integration"
+git push origin production-clean
+
+Then merge to main after testing.
+
+Option B: New branch from scratch
+
+Create orphan branch (no history):
+
+git checkout --orphan production
+git rm -rf .
+(Copy only production files)
+git add .
+git commit -m "Initial production release"
+git push origin production
+
+STEP 7: POST-PUSH VERIFICATION
+
+After pushing to new branch, clone fresh copy and test:
+
+git clone <repo-url> -b production-clean test-clone
+cd test-clone
+pip install -r requirements.txt
+python3 MusicPerformanceAnalysis/pipeline.py --audio <test-file> --score <test-score> --output Output/verify
+cat Output/verify/pipeline_summary.json
+
+STEP 8: CREATE RELEASE DOCUMENTATION
+
+Create README.md in root:
+
+Content should include:
+- System overview
+- Quick start guide
+- Installation instructions
+- Basic usage examples
+- Link to full documentation
+- Known issues
+- License information
+
+Create SETUP_GUIDE.md:
+
+Content should include:
+- System requirements
+- Dependency installation
+- Environment setup
+- First-run verification
+- Troubleshooting
+
+RECOMMENDED FILE TREE FOR PRODUCTION
+
+.
+├── .gitignore
+├── README.md
+├── SETUP_GUIDE.md
+├── requirements.txt
+├── run_help.txt
+├── ESSENTIAL_FILES_FOR_PRODUCTION.txt
+├── run_analysis.sh
+├── run_analysis_with_pqg.sh
+├── MusicPerformanceAnalysis/
+│   ├── __init__.py
+│   ├── pipeline.py
+│   ├── pipeline_with_pqg.py
+│   └── layers/
+│       ├── 01_input/
+│       ├── 02_processing/
+│       ├── 03_temporal_alignment/
+│       ├── 04_extraction/
+│       ├── 05_pqg_a2sa/
+│       ├── 06_inference/
+│       └── 07_grading/
+├── Bach_10_Dataset/ (optional)
+└── docs/ (optional, for additional documentation)
+    ├── LAYER_ARCHITECTURE_AND_GRADING_FORMULAS.txt
+    ├── LLM_FEEDBACK_DATA_REQUIREMENTS.txt
+    └── PQG_INTEGRATION_SUCCESS.md
+
+FINAL CHECKLIST
+
+Before pushing to production branch:
+
+[ ] All __init__.py files present
+[ ] No Output/ directories included
+[ ] No temporary/experimental files included
+[ ] No .pyc or __pycache__ included
+[ ] .gitignore created and tested
+[ ] requirements.txt complete and tested
+[ ] run_help.txt accurate
+[ ] README.md created
+[ ] DTW pipeline tested and working
+[ ] PQG pipeline tested and working
+[ ] Batch scripts tested
+[ ] Documentation reviewed for accuracy
+[ ] No sensitive data or credentials included
+[ ] License file added (if applicable)
+
+USAGE AFTER PUSHING
+
+Users cloning production branch should:
+
+1. Clone repository:
+   git clone <repo-url>
+
+2. Install dependencies:
+   pip install -r requirements.txt
+
+3. Run test:
+   python3 MusicPerformanceAnalysis/pipeline.py --audio <audio-file> --score <score-file> --output Output/test
+
+4. Check results:
+   cat Output/test/pipeline_summary.json
+
+5. Read documentation:
+   cat run_help.txt
+
+QUESTIONS TO CONFIRM
+
+Before proceeding with push, confirm:
+
+1. Do you want Bach_10_Dataset in production branch?
+   - YES: Include for easy testing
+   - NO: Exclude and document where to get test data
+
+2. Do you want all documentation files?
+   - YES: Include docs/ folder with all .md and .txt files
+   - NO: Keep only essential files (requirements.txt, run_help.txt)
+
+3. Do you want comparison/evaluation scripts?
+   - YES: Keep evaluate_bach10.py, compare_algorithms.py
+   - NO: Remove to keep repo minimal
+
+4. Branch naming preference?
+   - production
+   - main
+   - release
+   - v1.0
+   - (your choice)
+
+Let me know your preferences and I can help create the exact commands for pushing the clean branch.

@@ -1,0 +1,142 @@
+{
+  "metadata": {
+    "total_notes": 2417,
+    "reference_frequency": 440.0,
+    "pitch_range_midi": {
+      "min": 36,
+      "max": 83
+    },
+    "pitch_range_hz": {
+      "min": 65.40639132514966,
+      "max": 987.7666025122483
+    },
+    "total_duration": 91.33333333333333
+  },
+  "notes": [
+    {
+      "note_index": 0,
+      "onset_time": 0.0,
+      "offset_time": 0.5,
+      "duration": 0.5,
+      "midi_pitch": 55,
+      "frequency_hz": 195.99771799087463,
+      "note_name": "G",
+      "octave": 3,
+      "quarter_length": 1.0,
+      "part_name": "Voice",
+      "measure_number": 1
+    },
+    {
+      "note_index": 1,
+      "onset_time": 0.0,
+      "offset_time": 0.5,
+      "duration": 0.5,
+      "midi_pitch": 71,
+      "frequency_hz": 493.8833012561241,
+      "note_name": "B",
+      "octave": 4,
+      "quarter_length": 1.0,
+      "part_name": "Voice",
+      "measure_number": 1
+    },
+    {
+      "note_index": 2,
+      "onset_time": 0.5,
+      "offset_time": 1.0,
+      "duration": 0.5,
+      "midi_pitch": 54,
+      "frequency_hz": 184.9972113558172,
+      "note_name": "F#",
+      "octave": 3,
+      "quarter_length": 1.0,
+      "part_name": "Voice",
+      "measure_number": 1
+    },
+    {
+      "note_index": 3,
+      "onset_time": 0.5,
+      "offset_time": 1.0,
+      "duration": 0.5,
+      "midi_pitch": 54,
+      "frequency_hz": 184.9972113558172,
+      "note_name": "F#",
+      "octave": 3,
+      "quarter_length": 1.0,
+      "part_name": "Voice",
+      "measure_number": 1
+    },
+    {
+      "note_index": 4,
+      "onset_time": 0.5,
+      "offset_time": 1.0,
+      "duration": 0.5,
+      "midi_pitch": 57,
+      "frequency_hz": 220.0,
+      "note_name": "A",
+      "octave": 3,
+      "quarter_length": 1.0,
+      "part_name": "Voice",
+      "measure_number": 1
+    },
+    {
+      "note_index": 5,
+      "onset_time": 0.5,
+      "offset_time": 1.0,
+      "duration": 0.5,
+      "midi_pitch": 66,
+      "frequency_hz": 369.9944227116344,
+      "note_name": "F#",
+      "octave": 4,
+      "quarter_length": 1.0,
+      "part_name": "Voice",
+      "measure_number": 1
+    },
+    {
+      "note_index": 6,
+      "onset_time": 1.0,
+      "offset_time": 1.5,
+      "duration": 0.5,
+      "midi_pitch": 64,
+      "frequency_hz": 329.6275569128699,
+      "note_name": "E",
+      "octave": 4,
+      "quarter_length": 1.0,
+      "part_name": "Voice",
+      "measure_number": 1
+    },
+    {
+      "note_index": 7,
+      "onset_time": 1.5,
+      "offset_time": 2.0,
+      "duration": 0.5,
+      "midi_pitch": 55,
+      "frequency_hz": 195.99771799087463,
+      "note_name": "G",
+      "octave": 3,
+      "quarter_length": 1.0,
+      "part_name": "Voice",
+      "measure_number": 1
+    },
+    {
+      "note_index": 8,
+      "onset_time": 1.5,
+      "offset_time": 2.0,
+      "duration": 0.5,
+      "midi_pitch": 66,
+      "frequency_hz": 369.9944227116344,
+      "note_name": "F#",
+      "octave": 4,
+      "quarter_length": 1.0,
+      "part_name": "Voice",
+      "measure_number": 1
+    },
+    {
+      "note_index": 9,
+      "onset_time": 2.0,
+      "offset_time": 2.3333333333333335,
+      "duration": 0.3333333333333333,
+      "midi_pitch": 59,
+      "frequency_hz": 246.94165062806206,
+      "note_name": "B",
+      "octave": 3,
+      "quarter_length": 

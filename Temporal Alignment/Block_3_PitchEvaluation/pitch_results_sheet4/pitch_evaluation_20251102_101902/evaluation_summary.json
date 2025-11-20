@@ -1,0 +1,83 @@
+{
+  "timestamp": "2025-11-02T10:20:37.231933",
+  "input_files": {
+    "score": "/home/nikhilsingh/Documents/temp/Trials/Workspace/Sheet-4.xml",
+    "audio": "/home/nikhilsingh/Documents/temp/Trials/Workspace/Output/tuttibot_hybrid_v02_20251102_005230/01_input_layer/wav4sheet-4.wav"
+  },
+  "configuration": {
+    "method": "pyin",
+    "reference_frequency": 440.0
+  },
+  "grade": {
+    "letter_grade": "F",
+    "numeric_score": 3.5709252281900633e-26,
+    "quality_description": "Failing",
+    "perfect_percentage": 0.0,
+    "excellent_percentage": 3.3333333333333335,
+    "good_percentage": 0.0,
+    "poor_percentage": 96.66666666666667,
+    "mean_absolute_error_cents": 1579.98894685149,
+    "measurement_rate": 0.012412081092263137,
+    "within_10_cents": 0.0,
+    "within_25_cents": 3.3333333333333335,
+    "within_50_cents": 3.3333333333333335,
+    "strengths": [
+      "Performance shows potential for improvement"
+    ],
+    "areas_for_improvement": [
+      "Focus on overall pitch accuracy - consider using a tuner during practice",
+      "Only 3% of notes within acceptable range - practice slow scales",
+      "97% of notes have significant pitch issues - review problem areas",
+      "Some notes were unclear or too soft - work on note articulation and projection",
+      "Tendency to play flat (average -1510.2 cents) - raise pitch slightly",
+      "Pitch consistency varies - focus on maintaining steady intonation"
+    ],
+    "overall_feedback": "Pitch control needs substantial work before performance-ready. Successfully measured 30/2417 notes (1%). Average deviation: 1580.0 cents."
+  },
+  "metrics": {
+    "total_notes": 2417,
+    "measured_notes": 30,
+    "measurement_rate": 0.012412081092263137,
+    "mean_absolute_cents_error": 1579.98894685149,
+    "mean_cents_error": -1510.1996883436088,
+    "std_cents_error": 1282.9052224387376,
+    "median_absolute_cents_error": 1535.790280595446,
+    "max_sharp_cents": 509.209719404554,
+    "max_flat_cents": -3828.8608387066706,
+    "accuracy_breakdown": {
+      "perfect": {
+        "count": 0,
+        "percentage": 0.0,
+        "threshold": "< 10.0 cents"
+      },
+      "excellent": {
+        "count": 1,
+        "percentage": 3.3333333333333335,
+        "threshold": "10.0-25.0 cents"
+      },
+      "good": {
+        "count": 0,
+        "percentage": 0.0,
+        "threshold": "25.0-50.0 cents"
+      },
+      "poor": {
+        "count": 29,
+        "percentage": 96.66666666666667,
+        "threshold": "\u2265 50.0 cents"
+      }
+    },
+    "within_10_cents": 0.0,
+    "within_25_cents": 3.3333333333333335,
+    "within_50_cents": 3.3333333333333335,
+    "average_confidence": 0.7091605688501944,
+    "average_voiced_ratio": 0.41457431457431465
+  },
+  "output_files": {
+    "score_pitches": "pitch_results_sheet4/pitch_evaluation_20251102_101902/data/score_pitches.json",
+    "audio_pitches": "pitch_results_sheet4/pitch_evaluation_20251102_101902/data/audio_pitches.json",
+    "comparison_results": "pitch_results_sheet4/pitch_evaluation_20251102_101902/data/comparison_results.json",
+    "comparison_csv": "pitch_results_sheet4/pitch_evaluation_20251102_101902/reports/note_by_note_comparison.csv",
+    "grade_report": "pitch_results_sheet4/pitch_evaluation_20251102_101902/reports/pitch_grade.json",
+    "visualizations": null
+  }
+}

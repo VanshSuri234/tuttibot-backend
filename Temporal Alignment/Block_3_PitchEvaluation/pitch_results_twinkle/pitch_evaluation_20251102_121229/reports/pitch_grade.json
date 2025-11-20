@@ -1,0 +1,25 @@
+{
+  "letter_grade": "F",
+  "numeric_score": 0.0015750117147779131,
+  "quality_description": "Failing",
+  "perfect_percentage": 32.142857142857146,
+  "excellent_percentage": 0.0,
+  "good_percentage": 3.571428571428571,
+  "poor_percentage": 64.28571428571429,
+  "mean_absolute_error_cents": 276.46656886915156,
+  "measurement_rate": 1.0,
+  "within_10_cents": 32.142857142857146,
+  "within_25_cents": 32.142857142857146,
+  "within_50_cents": 35.714285714285715,
+  "strengths": [
+    "Clear, well-articulated notes throughout performance"
+  ],
+  "areas_for_improvement": [
+    "Focus on overall pitch accuracy - consider using a tuner during practice",
+    "Only 36% of notes within acceptable range - practice slow scales",
+    "64% of notes have significant pitch issues - review problem areas",
+    "Tendency to play sharp (average +44.6 cents) - lower pitch slightly",
+    "Pitch consistency varies - focus on maintaining steady intonation"
+  ],
+  "overall_feedback": "Pitch control needs substantial work before performance-ready. Successfully measured 28/28 notes (100%). Average deviation: 276.5 cents."
+}

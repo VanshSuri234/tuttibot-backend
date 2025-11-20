@@ -1,0 +1,31 @@
+# Pitch Evaluation Dependencies (CPU-optimized)
+
+# Core dependencies
+music21>=9.1.0          # Score parsing (MusicXML/MIDI)
+librosa>=0.10.0         # Audio analysis and pitch extraction
+numpy>=1.24.0           # Numerical operations
+scipy>=1.10.0           # Signal processing
+
+# Pitch extraction (CPU-friendly options)
+crepe>=0.0.13          # TensorFlow-based pitch tracker (CPU mode)
+# Alternative: Use librosa.pyin for pure CPU processing
+
+# Visualization
+matplotlib>=3.7.0       # Plotting pitch curves
+seaborn>=0.12.0        # Statistical visualizations
+
+# Evaluation metrics
+mir_eval>=0.7          # Music information retrieval evaluation
+
+# Audio I/O
+soundfile>=0.12.0      # Audio file reading
+audioread>=3.0.0       # Additional audio format support
+
+# Optional: for better pitch tracking
+resampy>=0.4.2         # High-quality audio resampling
+numba>=0.57.0          # JIT compilation for performance
+
+# Note: 
+# - CREPE will use CPU by default if no GPU available
+# - For pure CPU, librosa.pyin is recommended (no extra dependencies)
+# - torchcrepe NOT included since it requires PyTorch (use crepe instead)

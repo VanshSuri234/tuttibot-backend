@@ -1,0 +1,82 @@
+{
+  "timestamp": "2025-11-02T12:13:11.626941",
+  "input_files": {
+    "score": "/home/nikhilsingh/Documents/temp/Trials/Workspace/Twinkle_pdf_audiveris.xml",
+    "audio": "/home/nikhilsingh/Documents/temp/Trials/Workspace/twinkle_full.wav"
+  },
+  "configuration": {
+    "method": "pyin",
+    "reference_frequency": 440.0
+  },
+  "grade": {
+    "letter_grade": "F",
+    "numeric_score": 0.0015750117147779131,
+    "quality_description": "Failing",
+    "perfect_percentage": 32.142857142857146,
+    "excellent_percentage": 0.0,
+    "good_percentage": 3.571428571428571,
+    "poor_percentage": 64.28571428571429,
+    "mean_absolute_error_cents": 276.46656886915156,
+    "measurement_rate": 1.0,
+    "within_10_cents": 32.142857142857146,
+    "within_25_cents": 32.142857142857146,
+    "within_50_cents": 35.714285714285715,
+    "strengths": [
+      "Clear, well-articulated notes throughout performance"
+    ],
+    "areas_for_improvement": [
+      "Focus on overall pitch accuracy - consider using a tuner during practice",
+      "Only 36% of notes within acceptable range - practice slow scales",
+      "64% of notes have significant pitch issues - review problem areas",
+      "Tendency to play sharp (average +44.6 cents) - lower pitch slightly",
+      "Pitch consistency varies - focus on maintaining steady intonation"
+    ],
+    "overall_feedback": "Pitch control needs substantial work before performance-ready. Successfully measured 28/28 notes (100%). Average deviation: 276.5 cents."
+  },
+  "metrics": {
+    "total_notes": 28,
+    "measured_notes": 28,
+    "measurement_rate": 1.0,
+    "mean_absolute_cents_error": 276.46656886915156,
+    "mean_cents_error": 44.56686226169677,
+    "std_cents_error": 389.74792350640047,
+    "median_absolute_cents_error": 200.79028059544623,
+    "max_sharp_cents": 999.2097194045539,
+    "max_flat_cents": -700.7902805954462,
+    "accuracy_breakdown": {
+      "perfect": {
+        "count": 9,
+        "percentage": 32.142857142857146,
+        "threshold": "< 10.0 cents"
+      },
+      "excellent": {
+        "count": 0,
+        "percentage": 0.0,
+        "threshold": "10.0-25.0 cents"
+      },
+      "good": {
+        "count": 1,
+        "percentage": 3.571428571428571,
+        "threshold": "25.0-50.0 cents"
+      },
+      "poor": {
+        "count": 18,
+        "percentage": 64.28571428571429,
+        "threshold": "\u2265 50.0 cents"
+      }
+    },
+    "within_10_cents": 32.142857142857146,
+    "within_25_cents": 32.142857142857146,
+    "within_50_cents": 35.714285714285715,
+    "average_confidence": 0.9910825621463132,
+    "average_voiced_ratio": 0.970277645942098
+  },
+  "output_files": {
+    "score_pitches": "pitch_results_twinkle/pitch_evaluation_20251102_121229/data/score_pitches.json",
+    "audio_pitches": "pitch_results_twinkle/pitch_evaluation_20251102_121229/data/audio_pitches.json",
+    "comparison_results": "pitch_results_twinkle/pitch_evaluation_20251102_121229/data/comparison_results.json",
+    "comparison_csv": "pitch_results_twinkle/pitch_evaluation_20251102_121229/reports/note_by_note_comparison.csv",
+    "grade_report": "pitch_results_twinkle/pitch_evaluation_20251102_121229/reports/pitch_grade.json",
+    "visualizations": null
+  }
+}

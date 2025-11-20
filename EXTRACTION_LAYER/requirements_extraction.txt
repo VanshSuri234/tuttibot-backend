@@ -1,0 +1,27 @@
+# Extraction Layer Requirements
+
+# Core
+numpy>=1.21.0
+scipy>=1.7.0
+pandas>=1.3.0
+soundfile>=0.10.0
+audioread>=3.0.0
+tqdm>=4.62.0
+jsonschema>=4.0.0
+
+# Audio/MIR
+librosa>=0.10.0
+# aubio is optional but recommended (use conda-forge on some platforms)
+aubio>=0.4.9
+
+# Essentia (choose one depending on platform; both optional)
+# pip install essentia  # CPU build via PyPI/conda
+# pip install essentia-tensorflow  # If you prefer the TF build
+
+# Score processing
+music21>=8.0.0
+pretty-midi>=0.2.10
+
+# Notes:
+# - On Windows/macOS, you may prefer conda to install aubio/essentia.
+# - For Ubuntu/Debian, install libsndfile and portaudio system packages first.

@@ -1,0 +1,65 @@
+======================================================================
+ALGORITHM COMPARISON SUMMARY
+Baseline DTW vs PQG-A2SA
+======================================================================
+
+Audio: ../Bach_10_Dataset/04-ChristeDuBeistand.wav
+Score: ../Bach_10_Dataset/04-ChristeDuBeistand.mid
+Total Notes: 83
+
+----------------------------------------------------------------------
+MEAN ERRORS
+----------------------------------------------------------------------
+
+Baseline DTW:
+  Mean Note Error (MNE):  15404.88 ms
+  Mean Frame Error (MFE): 15751.35 ms
+
+PQG-A2SA:
+  Mean Note Error (MNE):    268.74 ms
+  Mean Frame Error (MFE):   126.39 ms
+
+Improvement (PQG-A2SA over Baseline):
+  Onset Error:   +98.26%
+  Offset Error:  +99.20%
+
+----------------------------------------------------------------------
+ALIGNMENT RATES
+----------------------------------------------------------------------
+
+Onset Alignment Rates:
+Threshold    Baseline DTW    PQG-A2SA        Difference  
+------------------------------------------------------------
+≤    30 ms     0.00%          12.05%         +12.05%
+≤    60 ms     0.00%          30.12%         +30.12%
+≤    90 ms     0.00%          37.35%         +37.35%
+≤   120 ms     0.00%          38.55%         +38.55%
+≤   150 ms     0.00%          44.58%         +44.58%
+≤   180 ms     0.00%          48.19%         +48.19%
+≤   200 ms     0.00%          55.42%         +55.42%
+
+Offset Alignment Rates:
+Threshold    Baseline DTW    PQG-A2SA        Difference  
+------------------------------------------------------------
+≤    30 ms     0.00%          33.73%         +33.73%
+≤    60 ms     0.00%          44.58%         +44.58%
+≤    90 ms     0.00%          49.40%         +49.40%
+≤   120 ms     0.00%          50.60%         +50.60%
+≤   150 ms     0.00%          57.83%         +57.83%
+≤   180 ms     0.00%          73.49%         +73.49%
+≤   200 ms     0.00%          90.36%         +90.36%
+
+======================================================================
+INTERPRETATION
+======================================================================
+
+✓ PQG-A2SA shows improved onset alignment over baseline DTW.
+✓ PQG-A2SA shows improved offset alignment over baseline DTW.
+
+Key advantages of PQG-A2SA:
+- Variable-interval DTW handles tempo variations better
+- IOI-guided refinement improves local alignment
+- Articulation detection refines note boundaries
+- NMF-based source separation handles polyphonic music
+
+======================================================================

@@ -1,0 +1,5459 @@
+{
+  "metadata": {
+    "method": "pyin",
+    "sample_rate": 22050,
+    "hop_length": 512,
+    "fmin": 65.0,
+    "fmax": 2093.0,
+    "confidence_threshold": 0.5,
+    "total_frames": 905,
+    "voiced_frames": 876,
+    "voiced_percentage": 96.79558011049724
+  },
+  "statistics": {
+    "frequency_range_hz": {
+      "min": 261.5061646776419,
+      "max": 439.7991928883532,
+      "mean": 344.4595484658471,
+      "median": 349.06885072286843,
+      "std": 53.066307406390294
+    },
+    "confidence": {
+      "mean": 0.9916529916066241,
+      "min": 0.5485250542599844,
+      "max": 1.0
+    }
+  },
+  "frames": [
+    {
+      "time": 0.0,
+      "frequency": 261.5061646776419,
+      "confidence": 0.01,
+      "is_voiced": false
+    },
+    {
+      "time": 0.023219954648526078,
+      "frequency": 261.5061646776419,
+      "confidence": 0.6159498854580681,
+      "is_voiced": true
+    },
+    {
+      "time": 0.046439909297052155,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.06965986394557823,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.09287981859410431,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.11609977324263039,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.13931972789115646,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.16253968253968254,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.18575963718820862,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.2089795918367347,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.23219954648526078,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.25541950113378686,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.2786394557823129,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.301859410430839,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.3250793650793651,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.34829931972789113,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.37151927437641724,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.3947392290249433,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.4179591836734694,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.44117913832199546,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.46439909297052157,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.4876190476190476,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.5108390022675737,
+      "frequency": 266.0772119191614,
+      "confidence": 0.8266685594724994,
+      "is_voiced": true
+    },
+    {
+      "time": 0.5340589569160997,
+      "frequency": 266.0772119191614,
+      "confidence": 0.8266685594724994,
+      "is_voiced": true
+    },
+    {
+      "time": 0.5572789115646258,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.5804988662131519,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.603718820861678,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.626938775510204,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.6501587301587302,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.6733786848072563,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.6965986394557823,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.7198185941043084,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.7430385487528345,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.7662585034013606,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.7894784580498866,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.8126984126984127,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.8359183673469388,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.8591383219954648,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.8823582766439909,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.905578231292517,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.9287981859410431,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.9520181405895691,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.9752380952380952,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 0.9984580498866213,
+      "frequency": 264.5447199466984,
+      "confidence": 0.5485250542599844,
+      "is_voiced": true
+    },
+    {
+      "time": 1.0216780045351475,
+      "frequency": 321.95185369813447,
+      "confidence": 0.1765306086328976,
+      "is_voiced": false
+    },
+    {
+      "time": 1.0448979591836736,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.0681179138321995,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.0913378684807256,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.1145578231292517,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.1377777777777778,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.1609977324263039,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.18421768707483,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.207437641723356,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.230657596371882,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.253877551020408,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.2770975056689342,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.3003174603174603,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.3235374149659864,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.3467573696145125,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.3699773242630386,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.3931972789115645,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.4164172335600906,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.4396371882086167,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.4628571428571429,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.486077097505669,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.509297052154195,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.5325170068027212,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.555736961451247,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.5789569160997732,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.6021768707482993,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.6253968253968254,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.6486167800453515,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.6718367346938776,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.6950566893424037,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.7182766439909296,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.7414965986394557,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.7647165532879818,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.787936507936508,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.811156462585034,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.8343764172335602,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.8575963718820863,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.8808163265306121,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.9040362811791383,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.9272562358276644,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.9504761904761905,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.9736961451247166,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 1.9969160997732427,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.020136054421769,
+      "frequency": 415.1151609054579,
+      "confidence": 0.6860828109301793,
+      "is_voiced": true
+    },
+    {
+      "time": 2.043356009070295,
+      "frequency": 437.26613593193156,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.066575963718821,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.089795918367347,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.1130158730158732,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.136235827664399,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.159455782312925,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.182675736961451,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.2058956916099772,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.2291156462585033,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.2523356009070294,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.2755555555555556,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.2987755102040817,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.3219954648526078,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.345215419501134,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.36843537414966,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.391655328798186,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.414875283446712,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.4380952380952383,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.461315192743764,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.48453514739229,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.507755102040816,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.5309750566893423,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.5541950113378684,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.5774149659863945,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.6006349206349206,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.6238548752834467,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.647074829931973,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.670294784580499,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.693514739229025,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.716734693877551,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.7399546485260773,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.7631746031746034,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.786394557823129,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.809614512471655,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.8328344671201813,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.8560544217687074,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.8792743764172335,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.9024943310657596,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.9257142857142857,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.948934240362812,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.972154195011338,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 2.995374149659864,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.01859410430839,
+      "frequency": 422.3712461052425,
+      "confidence": 0.6860828109301793,
+      "is_voiced": true
+    },
+    {
+      "time": 3.0418140589569163,
+      "frequency": 396.3692260464981,
+      "confidence": 0.9848789761259924,
+      "is_voiced": true
+    },
+    {
+      "time": 3.0650340136054424,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.0882539682539685,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.111473922902494,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.1346938775510202,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.1579138321995464,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.1811337868480725,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.2043537414965986,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.2275736961451247,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.250793650793651,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.274013605442177,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.297233560090703,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.320453514739229,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.3436734693877552,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.3668934240362813,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.3901133786848074,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.4133333333333336,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.436553287981859,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.4597732426303853,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.4829931972789114,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.5062131519274375,
+      "frequency": 385.08536359450676,
+      "confidence": 0.8911444948731202,
+      "is_voiced": true
+    },
+    {
+      "time": 3.5294331065759637,
+      "frequency": 365.57775582181085,
+      "confidence": 0.7571601330199094,
+      "is_voiced": true
+    },
+    {
+      "time": 3.5526530612244898,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.575873015873016,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.599092970521542,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.622312925170068,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.645532879818594,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.6687528344671203,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.6919727891156464,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.7151927437641725,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.7384126984126986,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.7616326530612243,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.7848526077097504,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.8080725623582765,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.8312925170068026,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.8545124716553287,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.877732426303855,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.900952380952381,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.924172335600907,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.947392290249433,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.9706122448979593,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 3.9938321995464854,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.017052154195011,
+      "frequency": 353.1248353951036,
+      "confidence": 0.4260623290432814,
+      "is_voiced": false
+    },
+    {
+      "time": 4.040272108843538,
+      "frequency": 353.1248353951036,
+      "confidence": 0.4260623290432814,
+      "is_voiced": false
+    },
+    {
+      "time": 4.063492063492063,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.08671201814059,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.1099319727891155,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.133151927437642,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.156371882086168,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.179591836734694,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.20281179138322,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.2260317460317465,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.249251700680272,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.272471655328798,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.295691609977324,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.31891156462585,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.342131519274377,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.365351473922902,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.388571428571429,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.4117913832199545,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.435011337868481,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.458231292517007,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.481451247165533,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.504671201814059,
+      "frequency": 351.09098600372937,
+      "confidence": 0.4260623290432814,
+      "is_voiced": false
+    },
+    {
+      "time": 4.527891156462585,
+      "frequency": 341.0961071537367,
+      "confidence": 0.3233360583906408,
+      "is_voiced": false
+    },
+    {
+      "time": 4.551111111111111,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.574331065759637,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.597551020408163,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.620770975056689,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.6439909297052155,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.667210884353741,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.690430839002268,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.713650793650793,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.73687074829932,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.760090702947846,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.783310657596372,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.806530612244898,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.829750566893424,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.85297052154195,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.876190476190477,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.899410430839002,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.922630385487528,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.9458503401360545,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.96907029478458,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 4.992290249433107,
+      "frequency": 329.4771215546362,
+      "confidence": 0.9999999999999999,
+      "is_voiced": true
+    },
+    {
+      "time": 5.015510204081632,
+      "frequency": 333.30546129938955,
+      "confidence": 0.8911444948731202,
+      "is_voiced": true
+    },
+    {
+      "time": 5.038730158730159,
+      "frequency": 333.30546129938955,
+      "confidence": 0.8911444948731203,
+      "is_voiced": true
+    },
+    {
+      "time": 5.061950113378685,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.085170068027211,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.108390022675737,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.131609977324263,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.154829931972789,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.178049886621316,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.201269841269841,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.224489795918367,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.2477097505668935,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.270929705215419,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.294149659863946,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.317369614512471,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.340589569160998,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.363809523809524,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.38702947845805,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.410249433106576,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.433469387755102,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.456689342403628,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.479909297052155,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.50312925170068,
+      "frequency": 331.3857631030082,
+      "confidence": 0.8911444948731202,
+      "is_voiced": true
+    },
+    {
+      "time": 5.526349206349207,
+      "frequency": 312.7865093813503,
+      "confidence": 0.42606232904328145,
+      "is_voiced": false
+    },
+    {
+      "time": 5.5495691609977325,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.572789115646258,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.596009070294785,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.61922902494331,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.642448979591837,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.6656689342403626,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.688888888888889,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.712108843537415,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.735328798185941,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.758548752834467,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.7817687074829935,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.804988662131519,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.828208616780046,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.851428571428571,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.874648526077097,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.897868480725624,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.921088435374149,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.944308390022676,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.9675283446712015,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 5.990748299319728,
+      "frequency": 293.5307452495941,
+      "confidence": 0.9999999999999999,
+      "is_voiced": true
+    },
+    {
+      "time": 6.013968253968254,
+      "frequency": 296.94140822080067,
+      "confidence": 0.8911444948731202,
+      "is_voiced": true
+    },
+    {
+      "time": 6.03718820861678,
+      "frequency": 296.94140822080067,
+      "confidence": 0.8911444948731203,
+      "is_voiced": true
+    },
+    {
+      "time": 6.060408163265306,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.0836281179138325,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.106848072562358,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.130068027210885,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.15328798185941,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.176507936507937,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.199727891156463,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.222947845804988,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.246167800453515,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.2693877551020405,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.292607709750567,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.315827664399093,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.339047619047619,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.362267573696145,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.3854875283446715,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.408707482993197,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.431927437641724,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.455147392290249,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.478367346938776,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.501587301587302,
+      "frequency": 295.23115155842805,
+      "confidence": 0.9459302094659092,
+      "is_voiced": true
+    },
+    {
+      "time": 6.524807256235827,
+      "frequency": 280.2753675911423,
+      "confidence": 0.4260623290432814,
+      "is_voiced": false
+    },
+    {
+      "time": 6.548027210884354,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.5712471655328795,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.594467120181406,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.617687074829932,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.640907029478458,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.664126984126984,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.6873469387755105,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.710566893424036,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.733786848072563,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.757006802721088,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.780226757369615,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.8034467120181406,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.826666666666667,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.849886621315193,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.873106575963718,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.896326530612245,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.919546485260771,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.942766439909297,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.965986394557823,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 6.989206349206349,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.012426303854875,
+      "frequency": 307.41302436705854,
+      "confidence": 0.1765306086328976,
+      "is_voiced": false
+    },
+    {
+      "time": 7.035646258503402,
+      "frequency": 385.08536359450676,
+      "confidence": 0.17653060863289757,
+      "is_voiced": false
+    },
+    {
+      "time": 7.058866213151927,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.082086167800454,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.1053061224489795,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.128526077097506,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.151746031746032,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.174965986394557,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.198185941043084,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.22140589569161,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.244625850340136,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.267845804988662,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.291065759637188,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.314285714285714,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.337505668934241,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.360725623582766,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.383945578231293,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.4071655328798185,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.430385487528345,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.453605442176871,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.476825396825397,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.500045351473923,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.523265306122449,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.546485260770975,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.569705215419501,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.592925170068027,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.616145124716553,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.63936507936508,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.662585034013605,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.685804988662132,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.7090249433106575,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.732244897959184,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.75546485260771,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.778684807256236,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.801904761904762,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.825124716553288,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.848344671201814,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.87156462585034,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.894784580498866,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.918004535147392,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.9412244897959186,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.964444444444444,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 7.987664399092971,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.010884353741497,
+      "frequency": 382.8674351061366,
+      "confidence": 0.8266685594724995,
+      "is_voiced": true
+    },
+    {
+      "time": 8.034104308390022,
+      "frequency": 359.2973487916218,
+      "confidence": 0.8266685594724995,
+      "is_voiced": true
+    },
+    {
+      "time": 8.057324263038549,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.080544217687075,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.103764172335602,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.126984126984127,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.150204081632653,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.17342403628118,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.196643990929704,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.219863945578231,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.243083900226758,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.266303854875284,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.289523809523809,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.312743764172335,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.335963718820862,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.359183673469389,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.382403628117913,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.40562358276644,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.428843537414966,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.452063492063493,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.475283446712018,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.498503401360544,
+      "frequency": 351.09098600372937,
+      "confidence": 0.7571601330199093,
+      "is_voiced": true
+    },
+    {
+      "time": 8.52172335600907,
+      "frequency": 353.1248353951036,
+      "confidence": 0.42606232904328134,
+      "is_voiced": false
+    },
+    {
+      "time": 8.544943310657596,
+      "frequency": 351.09098600372937,
+      "confidence": 0.7571601330199094,
+      "is_voiced": true
+    },
+    {
+      "time": 8.568163265306122,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.591383219954649,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.614603174603175,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.6378231292517,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.661043083900227,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.684263038548753,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.70748299319728,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.730702947845804,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.753922902494331,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.777142857142858,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.800362811791382,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.823582766439909,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.846802721088435,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.870022675736962,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.893242630385487,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.916462585034013,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.93968253968254,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.962902494331066,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 8.986122448979591,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.009342403628118,
+      "frequency": 349.06885072286843,
+      "confidence": 0.37213589829750865,
+      "is_voiced": false
+    },
+    {
+      "time": 9.032562358276644,
+      "frequency": 339.1315381390467,
+      "confidence": 0.32333605839064083,
+      "is_voiced": false
+    },
+    {
+      "time": 9.05578231292517,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.079002267573696,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.102222222222222,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.125442176870749,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.148662131519274,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.1718820861678,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.195102040816327,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.218321995464853,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.241541950113378,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.264761904761905,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.287981859410431,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.311201814058958,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.334421768707482,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.357641723356009,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.380861678004536,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.404081632653062,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.427301587301587,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.450521541950113,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.47374149659864,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.496961451247165,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.520181405895691,
+      "frequency": 333.30546129938955,
+      "confidence": 0.8911444948731203,
+      "is_voiced": true
+    },
+    {
+      "time": 9.543401360544218,
+      "frequency": 333.30546129938955,
+      "confidence": 0.8911444948731204,
+      "is_voiced": true
+    },
+    {
+      "time": 9.566621315192744,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.58984126984127,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.613061224489796,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.636281179138322,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.659501133786849,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.682721088435374,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.7059410430839,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.729160997732427,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.752380952380953,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.775600907029478,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.798820861678005,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.822040816326531,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.845260770975056,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.868480725623582,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.891700680272109,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.914920634920636,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.93814058956916,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.961360544217687,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 9.984580498866213,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.00780045351474,
+      "frequency": 327.579472972667,
+      "confidence": 0.6860828109301793,
+      "is_voiced": true
+    },
+    {
+      "time": 10.031020408163265,
+      "frequency": 309.19384990070745,
+      "confidence": 0.4260623290432814,
+      "is_voiced": false
+    },
+    {
+      "time": 10.054240362811791,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.077460317460318,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.100680272108843,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.12390022675737,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.147120181405896,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.170340136054422,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.193560090702947,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.216780045351474,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.24,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.263219954648527,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.286439909297052,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.309659863945578,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.332879818594105,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.356099773242631,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.379319727891156,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.402539682539683,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.425759637188209,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.448979591836734,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.47219954648526,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.495419501133787,
+      "frequency": 293.5307452495941,
+      "confidence": 0.9999999999999999,
+      "is_voiced": true
+    },
+    {
+      "time": 10.518639455782314,
+      "frequency": 351.09098600372937,
+      "confidence": 0.07797523762294817,
+      "is_voiced": false
+    },
+    {
+      "time": 10.541859410430838,
+      "frequency": 389.55983998793727,
+      "confidence": 0.8911444948731202,
+      "is_voiced": true
+    },
+    {
+      "time": 10.565079365079365,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.588299319727891,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.611519274376418,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.634739229024943,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.65795918367347,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.681179138321996,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.704399092970522,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.727619047619047,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.750839002267574,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.7740589569161,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.797278911564625,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.820498866213152,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.843718820861678,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.866938775510205,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.89015873015873,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.913378684807256,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.936598639455783,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.95981859410431,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 10.983038548752834,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.00625850340136,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.029478458049887,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.052698412698414,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.075918367346938,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.099138321995465,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.122358276643991,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.145578231292516,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.168798185941043,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.19201814058957,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.215238095238096,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.23845804988662,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.261678004535147,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.284897959183674,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.3081179138322,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.331337868480725,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.354557823129252,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.377777777777778,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.400997732426303,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.42421768707483,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.447437641723356,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.470657596371883,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.493877551020407,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.517097505668934,
+      "frequency": 376.2900017344983,
+      "confidence": 0.7571601330199094,
+      "is_voiced": true
+    },
+    {
+      "time": 11.54031746031746,
+      "frequency": 353.1248353951036,
+      "confidence": 0.9459302094659092,
+      "is_voiced": true
+    },
+    {
+      "time": 11.563537414965987,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.586757369614512,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.609977324263038,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.633197278911565,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.656417233560092,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.679637188208616,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.702857142857143,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.72607709750567,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.749297052154194,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.77251700680272,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.795736961451247,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.818956916099774,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.842176870748299,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.865396825396825,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.888616780045352,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.911836734693878,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.935056689342403,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.95827664399093,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 11.981496598639456,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.004716553287983,
+      "frequency": 353.1248353951036,
+      "confidence": 0.4260623290432814,
+      "is_voiced": false
+    },
+    {
+      "time": 12.027936507936507,
+      "frequency": 353.1248353951036,
+      "confidence": 0.42606232904328134,
+      "is_voiced": false
+    },
+    {
+      "time": 12.051156462585034,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.07437641723356,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.097596371882085,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.120816326530612,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.144036281179138,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.167256235827665,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.19047619047619,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.213696145124716,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.236916099773243,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.26013605442177,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.283356009070294,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.30657596371882,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.329795918367347,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.353015873015874,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.376235827664399,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.399455782312925,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.422675736961452,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.445895691609977,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.469115646258503,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.49233560090703,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.515555555555556,
+      "frequency": 347.05836208420885,
+      "confidence": 0.32333605839064083,
+      "is_voiced": false
+    },
+    {
+      "time": 12.538775510204081,
+      "frequency": 335.23628019429054,
+      "confidence": 0.3233360583906407,
+      "is_voiced": false
+    },
+    {
+      "time": 12.561995464852608,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.585215419501134,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.60843537414966,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.631655328798185,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.654875283446712,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.678095238095239,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.701315192743763,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.72453514739229,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.747755102040816,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.770975056689343,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.794195011337868,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.817414965986394,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.84063492063492,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.863854875283447,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.887074829931972,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.910294784580499,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.933514739229025,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.956734693877552,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 12.979954648526077,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.003174603174603,
+      "frequency": 333.30546129938955,
+      "confidence": 0.8911444948731202,
+      "is_voiced": true
+    },
+    {
+      "time": 13.02639455782313,
+      "frequency": 333.30546129938955,
+      "confidence": 0.8911444948731203,
+      "is_voiced": true
+    },
+    {
+      "time": 13.049614512471654,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.072834467120181,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.096054421768708,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.119274376417234,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.142494331065759,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.165714285714285,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.188934240362812,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.212154195011339,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.235374149659863,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.25859410430839,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.281814058956916,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.305034013605443,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.328253968253968,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.351473922902494,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.374693877551021,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.397913832199546,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.421133786848072,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.444353741496599,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.467573696145125,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.49079365079365,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.514013605442177,
+      "frequency": 323.816901813294,
+      "confidence": 0.5485250542599847,
+      "is_voiced": true
+    },
+    {
+      "time": 13.537233560090703,
+      "frequency": 303.8820846259238,
+      "confidence": 0.48498680771591124,
+      "is_voiced": false
+    },
+    {
+      "time": 13.56045351473923,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.583673469387755,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.606893424036281,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.630113378684808,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.653333333333334,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.676553287981859,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.699773242630386,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.722993197278912,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.746213151927437,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.769433106575963,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.79265306122449,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.815873015873017,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.839092970521541,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.862312925170068,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.885532879818594,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.908752834467121,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.931972789115646,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.955192743764172,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 13.978412698412699,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.001632653061224,
+      "frequency": 295.23115155842805,
+      "confidence": 0.9459302094659092,
+      "is_voiced": true
+    },
+    {
+      "time": 14.02485260770975,
+      "frequency": 280.2753675911423,
+      "confidence": 0.4260623290432814,
+      "is_voiced": false
+    },
+    {
+      "time": 14.048072562358277,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.071292517006803,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.094512471655328,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.117732426303855,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.140952380952381,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.164172335600908,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.187392290249432,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.210612244897959,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.233832199546486,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.257052154195012,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.280272108843537,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.303492063492063,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.32671201814059,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.349931972789115,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.373151927437641,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.396371882086168,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.419591836734694,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.44281179138322,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.466031746031746,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.489251700680272,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.512471655328799,
+      "frequency": 266.0772119191614,
+      "confidence": 0.8266685594724994,
+      "is_voiced": true
+    },
+    {
+      "time": 14.535691609977324,
+      "frequency": 266.0772119191614,
+      "confidence": 0.8266685594724995,
+      "is_voiced": true
+    },
+    {
+      "time": 14.55891156462585,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.582131519274377,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.605351473922903,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.628571428571428,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.651791383219955,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.675011337868481,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.698231292517006,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.721451247165533,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.744671201814059,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.767891156462586,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.79111111111111,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.814331065759637,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.837551020408164,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.86077097505669,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.883990929705215,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.907210884353741,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.930430839002268,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.953650793650795,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 14.97687074829932,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.000090702947846,
+      "frequency": 264.5447199466984,
+      "confidence": 0.27960516533635893,
+      "is_voiced": false
+    },
+    {
+      "time": 15.023310657596372,
+      "frequency": 321.95185369813447,
+      "confidence": 0.1765306086328976,
+      "is_voiced": false
+    },
+    {
+      "time": 15.046530612244897,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.069750566893424,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.09297052154195,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.116190476190477,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.139410430839002,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.162630385487528,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.185850340136055,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.209070294784581,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.232290249433106,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.255510204081633,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.27873015873016,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.301950113378684,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.32517006802721,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.348390022675737,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.371609977324264,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.394829931972788,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.418049886621315,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.441269841269841,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.464489795918368,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.487709750566893,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.51092970521542,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.534149659863946,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.557369614512472,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.580589569160997,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.603809523809524,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.62702947845805,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.650249433106575,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.673469387755102,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.696689342403628,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.719909297052155,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.74312925170068,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.766349206349206,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.789569160997733,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.81278911564626,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.836009070294784,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.85922902494331,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.882448979591837,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.905668934240364,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.928888888888888,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.952108843537415,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.975328798185942,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 15.998548752834466,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.021768707482995,
+      "frequency": 417.5198985689557,
+      "confidence": 0.6860828109301793,
+      "is_voiced": true
+    },
+    {
+      "time": 16.04498866213152,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.068208616780044,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.091428571428573,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.114648526077097,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.137868480725622,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.16108843537415,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.184308390022675,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.207528344671204,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.23074829931973,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.253968253968253,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.27718820861678,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.300408163265306,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.32362811791383,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.34684807256236,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.370068027210884,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.39328798185941,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.416507936507937,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.439727891156462,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.46294784580499,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.486167800453515,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.50938775510204,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.532607709750568,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.555827664399093,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.579047619047618,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.602267573696146,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.62548752834467,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.648707482993196,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.671927437641724,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.69514739229025,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.718367346938777,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.741587301587302,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.764807256235827,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.788027210884355,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.81124716553288,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.834467120181404,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.857687074829933,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.880907029478458,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.904126984126986,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.92734693877551,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.950566893424035,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.973786848072564,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 16.99700680272109,
+      "frequency": 439.7991928883532,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.020226757369613,
+      "frequency": 419.9385667360219,
+      "confidence": 0.6860828109301793,
+      "is_voiced": true
+    },
+    {
+      "time": 17.04344671201814,
+      "frequency": 394.0863072927035,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.066666666666666,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.08988662131519,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.11310657596372,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.136326530612244,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.159546485260773,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.182766439909297,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.205986394557822,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.22920634920635,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.252426303854875,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.2756462585034,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.29886621315193,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.322086167800453,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.345306122448978,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.368526077097506,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.39174603174603,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.41496598639456,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.438185941043084,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.46140589569161,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.484625850340137,
+      "frequency": 391.81653718338976,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.507845804988662,
+      "frequency": 385.08536359450676,
+      "confidence": 0.8911444948731203,
+      "is_voiced": true
+    },
+    {
+      "time": 17.531065759637187,
+      "frequency": 363.47218288654506,
+      "confidence": 0.7571601330199091,
+      "is_voiced": true
+    },
+    {
+      "time": 17.554285714285715,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.57750566893424,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.600725623582765,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.623945578231293,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.647165532879818,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.670385487528346,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.69360544217687,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.716825396825396,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.740045351473924,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.76326530612245,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.786485260770974,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.809705215419502,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.832925170068027,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.856145124716555,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.87936507936508,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.902585034013605,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.925804988662133,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.949024943310658,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.972244897959182,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 17.99546485260771,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.018684807256236,
+      "frequency": 353.1248353951036,
+      "confidence": 0.42606232904328134,
+      "is_voiced": false
+    },
+    {
+      "time": 18.04190476190476,
+      "frequency": 353.1248353951036,
+      "confidence": 0.4260623290432814,
+      "is_voiced": false
+    },
+    {
+      "time": 18.06512471655329,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.088344671201813,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.11156462585034,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.134784580498867,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.15800453514739,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.18122448979592,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.204444444444444,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.22766439909297,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.250884353741498,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.274104308390022,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.297324263038547,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.320544217687075,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.3437641723356,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.36698412698413,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.390204081632653,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.413424036281178,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.436643990929706,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.45986394557823,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.483083900226756,
+      "frequency": 349.06885072286843,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.506303854875284,
+      "frequency": 351.09098600372937,
+      "confidence": 0.37213589829750865,
+      "is_voiced": false
+    },
+    {
+      "time": 18.52952380952381,
+      "frequency": 339.1315381390467,
+      "confidence": 0.32333605839064083,
+      "is_voiced": false
+    },
+    {
+      "time": 18.552743764172334,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.575963718820862,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.599183673469387,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.622403628117915,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.64562358276644,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.668843537414965,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.692063492063493,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.715283446712018,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.738503401360543,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.76172335600907,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.784943310657596,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.808163265306124,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.83138321995465,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.854603174603174,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.877823129251702,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.901043083900227,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.92426303854875,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.94748299319728,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.970702947845805,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 18.99392290249433,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.017142857142858,
+      "frequency": 333.30546129938955,
+      "confidence": 0.8911444948731203,
+      "is_voiced": true
+    },
+    {
+      "time": 19.040362811791383,
+      "frequency": 333.30546129938955,
+      "confidence": 0.8911444948731203,
+      "is_voiced": true
+    },
+    {
+      "time": 19.06358276643991,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.086802721088436,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.11002267573696,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.13324263038549,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.156462585034014,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.17968253968254,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.202902494331067,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.22612244897959,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.249342403628116,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.272562358276645,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.29578231292517,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.319002267573698,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.342222222222222,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.365442176870747,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.388662131519276,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.4118820861678,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.435102040816325,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.458321995464853,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.481541950113378,
+      "frequency": 329.4771215546362,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.504761904761907,
+      "frequency": 329.4771215546362,
+      "confidence": 0.8266685594724995,
+      "is_voiced": true
+    },
+    {
+      "time": 19.52798185941043,
+      "frequency": 312.7865093813503,
+      "confidence": 0.42606232904328145,
+      "is_voiced": false
+    },
+    {
+      "time": 19.551201814058956,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.574421768707484,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.59764172335601,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.620861678004534,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.644081632653062,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.667301587301587,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.690521541950112,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.71374149659864,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.736961451247165,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.760181405895693,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.783401360544218,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.806621315192743,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.82984126984127,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.853061224489796,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.87628117913832,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.89950113378685,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.922721088435374,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.9459410430839,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.969160997732427,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 19.99238095238095,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.01560090702948,
+      "frequency": 296.94140822080067,
+      "confidence": 0.8911444948731202,
+      "is_voiced": true
+    },
+    {
+      "time": 20.038820861678005,
+      "frequency": 296.94140822080067,
+      "confidence": 0.8911444948731203,
+      "is_voiced": true
+    },
+    {
+      "time": 20.06204081632653,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.085260770975058,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.108480725623583,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.131700680272107,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.154920634920636,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.17814058956916,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.201360544217685,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.224580498866214,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.24780045351474,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.271020408163267,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.29424036281179,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.317460317460316,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.340680272108845,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.36390022675737,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.387120181405894,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.410340136054423,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.433560090702947,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.456780045351476,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.48,
+      "frequency": 293.5307452495941,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.503219954648525,
+      "frequency": 295.23115155842805,
+      "confidence": 0.8911444948731202,
+      "is_voiced": true
+    },
+    {
+      "time": 20.526439909297054,
+      "frequency": 278.66110025943624,
+      "confidence": 0.42606232904328145,
+      "is_voiced": false
+    },
+    {
+      "time": 20.54965986394558,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.572879818594103,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.59609977324263,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.619319727891156,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.64253968253968,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.66575963718821,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.688979591836734,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.712199546485262,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.735419501133787,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.758639455782312,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.78185941043084,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.805079365079365,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.82829931972789,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.851519274376418,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.874739229024943,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.897959183673468,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.921179138321996,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.94439909297052,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.96761904761905,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    },
+    {
+      "time": 20.990839002267574,
+      "frequency": 261.5061646776419,
+      "confidence": 1.0,
+      "is_voiced": true
+    }
+  ]
+}

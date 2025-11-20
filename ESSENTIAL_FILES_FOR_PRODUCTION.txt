@@ -1,0 +1,267 @@
+ESSENTIAL FILES AND FOLDERS FOR PRODUCTION BRANCH
+
+This document lists all required files/folders for the Music Performance Analysis system.
+
+CORE PIPELINE FILES
+
+MusicPerformanceAnalysis/
+  pipeline.py                           Main pipeline (DTW-only, backward compatible)
+  pipeline_with_pqg.py                  Enhanced pipeline with PQG-A2SA integration
+  __init__.py                           Package initialization
+
+LAYER 1: INPUT STANDARDIZATION
+
+MusicPerformanceAnalysis/layers/01_input/
+  input_layer.py                        Audio and score validation and standardization
+  __init__.py
+
+LAYER 2: AUDIO PROCESSING (OPTIONAL)
+
+MusicPerformanceAnalysis/layers/02_processing/
+  processing_layer.py                   Audio denoising, normalization (can be skipped)
+  __init__.py
+
+LAYER 3: TEMPORAL ALIGNMENT
+
+MusicPerformanceAnalysis/layers/03_temporal_alignment/
+  block_0_scoregraph/
+    generate_scoregraph.py              Convert MusicXML to ScoreGraph JSON
+  
+  block_1_amt/
+    amt_transcribe.py                   Audio-to-MIDI transcription using BasicPitch
+  
+  block_2_alignment_grading/
+    context_alignment_dag.py            DTW-based score-to-performance alignment
+    grading_metrics.py                  Compute grading metrics from alignment
+  
+  block_4_beats/
+    estimate_beats_beatnet.py           Beat detection (optional, can fail gracefully)
+
+LAYER 4: FEATURE EXTRACTION
+
+MusicPerformanceAnalysis/layers/04_extraction/
+  extraction_layer.py                   Extract performance and score features
+  requirements_extraction.py            Dependencies for extraction
+  __init__.py
+
+LAYER 5: PQG-A2SA ALIGNMENT (ENHANCED PIPELINE ONLY)
+
+MusicPerformanceAnalysis/layers/05_pqg_a2sa/
+  src/
+    __init__.py                         Package initialization
+    config.py                           Configuration and parameters
+    features.py                         Feature extraction for PQG
+    nmf.py                              Non-negative matrix factorization
+    vidtw.py                            Variable-length DTW
+    ioi_gm.py                           Inter-onset interval Gaussian model
+    baseline_dtw.py                     Baseline DTW implementation
+    articulation.py                     Articulation detection
+    evaluation.py                       Evaluation metrics
+    pipeline.py                         PQGAligner main class (note: conflicts with main pipeline.py name)
+  
+  evaluate_bach10.py                    Evaluation script
+  compare_algorithms.py                 Algorithm comparison utilities
+
+LAYER 6: ENHANCED INFERENCE CORE
+
+MusicPerformanceAnalysis/layers/06_inference/
+  __init__.py                           Package exports
+  inference_core.py                     Original inference core (DTW-only)
+  inference_core_with_pqg.py            Enhanced inference with PQG integration
+  data_collector.py                     Collects data from all layers
+  pqg_metrics_recomputer.py             Recomputes metrics using PQG timings
+  
+  analyzers/
+    __init__.py
+    rhythm_tempo.py                     Rhythm and tempo analysis
+    sound_quality.py                    Pitch and tone analysis
+    technical_virtuosity.py             Note accuracy and fluency analysis
+    phrasing_diction.py                 Phrasing and expression analysis
+    communicativeness.py                Musical communication analysis
+  
+  utils/
+    __init__.py
+    metrics_extractor.py                Extract metrics from alignments
+    scoring_functions.py                Score dimensions on 0-100 scale
+    data_utils.py                       Data manipulation utilities
+    metric_utils.py                     Metric calculation utilities
+
+LAYER 7: GRADING
+
+MusicPerformanceAnalysis/layers/07_grading/
+  grading_layer.py                      Final grade calculation and reporting
+  __init__.py
+
+EXECUTION SCRIPTS
+
+run_analysis.sh                         Batch processing script for DTW-only pipeline
+run_analysis_with_pqg.sh                Batch processing script for PQG-enhanced pipeline
+run_diesonne_with_pqg.sh                Example: DieSonne dataset with PQG
+
+CONFIGURATION FILES
+
+None currently required. All configuration is in code or command-line arguments.
+
+DATASET STRUCTURE (for testing)
+
+Bach_10_Dataset/
+  DieSonne/
+    06-DieSonne.xml                     Score file (MusicXML format)
+    06-DieSonne.mid                     Score file (MIDI format, optional)
+    06-DieSonne-violin.wav              Performance audio (violin)
+    06-DieSonne-clarinet.wav            Performance audio (clarinet)
+    06-DieSonne-bassoon.wav             Performance audio (bassoon)
+    06-DieSonne-saxphone.wav            Performance audio (saxophone)
+  
+  (Other pieces follow same structure)
+
+OUTPUT STRUCTURE (generated at runtime)
+
+Output/
+  <analysis_name>/
+    01_input/                           Validated input files
+    02_processing/                      Processed audio (if used)
+    03_temporal_alignment/              DTW alignment results
+      scoregraph.json
+      transcription.json
+      performance.mid
+      alignment_output/
+        alignment_results.json          DTW alignment with grading metrics
+        enhanced_alignment_complete.json
+    04_extraction/                      Extracted features
+      performance_features.json
+      score_features.json
+    05_pqg_a2sa/                        PQG alignment (enhanced pipeline only)
+      pqg_a2sa_results.json
+    05_inference_core/                  Inference results (note: should be 06)
+      grading_package.json              DTW-only grading package
+      grading_package_enhanced.json     PQG-enhanced grading package
+      metric_sources.json               Tracks which metrics from PQG vs DTW
+    07_grading/                         Final grading
+      final_grade.json
+      performance_report.txt
+    pipeline_summary.json               DTW pipeline summary
+    pipeline_summary_enhanced.json      PQG pipeline summary
+
+DOCUMENTATION FILES (OPTIONAL BUT RECOMMENDED)
+
+README.md                               Main documentation
+SETUP_GUIDE.md                          Installation and setup instructions
+USAGE_GUIDE.md                          How to run pipelines
+ARCHITECTURE.md                         System architecture overview
+requirements.txt                        Python dependencies
+run_help.txt                            Quick command reference
+
+PQG_INTEGRATION_SUCCESS.md              PQG integration documentation
+LAYER_ARCHITECTURE_AND_GRADING_FORMULAS.txt  Detailed layer explanation
+LLM_FEEDBACK_DATA_REQUIREMENTS.txt      LLM feedback data structure
+DieSonne_PQG_Results_Summary.txt        Example results
+
+DEPENDENCIES NOT INCLUDED (install separately)
+
+External tools:
+  BasicPitch                            For AMT transcription
+  BeatNet                               For beat detection (optional)
+  
+Python packages (see requirements.txt):
+  numpy
+  scipy
+  librosa
+  pretty_midi
+  music21
+  torch
+  tensorflow
+  scikit-learn
+  matplotlib
+  pyyaml
+  And others (see full requirements.txt)
+
+WHAT TO EXCLUDE FROM PRODUCTION BRANCH
+
+Temporary/Test Files:
+  Output/*                              All output directories (generated at runtime)
+  *.pyc                                 Python bytecode
+  __pycache__/                          Python cache directories
+  .pytest_cache/                        Pytest cache
+  *.log                                 Log files
+  nohup.out                             Background process logs
+
+Development/Documentation Files:
+  All .md files with names like:
+    COMPLETE_*.md
+    CURRENT_STATUS_*.md
+    IMPLEMENTATION_PLAN_*.md
+    EVALUATION_*.md
+    HYBRID_*.md
+    INFERENCE_CORE_*.md
+    CONTEXT_*.md
+    DTW_*.md
+    ENHANCED_*.md
+    FINAL_*.md
+    GPU_*.md
+    GRADING_*.md
+  (Keep only essential docs like README, SETUP, USAGE, ARCHITECTURE)
+
+Comparison Scripts:
+  compare_*.py                          Algorithm comparison scripts (unless needed)
+  evaluate_*.py                         Evaluation scripts (unless for testing)
+  generate_*.py                         Visualization generators (unless needed)
+
+Temporary Scripts:
+  deploy_*.sh                           Deployment experiments
+  docker_setup.sh                       Docker experiments (unless using Docker)
+  install_*.sh                          Various install attempts
+  test_*.sh                             Test scripts (can keep for testing)
+  hpc_compatibility_check.py            HPC-specific checks
+
+Workspace Clutter:
+  =0.2.0, =0.2.10, etc.                 Strange version directories
+  Grading_Rubric (if it's a directory)  Old rubric files
+
+FILES NEEDED FOR BASIC FUNCTIONALITY
+
+Minimum for DTW-only pipeline:
+  MusicPerformanceAnalysis/pipeline.py
+  MusicPerformanceAnalysis/layers/01_input/
+  MusicPerformanceAnalysis/layers/03_temporal_alignment/
+  MusicPerformanceAnalysis/layers/04_extraction/
+  MusicPerformanceAnalysis/layers/06_inference/ (without PQG files)
+  MusicPerformanceAnalysis/layers/07_grading/
+  run_analysis.sh
+  requirements.txt
+
+Additional for PQG-enhanced pipeline:
+  MusicPerformanceAnalysis/pipeline_with_pqg.py
+  MusicPerformanceAnalysis/layers/05_pqg_a2sa/
+  MusicPerformanceAnalysis/layers/06_inference/inference_core_with_pqg.py
+  MusicPerformanceAnalysis/layers/06_inference/pqg_metrics_recomputer.py
+  run_analysis_with_pqg.sh
+
+CRITICAL __init__.py FILES NEEDED
+
+MusicPerformanceAnalysis/__init__.py
+MusicPerformanceAnalysis/layers/__init__.py (if it exists)
+MusicPerformanceAnalysis/layers/01_input/__init__.py
+MusicPerformanceAnalysis/layers/02_processing/__init__.py
+MusicPerformanceAnalysis/layers/04_extraction/__init__.py
+MusicPerformanceAnalysis/layers/05_pqg_a2sa/src/__init__.py
+MusicPerformanceAnalysis/layers/06_inference/__init__.py
+MusicPerformanceAnalysis/layers/06_inference/analyzers/__init__.py
+MusicPerformanceAnalysis/layers/06_inference/utils/__init__.py
+MusicPerformanceAnalysis/layers/07_grading/__init__.py
+
+NOTES
+
+1. Layer 2 (processing) is optional and often skipped in production.
+
+2. Layer 5 (PQG-A2SA) is only needed for enhanced pipeline. DTW-only pipeline skips this entirely.
+
+3. Beat detection (block 4) can fail gracefully. Pipeline continues without it.
+
+4. Output directories are created automatically at runtime. Do not include in repository.
+
+5. The naming inconsistency (05_inference_core should be 06_inference_core) exists in current code. This is a known issue but doesn't affect functionality.
+
+6. PQG-A2SA's src/pipeline.py conflicts with main pipeline.py name. Import carefully using package imports.
+
+7. For clean production branch, keep only essential documentation and remove all experimental/comparison/evaluation files unless specifically needed.

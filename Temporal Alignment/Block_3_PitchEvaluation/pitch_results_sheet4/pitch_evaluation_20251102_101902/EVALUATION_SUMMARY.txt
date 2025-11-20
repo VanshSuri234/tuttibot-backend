@@ -1,0 +1,51 @@
+======================================================================
+PITCH ACCURACY EVALUATION SUMMARY
+======================================================================
+
+Date: 2025-11-02 10:20:37
+Score: Sheet-4.xml
+Audio: wav4sheet-4.wav
+
+FINAL GRADE
+----------------------------------------------------------------------
+Letter Grade: F
+Numeric Score: 0.0/100
+Quality: Failing
+
+KEY METRICS
+----------------------------------------------------------------------
+Mean Absolute Error: 1580.0 cents
+Measured Notes: 30/2417 (1%)
+Within ±10 cents: 0.0%
+Within ±25 cents: 3.3%
+Within ±50 cents: 3.3%
+
+ACCURACY BREAKDOWN
+----------------------------------------------------------------------
+Perfect (<10¢):       0.0%  (0 notes)
+Excellent (10-25¢):   3.3%  (1 notes)
+Good (25-50¢):        0.0%  (0 notes)
+Poor (≥50¢):         96.7%  (29 notes)
+
+STRENGTHS
+----------------------------------------------------------------------
+1. Performance shows potential for improvement
+
+AREAS FOR IMPROVEMENT
+----------------------------------------------------------------------
+1. Focus on overall pitch accuracy - consider using a tuner during practice
+2. Only 3% of notes within acceptable range - practice slow scales
+3. 97% of notes have significant pitch issues - review problem areas
+4. Some notes were unclear or too soft - work on note articulation and projection
+5. Tendency to play flat (average -1510.2 cents) - raise pitch slightly
+6. Pitch consistency varies - focus on maintaining steady intonation
+
+OVERALL FEEDBACK
+----------------------------------------------------------------------
+Pitch control needs substantial work before performance-ready. Successfully measured 30/2417 notes (1%). Average deviation: 1580.0 cents.
+
+======================================================================
+For detailed results, see:
+  - JSON summary: evaluation_summary.json
+  - CSV data: note_by_note_comparison.csv
+======================================================================

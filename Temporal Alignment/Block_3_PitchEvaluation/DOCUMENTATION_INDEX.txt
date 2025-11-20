@@ -1,0 +1,299 @@
+================================================================================
+PITCH EVALUATION SYSTEM - DOCUMENTATION INDEX
+================================================================================
+
+This directory contains a complete pitch evaluation system that compares
+musical scores with audio recordings to measure pitch accuracy.
+
+
+================================================================================
+DOCUMENTATION FILES
+================================================================================
+
+FOR USERS (START HERE):
+-----------------------
+
+1. MUSICIAN_GUIDE.txt (7.5 KB)
+   → Best starting point for performers and teachers
+   → Plain language, no technical jargon
+   → How to read results and use them to improve
+   → FAQ for common questions
+
+2. QUICK_REFERENCE.txt (4.2 KB)
+   → Fast lookup for key metrics
+   → What to check first
+   → Interpreting common scenarios
+   → Troubleshooting guide
+
+3. PITCH_EVALUATION_DOCUMENTATION.txt (19 KB)
+   → Complete technical documentation
+   → All formulas and calculations explained
+   → System architecture
+   → Detailed examples and frequency tables
+   → For those who want to understand how it works
+
+
+FOR DEVELOPERS:
+---------------
+
+4. README.md (14 KB)
+   → System overview
+   → Installation instructions
+   → API documentation
+   → Code examples
+
+5. Source Code Files:
+   - evaluate_pitch.py (main pipeline)
+   - score_pitch_extractor.py
+   - audio_pitch_extractor.py
+   - pitch_comparator.py
+   - pitch_grader.py
+   - pitch_visualizer.py
+   - generate_musician_report.py
+
+
+================================================================================
+GENERATED REPORTS (After Running Evaluation)
+================================================================================
+
+Each evaluation creates a timestamped folder with these files:
+
+ESSENTIAL FILES:
+----------------
+MUSICIAN_REPORT.txt
+   → Auto-generated for each evaluation
+   → Customized based on your results
+   → Simplified interpretation
+   → Performance-specific feedback
+
+EVALUATION_SUMMARY.txt
+   → Technical summary with all metrics
+   → Calculation pipeline explained
+   → Complete statistical analysis
+
+note_by_note_comparison.csv
+   → Spreadsheet with every note
+   → Open in Excel/LibreOffice
+   → Easy to sort and filter
+   → Identifies specific problem notes
+
+
+DETAILED DATA:
+--------------
+pitch_evaluation.json
+   → All metrics in JSON format
+   → For further analysis or programming
+
+comparison_results.json
+   → Complete comparison data
+   → Per-note measurements
+
+score_pitches.json
+   → Notes extracted from score
+   
+audio_pitches.json
+   → Frequencies detected from audio
+
+evaluation_summary.json
+   → Complete metadata
+
+
+VISUALIZATIONS (if enabled):
+-----------------------------
+pitch_curves.png
+   → Score vs audio pitch over time
+
+error_distribution.png
+   → Histogram of cents errors
+
+accuracy_breakdown.png
+   → Pie chart of accuracy categories
+
+
+================================================================================
+WHICH FILE SHOULD I READ?
+================================================================================
+
+IF YOU ARE...                          READ THIS FIRST:
+----------------                       -----------------
+A musician/performer                   → MUSICIAN_GUIDE.txt
+A music teacher                        → MUSICIAN_GUIDE.txt
+Someone analyzing results quickly      → QUICK_REFERENCE.txt
+                                         + MUSICIAN_REPORT.txt (in results)
+A developer/researcher                 → PITCH_EVALUATION_DOCUMENTATION.txt
+Someone needing detailed data          → note_by_note_comparison.csv
+Someone writing integration code       → README.md
+
+
+================================================================================
+USAGE WORKFLOW
+================================================================================
+
+STEP 1: Run Evaluation
+-----------------------
+python evaluate_pitch.py --score piece.xml --audio recording.wav
+
+Output folder created with timestamp:
+pitch_evaluation_20251103_HHMMSS/
+
+
+STEP 2: Check Overall Results
+------------------------------
+Open: MUSICIAN_REPORT.txt (in output folder)
+Look at:
+  - Accuracy Score (0-100)
+  - Measurement Rate (should be >80%)
+  - Average Pitch Error (cents)
+
+
+STEP 3: Identify Problem Areas
+-------------------------------
+Open: note_by_note_comparison.csv
+Sort by: cents_error (largest first)
+Find: Notes with highest errors
+Note: onset_time to locate in recording
+
+
+STEP 4: Understand Details (if needed)
+---------------------------------------
+Read: EVALUATION_SUMMARY.txt
+Check: Systematic bias, statistics
+Review: PITCH_EVALUATION_DOCUMENTATION.txt for formula explanations
+
+
+================================================================================
+KEY CONCEPTS
+================================================================================
+
+Cents: Unit for measuring pitch deviation
+   - 100 cents = 1 semitone (one piano key)
+   - 10 cents = just noticeable
+   - 0 cents = perfect
+
+MACE: Mean Absolute Cents Error
+   - Average of all pitch errors
+   - Primary metric for accuracy
+   - Lower is better
+
+Measurement Rate: Percentage of notes detected
+   - Should be >80% for reliable results
+   - Low rate indicates audio quality issues
+
+Systematic Bias: Tendency to play sharp or flat
+   - Detected when average error >10 cents
+   - Indicates tuning or transposition issue
+
+
+================================================================================
+SYSTEM CAPABILITIES
+================================================================================
+
+INPUTS:
+- Score: MusicXML (.xml, .mxl) or MIDI (.mid)
+- Audio: WAV, MP3, FLAC, OGG
+
+OUTPUTS:
+- Accuracy score (0-100)
+- Per-note cents deviation
+- Statistical analysis
+- Error categorization
+- Bias detection
+- Visual plots (optional)
+
+PROCESSING:
+- Automatic note extraction
+- Frame-by-frame pitch detection
+- Temporal alignment
+- Statistical computation
+- Report generation
+
+REQUIREMENTS:
+- Python 3.7+
+- CPU only (no GPU needed)
+- ~30-60 seconds per minute of audio
+
+
+================================================================================
+SUPPORT AND TROUBLESHOOTING
+================================================================================
+
+Common Issues:
+
+"Low measurement rate (<50%)"
+   → Check: Audio file matches score?
+   → Verify: Recording is not silent/quiet
+   → Action: See QUICK_REFERENCE.txt
+
+"High MACE (>100 cents)"
+   → Check: Audio in same key as score?
+   → Verify: Instrument tuned correctly?
+   → Action: See Troubleshooting in QUICK_REFERENCE.txt
+
+"Missing notes in CSV"
+   → Normal for quiet/short notes
+   → Check: Audio volume sufficient?
+   → Review: Measurement rate
+
+For detailed troubleshooting:
+→ QUICK_REFERENCE.txt (Troubleshooting section)
+→ PITCH_EVALUATION_DOCUMENTATION.txt (FAQ section)
+
+
+================================================================================
+EXAMPLES AND SAMPLES
+================================================================================
+
+Sample Command:
+python evaluate_pitch.py --score Sheet-4.xml --audio wav4sheet-4.wav
+
+With Options:
+python evaluate_pitch.py \
+    --score piece.xml \
+    --audio recording.wav \
+    --output ./my_results \
+    --reference-freq 442.0
+
+Batch Processing:
+cd Data_Pitch/
+./evaluate_all_segments.sh
+
+
+================================================================================
+VERSION INFORMATION
+================================================================================
+
+System Version: 1.0
+Created: November 2025
+Last Updated: November 3, 2025
+
+Components:
+- Score Parser: music21 v9.1.0+
+- Pitch Detector: librosa (pYIN algorithm)
+- Analysis: numpy, scipy
+- Visualization: matplotlib, seaborn
+
+
+================================================================================
+GETTING STARTED CHECKLIST
+================================================================================
+
+□ Have MusicXML score file (.xml or .mxl)
+□ Have audio recording file (.wav recommended)
+□ Verify audio matches the score
+□ Check audio quality (clear, not too quiet)
+□ Python and dependencies installed
+□ Read MUSICIAN_GUIDE.txt or QUICK_REFERENCE.txt
+□ Run evaluation command
+□ Review MUSICIAN_REPORT.txt in output
+□ Open CSV file for note-by-note details
+□ Use results to guide practice
+
+
+================================================================================
+
+For the most appropriate documentation for your needs, refer to the
+"WHICH FILE SHOULD I READ?" section above.
+
+All documentation is in plain text format (.txt) for universal compatibility.
+
+================================================================================

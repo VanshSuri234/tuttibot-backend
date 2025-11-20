@@ -1,0 +1,256 @@
+===============================================================================
+MUSICIAN-FRIENDLY VISUALIZATIONS - GUIDE
+===============================================================================
+Created: November 3, 2025
+
+OVERVIEW
+--------
+We have created easy-to-understand visual reports for all Movement1 pitch 
+evaluations. These plots show pitch accuracy in ways that make sense to 
+musicians, using note names (like C4, A4) instead of technical measurements.
+
+
+WHERE TO FIND THE PLOTS
+-----------------------
+Location: Data_Pitch/pitch_results_movement1/segment##/pitch_evaluation_*/
+          musician_visualizations/
+
+Each segment evaluation contains 4 PNG image files that you can view with
+any image viewer.
+
+
+THE 4 VISUALIZATION TYPES
+==========================
+
+1. pitch_over_time.png - PITCH TIMELINE
+   ------------------------------------
+   Shows your performance pitch over time compared to the score.
+   
+   What you see:
+   - BLUE BARS: Expected notes from the score
+   - RED LINE: Your actual sung/played pitches
+   - COLORED DOTS: Individual note measurements
+     * Green dots = Perfect (within 10 cents)
+     * Orange dots = Good (10-25 cents)
+     * Dark orange = Acceptable (25-50 cents)  
+     * Red dots = Poor (50+ cents off)
+   
+   Y-axis: Musical note names (C4, D4, E4, etc.) - easy to read!
+   X-axis: Time in seconds
+   
+   What to look for:
+   - Does the red line follow the blue bars closely?
+   - Are there sections where you go flat (below) or sharp (above)?
+   - Look for patterns - consistent drifting vs. random errors
+
+
+2. note_errors.png - NOTE-BY-NOTE ACCURACY
+   ----------------------------------------
+   Bar chart showing each note's pitch error.
+   
+   What you see:
+   - Each bar = one measured note
+   - Bar color matches accuracy (green/orange/red)
+   - POSITIVE bars = You were SHARP (too high)
+   - NEGATIVE bars = You were FLAT (too low)
+   - Horizontal reference lines at ±10¢, ±25¢, ±50¢
+   
+   X-axis: Note number and name
+   Y-axis: Error in cents (0 = perfect)
+   
+   What to look for:
+   - Which specific notes need work?
+   - Are you consistently sharp or flat?
+   - Are there particular notes that are harder for you?
+
+
+3. accuracy_summary.png - OVERALL PERFORMANCE
+   -------------------------------------------
+   Visual summary with pie chart and key statistics.
+   
+   What you see:
+   TOP: Pie chart breaking down your accuracy:
+        - Green slice = Perfect notes (<10¢)
+        - Orange = Good notes (10-25¢)
+        - Dark orange = Acceptable (25-50¢)
+        - Red = Poor notes (≥50¢)
+   
+   BOTTOM LEFT: Key statistics
+        - Mean Error: Average cents off
+        - Measurement Rate: % of notes detected in audio
+        - Within ±10¢/25¢/50¢: Accuracy percentages
+   
+   BOTTOM RIGHT: Overall assessment
+        - EXCELLENT, VERY GOOD, GOOD, FAIR, or NEEDS WORK
+        - Based on your mean error
+   
+   What to look for:
+   - What percentage of notes are in the "Perfect" category?
+   - Is your mean error under 25 cents (good target)?
+
+
+4. error_distribution.png - ERROR PATTERNS
+   ----------------------------------------
+   Histogram showing how your pitch errors are distributed.
+   
+   What you see:
+   - Bars showing how many notes fall into each error range
+   - Bar colors match accuracy levels (green/orange/red)
+   - BLUE dashed line = Your median error
+   - RED dashed line = Your mean error
+   - Center line (0) = perfect pitch
+   
+   What to look for:
+   - Is the histogram centered on 0? (Random errors - good!)
+   - Is it shifted left (flat tendency) or right (sharp tendency)?
+   - Wide spread = inconsistent, narrow = consistent but maybe biased
+   
+   INTERPRETATION TIPS:
+   - Bell curve centered at 0 = Good random variation
+   - Shifted curve = Systematic bias (always sharp/flat)
+   - Flat distribution = Very inconsistent
+
+
+HOW TO USE THESE VISUALIZATIONS
+================================
+
+FOR PRACTICE SESSIONS:
+----------------------
+1. Look at pitch_over_time.png first
+   - Identify problem sections (where red line diverges from blue)
+   - Note if you tend to go flat in long notes or sharp in runs
+
+2. Check note_errors.png
+   - Find which specific notes need work
+   - Practice those problematic notes in isolation
+
+3. Review error_distribution.png
+   - If shifted consistently left/flat: work on support, vowel placement
+   - If shifted consistently right/sharp: work on relaxation, jaw position
+   - If very wide spread: work on consistency and listening skills
+
+
+FOR PROGRESS TRACKING:
+----------------------
+1. Save these plots from each practice session
+2. Compare accuracy_summary.png over time
+   - Is the green slice getting bigger?
+   - Is your mean error decreasing?
+
+3. Compare pitch_over_time.png from different sessions
+   - Are the red lines getting closer to blue bars?
+   - Are there fewer red dots and more green dots?
+
+
+UNDERSTANDING CENTS
+===================
+Musicians should know:
+- 100 cents = 1 semitone (half step)
+- 10 cents = Barely noticeable, professional level
+- 25 cents = Noticeable but acceptable
+- 50 cents = Half a semitone, clearly audible
+- 100 cents = A full semitone off (e.g., C instead of C#)
+
+
+WHAT DIFFERENT RESULTS MEAN
+============================
+
+EXCELLENT RESULTS (Mean Error < 10 cents):
+- Professional/conservatory level accuracy
+- Very tight pitch control
+- Green dominates the pie chart
+- Most dots on pitch_over_time are green
+
+VERY GOOD RESULTS (Mean Error 10-25 cents):
+- Strong pitch control
+- Minor deviations only
+- Mix of green and orange in pie chart
+- Good foundation to build on
+
+GOOD RESULTS (Mean Error 25-50 cents):
+- Generally accurate with some noticeable drift
+- Orange dominates pie chart
+- Pitch is recognizable but needs refinement
+- Focus on consistency
+
+NEEDS WORK (Mean Error > 50 cents):
+- Significant pitch issues
+- Red appears prominently in charts
+- May indicate:
+  * Microphone/audio quality issues
+  * Need for ear training
+  * Technical vocal/instrumental issues
+  * Wrong octave being played
+
+
+LOW MEASUREMENT RATE (<50%)
+----------------------------
+If "Measurement Rate" in accuracy_summary.png is low:
+- Audio quality may be poor (noise, distortion)
+- You might be singing/playing too softly
+- There may be long silences in the recording
+- Microphone placement might be incorrect
+
+This doesn't mean you're singing badly - it means the system
+couldn't detect pitch in those sections!
+
+
+TECHNICAL NOTES
+===============
+- Visualizations generated by: musician_visualizer.py
+- Created for all segments in Data_Pitch/pitch_results_movement1/
+- Uses note names (C4, D4, etc.) instead of Hz for readability
+- Color coding: Green (perfect) → Orange (good) → Red (poor)
+- Based on industry-standard cents measurement
+- Y-axis on pitch plots shows actual musical staff positions
+
+
+HOW TO REGENERATE VISUALIZATIONS
+=================================
+If you run new pitch evaluations and want new visualizations:
+
+From Block_3_PitchEvaluation directory, run:
+    ./visualize_all_segments.sh
+
+This will create musician_visualizations/ folders for all evaluations
+in the Data_Pitch/pitch_results_movement1/ directory.
+
+
+QUESTIONS & INTERPRETATION
+===========================
+
+Q: Why do I see fewer dots than notes in the score?
+A: The system only plots measured notes. Silent sections, very quiet
+   notes, or noisy audio may not be detected.
+
+Q: My pitch_over_time shows red line way off from blue bars everywhere?
+A: This might indicate:
+   - Wrong audio file paired with wrong score
+   - Playing/singing in different octave
+   - Significant tuning issues (check your instrument/voice)
+   - Audio quality problems
+
+Q: I see no visualizations in my evaluation folder?
+A: Run the ./visualize_all_segments.sh script to generate them.
+   Make sure you have matplotlib and seaborn installed.
+
+Q: Can I share these images?
+A: Yes! They're PNG files - use them in presentations, reports,
+   or share with teachers/conductors.
+
+
+NEXT STEPS
+==========
+1. Open the visualizations for your evaluation in any image viewer
+2. Start with pitch_over_time.png to get the big picture
+3. Use note_errors.png to identify specific problem notes
+4. Check accuracy_summary.png for overall assessment
+5. Study error_distribution.png to understand your pitch patterns
+6. Practice the problem areas identified
+7. Re-evaluate and compare new visualizations to track progress
+
+
+===============================================================================
+For technical documentation, see: PITCH_EVALUATION_DOCUMENTATION.txt
+For musician's guide to results: MUSICIAN_GUIDE.txt
+===============================================================================

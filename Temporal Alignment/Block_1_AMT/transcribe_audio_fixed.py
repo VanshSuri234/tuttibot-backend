@@ -28,7 +28,7 @@ def transcribe_audio_basic_pitch(audio_path: str, output_dir: str = None, gpu_ma
     Enhanced with GPU support and automatic device selection
     Then parse the output files to get structured data
     """
-    print(f"🚀 Starting Basic Pitch transcription of {audio_path}")
+    print(f"Starting Basic Pitch transcription of {audio_path}")
     
     # Import GPU manager if not provided
     if gpu_manager is None:
@@ -36,20 +36,20 @@ def transcribe_audio_basic_pitch(audio_path: str, output_dir: str = None, gpu_ma
             from gpu_manager import GPUManager
             gpu_manager = GPUManager()
         except ImportError:
-            print("⚠️ GPU manager not available, using default settings")
+            print("Warning: GPU manager not available, using default settings")
             gpu_manager = None
     
     # Log device configuration
     if gpu_manager:
         device_type = "GPU" if gpu_manager.device_config['use_gpu'] else "CPU"
-        print(f"🎯 AMT Device: {device_type}")
+        print(f"AMT Device: {device_type}")
         if gpu_manager.device_config['use_gpu']:
-            print(f"📱 GPU ID: {gpu_manager.device_config['device_id']}")
+            print(f"GPU ID: {gpu_manager.device_config['device_id']}")
             
             # Monitor GPU memory before transcription
             memory_info = gpu_manager.monitor_gpu_memory()
             if memory_info:
-                print(f"💾 GPU Memory: {memory_info['used_memory_mb']}/{memory_info['total_memory_mb']} MB")
+                print(f"GPU Memory: {memory_info['used_memory_mb']}/{memory_info['total_memory_mb']} MB")
     
     # Create temporary directory if no output specified
     if output_dir is None:
@@ -62,7 +62,7 @@ def transcribe_audio_basic_pitch(audio_path: str, output_dir: str = None, gpu_ma
     
     try:
         # Prepare Basic Pitch command
-        print("🎵 Running Basic Pitch CLI...")
+        print("Running Basic Pitch CLI...")
         cmd = [
             'basic-pitch', 
             output_dir, 
@@ -77,12 +77,12 @@ def transcribe_audio_basic_pitch(audio_path: str, output_dir: str = None, gpu_ma
             env = os.environ.copy()
             env['CUDA_VISIBLE_DEVICES'] = str(gpu_manager.device_config['device_id'])
             # Basic Pitch should automatically use GPU if available
-            print(f"🎮 Using GPU {gpu_manager.device_config['device_id']} for transcription")
+            print(f"Using GPU {gpu_manager.device_config['device_id']} for transcription")
         else:
             env = os.environ.copy()
             # Force CPU mode if needed
             env['CUDA_VISIBLE_DEVICES'] = ''
-            print("💻 Using CPU for transcription")
+            print("Using CPU for transcription")
         
         result = subprocess.run(
             cmd,
@@ -95,7 +95,7 @@ def transcribe_audio_basic_pitch(audio_path: str, output_dir: str = None, gpu_ma
         if result.returncode != 0:
             raise RuntimeError(f"Basic Pitch failed: {result.stderr}")
         
-        print("   ✅ Basic Pitch CLI completed successfully")
+        print("   Basic Pitch CLI completed successfully")
         
         # Find the generated files
         audio_stem = Path(audio_path).stem
@@ -106,7 +106,7 @@ def transcribe_audio_basic_pitch(audio_path: str, output_dir: str = None, gpu_ma
             raise FileNotFoundError(f"Expected CSV file not found: {csv_file}")
         
         # Parse CSV file to get note events
-        print("📊 Parsing note events...")
+        print("Parsing note events...")
         
         # Read CSV manually to handle malformed rows
         with open(csv_file, 'r') as f:
@@ -140,10 +140,10 @@ def transcribe_audio_basic_pitch(audio_path: str, output_dir: str = None, gpu_ma
                         }
                         notes.append(note)
             except (ValueError, IndexError) as e:
-                print(f"   ⚠️  Skipping malformed line {line_num}: {e}")
+                print(f"   Warning: Skipping malformed line {line_num}: {e}")
                 continue
         
-        print(f"   ✅ Parsed {len(notes)} notes from CSV")
+        print(f"   Parsed {len(notes)} notes from CSV")
         
         # Calculate statistics
         if notes:
@@ -193,7 +193,7 @@ def save_transcription(transcription_data: dict, output_path: str):
     """Save transcription data to JSON file"""
     with open(output_path, 'w') as f:
         json.dump(transcription_data, f, indent=2)
-    print(f"   ✅ Saved transcription to {output_path}")
+    print(f"   Saved transcription to {output_path}")
 
 def main():
     parser = argparse.ArgumentParser(description='Working AMT with Basic Pitch CLI')
@@ -204,7 +204,7 @@ def main():
     
     audio_path = Path(args.audio)
     if not audio_path.exists():
-        print(f"❌ Audio file not found: {audio_path}")
+        print(f"Error: Audio file not found: {audio_path}")
         return 1
     
     output_dir = args.output_dir or "output"
@@ -221,21 +221,21 @@ def main():
         notes = transcription_data['notes']
         metadata = transcription_data['metadata']
         
-        print(f"\n✅ Transcription completed successfully!")
-        print(f"📊 Found {len(notes)} notes")
-        print(f"⏱️  Total duration: {metadata['total_duration_s']:.2f}s")
-        print(f"🎹 Pitch range: {metadata['pitch_range']['min_midi']} - {metadata['pitch_range']['max_midi']} MIDI")
-        print(f"📁 MIDI file: {metadata['source_files']['midi']}")
-        print(f"📁 JSON file: {json_output}")
+        print(f"\nTranscription completed successfully!")
+        print(f"Found {len(notes)} notes")
+        print(f"Total duration: {metadata['total_duration_s']:.2f}s")
+        print(f"Pitch range: {metadata['pitch_range']['min_midi']} - {metadata['pitch_range']['max_midi']} MIDI")
+        print(f"MIDI file: {metadata['source_files']['midi']}")
+        print(f"JSON file: {json_output}")
         
         if notes:
-            print(f"\n🎵 First few notes:")
+            print(f"\nFirst few notes:")
             for i, note in enumerate(notes[:5]):
                 print(f"  Note {i+1}: MIDI {note['pitch_midi']} ({note['pitch_hz']:.1f}Hz) "
                       f"from {note['onset_time']:.2f}s to {note['offset_time']:.2f}s "
                       f"(vel: {note['velocity']})")
             
-            print(f"\n📈 Statistics:")
+            print(f"\nStatistics:")
             print(f"   Avg duration: {metadata['duration_stats']['avg_duration']:.3f}s")
             print(f"   Min duration: {metadata['duration_stats']['min_duration']:.3f}s")
             print(f"   Max duration: {metadata['duration_stats']['max_duration']:.3f}s")
@@ -243,7 +243,7 @@ def main():
         return 0
         
     except Exception as e:
-        print(f"❌ Transcription failed: {e}")
+        print(f"Error: Transcription failed: {e}")
         return 1
 
 if __name__ == '__main__':

@@ -1,4 +1,8 @@
-# TuttiBot .gitignore
+# Music Performance Analysis .gitignore
+
+# Output directories (generated at runtime)
+Output/
+Output_*/
 
 # Python
 __pycache__/
@@ -6,9 +10,11 @@ __pycache__/
 *$py.class
 *.so
 .Python
+*.egg
+*.egg-info/
+dist/
 build/
 develop-eggs/
-dist/
 downloads/
 eggs/
 .eggs/
@@ -18,57 +24,66 @@ parts/
 sdist/
 var/
 wheels/
-*.egg-info/
 .installed.cfg
-*.egg
+MANIFEST
 
 # Virtual environments
 venv/
 env/
 ENV/
+env.bak/
+venv.bak/
 .venv/
+
+# Testing
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# Logs
+*.log
+nohup.out
+*.out
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
-
-# TuttiBot output directories
-tuttibot_output_*/
-*_audiveris_output/
-*.omr
-
-# Temporary files
-*.tmp
-*.temp
-*_converted.*
-*_processed.*
-*_normalized.*
-
-# Audio files (typically too large for git)
-*.wav
-*.mp3
-*.flac
-*.aac
-*.ogg
-
-# Score files that might be large
-*.pdf
-
-# Log files
-*.log
-
-# OS generated files
+*~
 .DS_Store
 .DS_Store?
 ._*
 .Spotlight-V100
 .Trashes
-ehthumbs.db
 Thumbs.db
+ehthumbs.db
 
-# Keep example/test files if they're small
-!example_*.wav
-!test_*.xml
-!sample_*.mid
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# Temporary files
+*.tmp
+*.bak
+*.orig
+*.temp
+*_converted.*
+*_processed.*
+*_normalized.*
+
+# Model checkpoints
+*.pt
+*.pth
+*.ckpt
+checkpoints/
+
+# Keep Bach dataset audio files (they're for testing)
+!Bach_10_Dataset/**/*.wav
+!Bach_10_Dataset/**/*.xml
+!Bach_10_Dataset/**/*.mid

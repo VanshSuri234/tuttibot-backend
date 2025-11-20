@@ -1,0 +1,32 @@
+{
+  "metadata": {
+    "method": "pyin",
+    "sample_rate": 22050,
+    "hop_length": 512,
+    "fmin": 65.0,
+    "fmax": 2093.0,
+    "confidence_threshold": 0.5,
+    "total_frames": 10250,
+    "voiced_frames": 279,
+    "voiced_percentage": 2.7219512195121953
+  },
+  "statistics": {
+    "frequency_range_hz": {
+      "min": 65.0,
+      "max": 593.8828164416013,
+      "mean": 138.38685205514227,
+      "median": 99.09230651162453,
+      "std": 94.25773436461633
+    },
+    "confidence": {
+      "mean": 0.666601738956747,
+      "min": 0.5485250542599843,
+      "max": 0.9459302094659093
+    }
+  },
+  "frames": [
+    {
+      "time": 0.0,
+      "frequency": 65.0,
+      "confidence": 0.01,
+      "is_voiced": 
