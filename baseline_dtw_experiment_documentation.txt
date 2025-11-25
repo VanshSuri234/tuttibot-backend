@@ -1,0 +1,17 @@
+
+This experiment is designed to evaluate the temporal alignment between musical scores and their corresponding performances for each instrument in the Bach10 dataset, which consists of 10 chorales and four instruments: violin, clarinet, saxophone, and bassoon. The goal is to establish a robust baseline using Dynamic Time Warping (DTW), a well-known algorithm for measuring similarity between two sequences that may vary in time or speed. By using DTW, we can quantify how well the performed audio matches the expected timing and pitch structure of the score.
+
+The process begins by extracting chroma features from both the MIDI score and the instrument's WAV performance. Chroma features represent the intensity of each of the twelve pitch classes (semitones) in music, making them suitable for comparing harmonic content while being robust to timbral differences. The MIDI file is synthesized to audio for feature extraction, ensuring that the score and performance are represented in a comparable format.
+
+Once the chroma features are obtained, DTW is applied to align the score and performance sequences. The DTW algorithm constructs a cost matrix based on the Euclidean distance between chroma vectors at each time step, then finds the optimal alignment path that minimizes the total cost. This path reflects the best temporal mapping between the score and performance, accounting for expressive timing variations.
+
+To evaluate the quality of alignment, three metrics are computed for each instrument across all chorales. The Mean Absolute Error (MAE) is calculated as the average absolute difference between aligned time indices: MAE = (1/N) * Σ|i - j|, where (i, j) are aligned indices and N is the number of alignment steps. The Root Mean Square Error (RMSE) is the square root of the average squared difference: RMSE = sqrt((1/N) * Σ(i - j)^2). Note-match accuracy measures the proportion of alignment steps where the score and performance indices are within a small threshold (e.g., |i - j| < 3), reflecting how often the alignment is close to perfect.
+
+The results are aggregated per instrument, providing a summary of alignment performance for violin, clarinet, saxophone, and bassoon. This aggregation helps identify systematic differences in alignment quality due to instrument-specific expressive characteristics. The output is printed and saved in 'baseline_dtw_results.txt' in a simple table format:
+instrument | MAE | RMSE | Accuracy
+violin | ... | ... | ...
+clarinet | ... | ... | ...
+saxphone | ... | ... | ...
+bassoon | ... | ... | ...
+
+This baseline experiment is essential for benchmarking more advanced alignment methods and understanding the limitations of pitch-based DTW in the context of expressive musical performance.

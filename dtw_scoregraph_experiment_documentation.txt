@@ -1,0 +1,16 @@
+
+This experiment extends the baseline DTW alignment by incorporating ScoreGraph context constraints, which are designed to improve the robustness of alignment in the presence of musical structure and expressive timing. The ScoreGraph encodes relationships between notes in the score, such as phrase boundaries and structural anchors, and these relationships are used to penalize unrealistic alignment paths in the DTW cost matrix. By doing so, the alignment algorithm is encouraged to respect musical context, leading to more musically meaningful results.
+
+For each chorale and each instrument (violin, clarinet, saxophone, bassoon), chroma features are extracted from the MIDI score and the instrument's WAV performance. The ScoreGraph context penalties are applied to the DTW cost matrix, increasing the cost for alignment steps that violate musical structure. The DTW algorithm then finds the optimal alignment path, balancing both pitch similarity and structural context.
+
+The evaluation metrics are the same as in the baseline: Mean Absolute Error (MAE), Root Mean Square Error (RMSE), and note-match accuracy. MAE is calculated as the average absolute difference between aligned indices, RMSE as the square root of the average squared difference, and note-match accuracy as the proportion of alignment steps within a small threshold. These metrics quantify the temporal precision and reliability of the alignment, with context constraints expected to reduce errors and improve accuracy.
+
+Results are aggregated per instrument, allowing for comparison of alignment quality across violin, clarinet, saxophone, and bassoon. The output is printed and saved in 'dtw_scoregraph_results.txt' in a table format:
+instrument | MAE | RMSE | Accuracy
+violin | ... | ... | ...
+clarinet | ... | ... | ...
+saxphone | ... | ... | ...
+bassoon | ... | ... | ...
+
+This experiment demonstrates the benefit of incorporating musical context into alignment algorithms, providing a more realistic assessment of performance timing and structure.
+

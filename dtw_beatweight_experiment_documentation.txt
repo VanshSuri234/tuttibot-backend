@@ -1,0 +1,15 @@
+
+This experiment investigates the effect of beat weighting on alignment quality between score and performance for each instrument in the Bach10 dataset. Beat weighting is a technique that modifies the DTW cost matrix to favor alignment steps that coincide with musically important beats, such as downbeats or strong rhythmic anchors. By rewarding beat-aligned steps, the algorithm is better able to capture the intended rhythmic structure of the performance, especially in expressive or rubato passages.
+
+For each chorale and instrument (violin, clarinet, saxophone, bassoon), chroma features are extracted from the MIDI score and the instrument's WAV file. Beat weighting is applied to the DTW cost matrix, reducing the cost for alignment steps that match score and performance beats. The DTW algorithm then computes the optimal alignment path, which is expected to be more rhythmically accurate.
+
+The evaluation metrics are Mean Absolute Error (MAE), Root Mean Square Error (RMSE), and note-match accuracy. MAE is the average absolute difference between aligned indices, RMSE is the square root of the average squared difference, and note-match accuracy is the proportion of alignment steps within a small threshold. These metrics provide a quantitative assessment of how well the alignment respects the rhythmic structure of the music.
+
+Results are aggregated per instrument, and the output is printed and saved in 'dtw_beatweight_results.txt' in a table format:
+instrument | MAE | RMSE | Accuracy
+violin | ... | ... | ...
+clarinet | ... | ... | ...
+saxphone | ... | ... | ...
+bassoon | ... | ... | ...
+
+This experiment highlights the importance of rhythmic information in alignment algorithms and demonstrates how beat weighting can improve the evaluation of performance timing.

@@ -1,0 +1,13 @@
+
+This script is designed to aggregate and compare alignment metrics for each instrument across all 10 chorales and all experiment variants, including Baseline DTW, DTW+ScoreGraph, DTW+BeatWeight, and Full System. By collecting results from each experiment, it provides a comprehensive overview of how different alignment strategies affect each instrument's performance, highlighting strengths and weaknesses in timing and structure.
+
+For each experiment variant, the script loads the results from the corresponding JSON file and computes the mean values of Mean Absolute Error (MAE), Root Mean Square Error (RMSE), and note-match accuracy for each instrument (violin, clarinet, saxophone, bassoon) across all chorales. MAE is calculated as the average absolute difference between aligned indices, RMSE as the square root of the average squared difference, and note-match accuracy as the proportion of alignment steps within a small threshold. These metrics allow for direct comparison of alignment quality and reliability between methods and instruments.
+
+The output is printed and saved in '<experiment>_cross_instrument_results.txt' for each variant, in a table format:
+instrument | MAE | RMSE | Accuracy
+violin | ... | ... | ...
+clarinet | ... | ... | ...
+saxphone | ... | ... | ...
+bassoon | ... | ... | ...
+
+This aggregation is essential for understanding the impact of alignment improvements and for guiding further grading and sensitivity analyses.

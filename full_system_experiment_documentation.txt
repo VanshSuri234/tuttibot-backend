@@ -1,0 +1,16 @@
+
+This experiment implements the full alignment system, combining both ScoreGraph context constraints and beat weighting to achieve the most musically informed alignment between score and performance for each instrument in the Bach10 dataset. By integrating structural and rhythmic information, the algorithm is able to produce alignments that are both contextually and rhythmically accurate, reflecting the true expressive intent of the performer.
+
+For each chorale and instrument (violin, clarinet, saxophone, bassoon), chroma features are extracted from the MIDI score and the instrument's WAV file. The DTW cost matrix is modified by applying ScoreGraph context penalties, which discourage alignment paths that violate musical structure, and beat weighting, which rewards alignment steps that match important beats. The DTW algorithm then computes the optimal alignment path, balancing pitch, structure, and rhythm.
+
+The evaluation metrics are Mean Absolute Error (MAE), Root Mean Square Error (RMSE), and note-match accuracy. MAE is the average absolute difference between aligned indices, RMSE is the square root of the average squared difference, and note-match accuracy is the proportion of alignment steps within a small threshold. These metrics provide a comprehensive assessment of alignment quality, capturing both timing precision and musical correctness.
+
+Results are aggregated per instrument, and the output is printed and saved in 'full_system_results.txt' in a table format:
+instrument | MAE | RMSE | Accuracy
+violin | ... | ... | ...
+clarinet | ... | ... | ...
+saxphone | ... | ... | ...
+bassoon | ... | ... | ...
+
+This experiment serves as the reference for evaluating the incremental benefits of context and rhythm-aware alignment, and is essential for benchmarking the grading and sensitivity analyses that follow.
+
