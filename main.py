@@ -51,14 +51,14 @@ class TuttiBotPipeline:
         for dir_path in [self.input_dir, self.processing_dir, self.extraction_dir, self.final_dir]:
             dir_path.mkdir(exist_ok=True)
         
-        print(f"🚀 TuttiBot Pipeline initialized")
-        print(f"📁 Output directory: {self.output_dir}")
-        print("=" * 60)
+        print(f" TuttiBot Pipeline initialized")
+        print(f" Output directory: {self.output_dir}")
+        # print("=" * 60)
     
     def run_input_layer(self, audio_path: str, score_path: str):
         """Run INPUT3_LAYER to standardize inputs"""
-        print("🎵 STEP 1: INPUT LAYER (INPUT3_LAYER)")
-        print("-" * 40)
+        print(" STEP 1: INPUT LAYER (INPUT3_LAYER)")
+        # print("-" * 40)
         
         try:
             from input_layer import MusicInputLayer
@@ -92,20 +92,20 @@ class TuttiBotPipeline:
             with open(self.input_dir / "input_metadata.json", 'w') as f:
                 json.dump(metadata, f, indent=2)
             
-            print(f"✅ Audio processed: {results['audio']['message']}")
-            print(f"✅ Score processed: {results['score']['message']}")
-            print(f"📁 Results saved to: {self.input_dir}")
-            print(f"⏱️  Input layer processing time: Fast direct CLI method")
+            print(f" Audio processed: {results['audio']['message']}")
+            print(f" Score processed: {results['score']['message']}")
+            print(f" Results saved to: {self.input_dir}")
+            print(f"  Input layer processing time: Fast direct CLI method")
             
             return str(audio_output), str(score_output)
             
         except Exception as e:
-            print(f"❌ INPUT LAYER FAILED: {e}")
+            print(f" INPUT LAYER FAILED: {e}")
             raise
     
     def run_processing_layer(self, audio_path: str, score_path: str):
         """Run PROCESSING_LAYER for audio cleaning and music analysis"""
-        print("\\n🔧 STEP 2: PROCESSING LAYER")
+        print("\\n STEP 2: PROCESSING LAYER")
         print("-" * 40)
         
         try:
@@ -132,9 +132,9 @@ class TuttiBotPipeline:
             with open(self.processing_dir / "processing_metadata.json", 'w') as f:
                 json.dump(metadata, f, indent=2, default=str)
             
-            print(f"✅ Audio cleaned and segmented: {len(result.audio_segments)} segments")
-            print(f"✅ Music features extracted: {metadata['music_features_count']} features")
-            print(f"📁 Results saved to: {self.processing_dir}")
+            print(f" Audio cleaned and segmented: {len(result.audio_segments)} segments")
+            print(f" Music features extracted: {metadata['music_features_count']} features")
+            print(f" Results saved to: {self.processing_dir}")
             
             return {
                 'success': True,
@@ -149,12 +149,12 @@ class TuttiBotPipeline:
             }
             
         except Exception as e:
-            print(f"❌ PROCESSING LAYER FAILED: {e}")
+            print(f" PROCESSING LAYER FAILED: {e}")
             raise
     
     def run_extraction_layer(self, processing_results: dict):
         """Run EXTRACTION_LAYER for advanced feature analysis"""
-        print("\\n📊 STEP 3: EXTRACTION LAYER")
+        print("\\n STEP 3: EXTRACTION LAYER")
         print("-" * 40)
         
         try:
@@ -237,9 +237,9 @@ class TuttiBotPipeline:
             with open(self.extraction_dir / "extraction_metadata.json", 'w') as f:
                 json.dump(metadata, f, indent=2)
             
-            print(f"✅ Audio features extracted: {metadata['audio_features_size_kb']:.1f} KB")
-            print(f"✅ Score features extracted: {metadata['score_features_size_kb']:.1f} KB")
-            print(f"📁 Results saved to: {self.extraction_dir}")
+            print(f" Audio features extracted: {metadata['audio_features_size_kb']:.1f} KB")
+            print(f" Score features extracted: {metadata['score_features_size_kb']:.1f} KB")
+            print(f" Results saved to: {self.extraction_dir}")
             
             return {
                 'audio_features': audio_data,
@@ -249,12 +249,12 @@ class TuttiBotPipeline:
             }
             
         except Exception as e:
-            print(f"❌ EXTRACTION LAYER FAILED: {e}")
+            print(f" EXTRACTION LAYER FAILED: {e}")
             raise
     
     def create_final_summary(self, input_metadata: dict, processing_results: dict, extraction_results: dict):
         """Create final comprehensive summary"""
-        print("\\n📋 STEP 4: FINAL SUMMARY")
+        print("\\n STEP 4: FINAL SUMMARY")
         print("-" * 40)
         
         try:
@@ -299,14 +299,14 @@ class TuttiBotPipeline:
                 if src.exists():
                     shutil.copy2(src, self.final_dir / dst)
             
-            print(f"✅ Pipeline completed successfully!")
-            print(f"📁 Final results: {self.final_dir}")
-            print(f"📄 Summary: {summary_path}")
+            print(f" Pipeline completed successfully!")
+            print(f" Final results: {self.final_dir}")
+            print(f" Summary: {summary_path}")
             
             return summary
             
         except Exception as e:
-            print(f"⚠️ Error creating summary: {e}")
+            print(f" Error creating summary: {e}")
             return {}
     
     def run_complete_pipeline(self, audio_path: str, score_path: str):
@@ -314,10 +314,10 @@ class TuttiBotPipeline:
         start_time = datetime.now()
         
         try:
-            print(f"🎼 Starting TuttiBot Complete Pipeline")
-            print(f"🎵 Audio input: {Path(audio_path).name}")
-            print(f"🎼 Score input: {Path(score_path).name}")
-            print("=" * 60)
+            print(f" Starting TuttiBot Complete Pipeline")
+            print(f" Audio input: {Path(audio_path).name}")
+            print(f" Score input: {Path(score_path).name}")
+            # print("=" * 60)
             
             # Step 1: Input Layer
             std_audio, std_score = self.run_input_layer(audio_path, score_path)
@@ -335,19 +335,19 @@ class TuttiBotPipeline:
             # Calculate total time
             total_time = (datetime.now() - start_time).total_seconds()
             
-            print("\\n" + "=" * 60)
-            print("🎉 PIPELINE COMPLETED SUCCESSFULLY! 🎉")
-            print("=" * 60)
-            print(f"⏱️  Total processing time: {total_time:.1f} seconds")
-            print(f"📁 All results saved in: {self.output_dir}")
-            print(f"📋 Check final_results/ for key outputs")
+            # print("\\n" + "=" * 60)
+            print(" PIPELINE COMPLETED SUCCESSFULLY! ")
+            # print("=" * 60)
+            print(f"⏱  Total processing time: {total_time:.1f} seconds")
+            print(f" All results saved in: {self.output_dir}")
+            print(f" Check final_results/ for key outputs")
             
             return True
             
         except Exception as e:
-            print("\\n" + "=" * 60)
-            print("❌ PIPELINE FAILED")
-            print("=" * 60)
+            # print("\\n" + "=" * 60)
+            print(" PIPELINE FAILED")
+            # print("=" * 60)
             print(f"Error: {e}")
             return False
 
@@ -357,7 +357,7 @@ def main():
     # Handle help requests
     if len(sys.argv) == 2 and sys.argv[1] in ['-h', '--help', 'help']:
         print("TuttiBot - Music Analysis Pipeline")
-        print("=" * 40)
+        # print("=" * 40)
         print("Usage: python main.py <audio_file> <score_file>")
         print()
         print("Examples:")
@@ -382,7 +382,7 @@ def main():
         sys.exit(0)
     
     if len(sys.argv) != 3:
-        print("❌ Error: Wrong number of arguments")
+        print(" Error: Wrong number of arguments")
         print()
         print("Usage: python main.py <audio_file> <score_file>")
         print()
@@ -402,11 +402,11 @@ def main():
     
     # Validate input files
     if not Path(audio_file).exists():
-        print(f"❌ Audio file not found: {audio_file}")
+        print(f" Audio file not found: {audio_file}")
         sys.exit(1)
     
     if not Path(score_file).exists():
-        print(f"❌ Score file not found: {score_file}")
+        print(f" Score file not found: {score_file}")
         sys.exit(1)
     
     # Run pipeline

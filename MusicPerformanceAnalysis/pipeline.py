@@ -256,9 +256,9 @@ class MusicPerformancePipeline:
             processed_audio = Path(result.processed_audio_path)
             if processed_audio.exists():
                 self.audio_path = processed_audio
-                logger.info(f"✓ Audio processed: {self.audio_path.name}")
+                logger.info(f" Audio processed: {self.audio_path.name}")
             else:
-                logger.info(f"✓ Audio processing skipped (not needed)")
+                logger.info(f" Audio processing skipped (not needed)")
             
             # Save processing metadata (convert numpy types)
             metadata_file = self.processing_dir / "processing_metadata.json"
@@ -473,7 +473,7 @@ class MusicPerformancePipeline:
             result = subprocess.run(cmd, capture_output=True, text=True)
             
             if result.returncode == 0 and output_midi.exists():
-                logger.info(f"✓ MIDI transcription saved: {output_midi}")
+                logger.info(f" MIDI transcription saved: {output_midi}")
                 
                 # Convert MIDI to JSON format for downstream processing
                 try:
@@ -499,7 +499,7 @@ class MusicPerformancePipeline:
                     with open(output_json, 'w') as f:
                         json.dump(transcription_data, f, indent=2)
                     
-                    logger.info(f"✓ JSON transcription saved: {output_json}")
+                    logger.info(f" JSON transcription saved: {output_json}")
                     self.results['transcription'] = str(output_json)
                     self.results['transcription_midi'] = str(output_midi)
                     return True
@@ -535,7 +535,7 @@ class MusicPerformancePipeline:
             result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
             
             if result.returncode == 0 and output_file.exists():
-                logger.info(f"✓ Beat detection saved: {output_file}")
+                logger.info(f" Beat detection saved: {output_file}")
                 self.results['beats'] = str(output_file)
                 return True
             else:
@@ -639,7 +639,7 @@ class MusicPerformancePipeline:
             # Check for results file
             results_file = output_dir / "alignment_results.json"
             if result.returncode == 0 and results_file.exists():
-                logger.info(f"✓ DTW alignment saved: {results_file}")
+                logger.info(f" DTW alignment saved: {results_file}")
                 self.results['alignment'] = str(results_file)
                 return True
             else:
@@ -767,12 +767,12 @@ class MusicPerformancePipeline:
                     if perf_features_file and Path(perf_features_file).exists():
                         with open(perf_features_file) as f:
                             extraction_results['performance'] = json.load(f)
-                        logger.info(f"✓ Performance features loaded")
+                        logger.info(f" Performance features loaded")
                     
                     if score_features_file and Path(score_features_file).exists():
                         with open(score_features_file) as f:
                             extraction_results['score'] = json.load(f)
-                        logger.info(f"✓ Score features loaded")
+                        logger.info(f" Score features loaded")
                 except Exception as e:
                     logger.warning(f"Could not load extraction features: {e}")
             
@@ -784,7 +784,7 @@ class MusicPerformancePipeline:
                     try:
                         with open(pqg_file) as f:
                             pqg_results = json.load(f)
-                        logger.info(f"✓ PQG-A2SA metrics loaded")
+                        logger.info(f" PQG-A2SA metrics loaded")
                     except Exception as e:
                         logger.warning(f"Could not load PQG-A2SA results: {e}")
             
@@ -987,9 +987,9 @@ class MusicPerformancePipeline:
             with open(report_file, 'w') as f:
                 f.write(report)
             
-            logger.info(f"✓ Final grade: {final_score:.1f}/100")
-            logger.info(f"✓ Grade saved: {output_file}")
-            logger.info(f"✓ Report saved: {report_file}")
+            logger.info(f" Final grade: {final_score:.1f}/100")
+            logger.info(f" Grade saved: {output_file}")
+            logger.info(f" Report saved: {report_file}")
             
             self.results['final_grade'] = str(output_file)
             self.status['grading'] = True
@@ -1144,7 +1144,7 @@ class MusicPerformancePipeline:
         self._save_summary(start_time)
         
         logger.info("\n" + "="*70)
-        logger.info("  ✓ PIPELINE COMPLETE")
+        logger.info("   PIPELINE COMPLETE")
         logger.info("="*70)
         
         return True
@@ -1200,7 +1200,7 @@ def main():
     success = pipeline.run_pipeline()
     
     if success:
-        print("\n✓ Analysis complete!")
+        print("\n Analysis complete!")
         print(f"Results: {args.output}")
         sys.exit(0)
     else:

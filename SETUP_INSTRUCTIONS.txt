@@ -59,7 +59,7 @@ STEP 3: CREATE PYTHON VIRTUAL ENVIRONMENT (RECOMMENDED)
 
 Using venv (built-in):
 
-    python3 -m venv pipeline_env
+    python3 -m venv pipeline_env # using (tuttibot_env)
     source pipeline_env/bin/activate
 
     On Windows:
@@ -152,7 +152,7 @@ Basic command:
 Example with provided Bach dataset:
 
     ./run_analysis.sh Bach_10_Dataset/04_ChristeDuBeistand
-
+NOTE: run_analysis.sh is hardcoded and we need to change the path of the WORKSPACE_DIR, so do that
 This will:
     1. Find all instrument audio files
     2. Process each instrument

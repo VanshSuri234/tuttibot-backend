@@ -3,18 +3,18 @@
 <score-partwise version="4.0.3">
   <identification>
     <encoding>
-      <software>Audiveris 5.6.2</software>
+      <software>Audiveris 5.8.1</software>
       <supports type="yes" element="print" attribute="new-system" value="yes"></supports>
       <supports type="yes" element="print" attribute="new-page" value="yes"></supports>
       <supports type="yes" element="accidental"></supports>
       <supports type="yes" element="beam"></supports>
       <supports type="yes" element="stem"></supports>
       <software>ProxyMusic 4.0.3</software>
-      <encoding-date>2025-09-04</encoding-date>
+      <encoding-date>2025-12-02</encoding-date>
     </encoding>
-    <source>/home/admin1/TuttiBot/Workspace/Twinkle_pdf.pdf</source>
+    <source>/home/unitree/Documents/TuttiBot/Workspace/Twinkle_pdf.pdf</source>
     <miscellaneous>
-      <miscellaneous-field name="source-file">/home/admin1/TuttiBot/Workspace/Twinkle_pdf.pdf</miscellaneous-field>
+      <miscellaneous-field name="source-file">/home/unitree/Documents/TuttiBot/Workspace/Twinkle_pdf.pdf</miscellaneous-field>
       <miscellaneous-field name="source-sheet-1">1 2</miscellaneous-field>
     </miscellaneous>
   </identification>
@@ -80,10 +80,6 @@
         <voice>1</voice>
         <type>quarter</type>
         <stem default-y="-14">up</stem>
-        <lyric number="1" placement="below" default-y="-85">
-          <syllabic>begin</syllabic>
-          <text>Twin</text>
-        </lyric>
       </note>
       <note default-x="130">
         <pitch>
@@ -94,11 +90,6 @@
         <voice>1</voice>
         <type>quarter</type>
         <stem default-y="-14">up</stem>
-        <notations>
-          <articulations>
-            <breath-mark default-x="154" default-y="-86" placement="below">comma</breath-mark>
-          </articulations>
-        </notations>
       </note>
       <note default-x="197">
         <pitch>
@@ -133,7 +124,7 @@
         <type>quarter</type>
         <stem default-y="10">up</stem>
         <lyric number="1" placement="below" default-y="-85">
-          <syllabic>middle</syllabic>
+          <syllabic>begin</syllabic>
           <text>lit</text>
         </lyric>
       </note>
@@ -196,6 +187,12 @@
           <text>I</text>
         </lyric>
       </note>
+      <direction placement="below">
+        <direction-type>
+          <pedal type="start" line="no" default-x="120" default-y="-229" halign="left"></pedal>
+        </direction-type>
+        <sound damper-pedal="yes"></sound>
+      </direction>
       <note default-x="145">
         <pitch>
           <step>E</step>
@@ -250,6 +247,10 @@
         <voice>1</voice>
         <type>quarter</type>
         <stem default-y="-9">up</stem>
+        <lyric number="1" placement="below" default-y="-85">
+          <syllabic>single</syllabic>
+          <text>Full</text>
+        </lyric>
       </note>
       <note default-x="146">
         <pitch>
@@ -260,10 +261,6 @@
         <voice>1</voice>
         <type>half</type>
         <stem default-y="-14">up</stem>
-        <lyric number="1" placement="below" default-y="-85">
-          <syllabic>single</syllabic>
-          <text>are!</text>
-        </lyric>
       </note>
     </measure>
     <!--=======================================================-->
@@ -293,10 +290,6 @@
         <voice>1</voice>
         <type>quarter</type>
         <stem default-y="-15">up</stem>
-        <lyric number="1" placement="below" default-y="-85">
-          <syllabic>begin</syllabic>
-          <text>Twin</text>
-        </lyric>
       </note>
       <note default-x="121">
         <pitch>
@@ -312,10 +305,6 @@
             <staccato placement="below" default-y="-84"></staccato>
           </articulations>
         </notations>
-        <lyric number="1" placement="below" default-y="-85">
-          <syllabic>end</syllabic>
-          <text>11:13,</text>
-        </lyric>
       </note>
       <note default-x="187">
         <pitch>
@@ -357,11 +346,6 @@
         <voice>1</voice>
         <type>quarter</type>
         <stem default-y="11">up</stem>
-        <notations>
-          <articulations>
-            <tenuto placement="below" default-y="-32"></tenuto>
-          </articulations>
-        </notations>
         <lyric number="1" placement="below" default-y="-85">
           <syllabic>begin</syllabic>
           <text>lit</text>
@@ -437,11 +421,6 @@
         <voice>1</voice>
         <type>quarter</type>
         <stem default-y="-5">up</stem>
-        <notations>
-          <articulations>
-            <tenuto placement="below" default-y="-48"></tenuto>
-          </articulations>
-        </notations>
         <lyric number="1" placement="below" default-y="-85">
           <syllabic>end</syllabic>
           <text>tier</text>
@@ -473,11 +452,15 @@
         <voice>1</voice>
         <type>quarter</type>
         <stem default-y="-10">up</stem>
-        <lyric number="1" placement="below" default-y="-85">
-          <syllabic>single</syllabic>
-          <text>371111</text>
-        </lyric>
       </note>
+      <direction placement="above">
+        <direction-type>
+          <dynamics default-y="61" relative-x="13">
+            <p/>
+          </dynamics>
+        </direction-type>
+        <sound dynamics="56"></sound>
+      </direction>
       <note default-x="148">
         <pitch>
           <step>B</step>
@@ -487,6 +470,10 @@
         <voice>1</voice>
         <type>half</type>
         <stem default-y="-15">up</stem>
+        <lyric number="1" placement="below" default-y="-85">
+          <syllabic>single</syllabic>
+          <text>are!</text>
+        </lyric>
       </note>
       <note default-x="148">
         <chord/>

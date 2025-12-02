@@ -10,7 +10,9 @@
 
 set -e  # Exit on error
 
-WORKSPACE_DIR="/home/nikhilsingh/Documents/temp/Trials/Workspace"
+# WORKSPACE_DIR="/home/unitree/Documents/TuttiBot/Workspace"
+# Use the directory where this script is located
+WORKSPACE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$WORKSPACE_DIR"
 
 # Check if dataset folder is provided
@@ -134,6 +136,9 @@ echo "$AUDIO_FILES" | while read AUDIO_FILE; do
     echo "[$COUNTER/$NUM_INSTRUMENTS] Analyzing: $INSTRUMENT"
     echo ""
     
+    # Create output directory before running pipeline
+    mkdir -p "$INST_OUTPUT"
+
     python3 MusicPerformanceAnalysis/pipeline.py \
         --audio "$AUDIO_FILE" \
         --score "$XML_FILE" \
