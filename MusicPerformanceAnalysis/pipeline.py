@@ -161,7 +161,16 @@ class MusicPerformancePipeline:
             'extraction': {'enabled': True},
             'pqg_a2sa': {'enabled': True, 'optional': True},
             'inference': {'enabled': True},
-            'grading': {'enabled': True},
+            'grading': {
+                'enabled': True,
+                'pqg_a2sa_weights': {
+                    'pitch': 0.3,
+                    'note_accuracy': 0.2,
+                    'rhythm': 0.2,
+                    'tempo': 0.15,
+                    'articulation': 0.15
+                }
+            },
             'output': {
                 'subdirs': {
                     'input': '01_input',
@@ -202,15 +211,15 @@ class MusicPerformancePipeline:
             # Store standardized paths
             if result['audio']['converted']:
                 self.audio_path = Path(result['audio']['output_path'])
-                logger.info(f"✓ Audio standardized: {self.audio_path.name}")
+                logger.info(f" Audio standardized: {self.audio_path.name}")
             else:
-                logger.info(f"✓ Audio validated: {self.audio_path.name}")
+                logger.info(f" Audio validated: {self.audio_path.name}")
             
             if result['score']['converted']:
                 self.score_path = Path(result['score']['output_path'])
-                logger.info(f"✓ Score standardized: {self.score_path.name}")
+                logger.info(f" Score standardized: {self.score_path.name}")
             else:
-                logger.info(f"✓ Score validated: {self.score_path.name}")
+                logger.info(f" Score validated: {self.score_path.name}")
             
             self.status['input'] = True
             return True
@@ -251,10 +260,33 @@ class MusicPerformancePipeline:
             else:
                 logger.info(f"✓ Audio processing skipped (not needed)")
             
-            # Save processing metadata
+            # Save processing metadata (convert numpy types)
             metadata_file = self.processing_dir / "processing_metadata.json"
-            with open(metadata_file, 'w') as f:
-                json.dump(result.processing_metadata, f, indent=2)
+            try:
+                # Convert numpy types to Python types
+                metadata_dict = result.processing_metadata
+                if isinstance(metadata_dict, dict):
+                    # Simple conversion of common numpy types
+                    def convert_numpy(obj):
+                        import numpy as np
+                        if isinstance(obj, np.bool_):
+                            return bool(obj)
+                        elif isinstance(obj, (np.integer, np.floating)):
+                            return float(obj) if isinstance(obj, np.floating) else int(obj)
+                        elif isinstance(obj, np.ndarray):
+                            return obj.tolist()
+                        elif isinstance(obj, dict):
+                            return {k: convert_numpy(v) for k, v in obj.items()}
+                        elif isinstance(obj, list):
+                            return [convert_numpy(item) for item in obj]
+                        return obj
+                    
+                    metadata_dict = convert_numpy(metadata_dict)
+                
+                with open(metadata_file, 'w') as f:
+                    json.dump(metadata_dict, f, indent=2)
+            except Exception as e:
+                logger.warning(f"Could not save processing metadata: {e}")
             
             self.results['processing_metadata'] = str(metadata_file)
             self.status['processing'] = True
@@ -311,7 +343,7 @@ class MusicPerformancePipeline:
             
             self.results['extraction'] = outputs
             self.status['extraction'] = True
-            logger.info(f"✓ Feature extraction complete")
+            logger.info(f" Feature extraction complete")
             return True
             
         except Exception as e:
@@ -364,7 +396,7 @@ class MusicPerformancePipeline:
                 return False
             
             self.status['temporal_alignment'] = True
-            logger.info("✓ Temporal alignment complete")
+            logger.info(" Temporal alignment complete")
             return True
             
         except Exception as e:
@@ -407,7 +439,7 @@ class MusicPerformancePipeline:
             result = subprocess.run(cmd, capture_output=True, text=True)
             
             if result.returncode == 0 and output_file.exists():
-                logger.info(f"✓ ScoreGraph saved: {output_file}")
+                logger.info(f" ScoreGraph saved: {output_file}")
                 self.results['scoregraph'] = str(output_file)
                 return True
             else:
@@ -553,7 +585,7 @@ class MusicPerformancePipeline:
             with open(output_file, 'w') as f:
                 json.dump(results, f, indent=2)
             
-            logger.info(f"✓ Context alignment saved: {output_file}")
+            logger.info(f" Context alignment saved: {output_file}")
             self.results['context_alignment'] = str(output_file)
             return True
             
@@ -567,6 +599,7 @@ class MusicPerformancePipeline:
         
         try:
             import subprocess
+            import os
             
             script = self.layers_dir / "03_temporal_alignment" / "block_2_dtw" / "align_symbolic_enhanced_with_metrics.py"
             output_dir = self.temporal_dir / "alignment_output"
@@ -592,7 +625,16 @@ class MusicPerformancePipeline:
             if beats_file:
                 cmd.extend(["--beats", beats_file])
             
-            result = subprocess.run(cmd, capture_output=True, text=True)
+            # Pass config parameters as environment variables
+            env = os.environ.copy()
+            if 'grading' in self.config:
+                env['PITCH_THRESHOLD'] = str(int(self.config['grading'].get('pitch_threshold', 50)))
+            
+            try:
+                result = subprocess.run(cmd, capture_output=True, text=True, timeout=300, env=env)
+            except subprocess.TimeoutExpired:
+                logger.error("DTW alignment timeout (>5 minutes)")
+                return False
             
             # Check for results file
             results_file = output_dir / "alignment_results.json"
@@ -681,7 +723,7 @@ class MusicPerformancePipeline:
             with open(output_file, 'w') as f:
                 json.dump(results_serializable, f, indent=2)
             
-            logger.info(f"✓ PQG-A2SA results saved: {output_file}")
+            logger.info(f" PQG-A2SA results saved: {output_file}")
             self.results['pqg_a2sa'] = str(output_file)
             self.status['pqg_a2sa'] = True
             return True
@@ -766,7 +808,7 @@ class MusicPerformancePipeline:
             with open(output_file, 'w') as f:
                 json.dump(grading_package, f, indent=2)
             
-            logger.info(f"✓ Inference package saved: {output_file}")
+            logger.info(f" Inference package saved: {output_file}")
             self.results['grading_package'] = str(output_file)
             self.status['inference'] = True
             return True

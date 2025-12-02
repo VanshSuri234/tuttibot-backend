@@ -1,0 +1,196 @@
+================================================================================
+INTEGRATION-READY-BRANCH - FILE DEPENDENCY LIST
+================================================================================
+
+This document lists all files that will be included in the Integration-Ready-Branch.
+These are the minimum required files for the run_analysis.sh pipeline to function.
+
+================================================================================
+CORE PIPELINE FILES
+================================================================================
+
+1. run_analysis.sh
+   - Main entry point script
+   - Orchestrates the entire analysis pipeline
+   - Calls pipeline.py for each instrument
+
+2. MusicPerformanceAnalysis/pipeline.py
+   - Main Python pipeline orchestrator
+   - Imports all layers and coordinates execution
+   - Entry point: main() function
+
+================================================================================
+LAYER 01: INPUT STANDARDIZATION
+================================================================================
+
+MusicPerformanceAnalysis/layers/01_input/
+├── input_layer.py          [IMPORTED: from input_layer import MusicInputLayer]
+
+Purpose: Validates and standardizes audio/score inputs
+
+================================================================================
+LAYER 02: AUDIO PROCESSING
+================================================================================
+
+MusicPerformanceAnalysis/layers/02_processing/
+├── processing_layer.py     [IMPORTED: from processing_layer import ProcessingLayer]
+
+Purpose: Noise reduction, normalization, segmentation
+
+================================================================================
+LAYER 03: TEMPORAL ALIGNMENT (CORE - MOST CRITICAL)
+================================================================================
+
+MusicPerformanceAnalysis/layers/03_temporal_alignment/
+
+Block 0 - ScoreGraph:
+├── block_0_scoregraph/
+│   ├── build_scoregraph_with_notes.py    [EXECUTED: main script called by pipeline]
+│   ├── build_scoregraph_simple.py        [MAY BE IMPORTED by build_scoregraph_with_notes.py]
+│   ├── build_scoregraph_unified.py       [MAY BE IMPORTED]
+│   ├── build_scoregraph_music21.py       [MAY BE IMPORTED]
+│   └── build_scoregraph.py               [MAY BE IMPORTED]
+
+Block 1 - Transcription:
+├── block_1_transcription/
+│   ├── transcribe_enhanced.py            [EXECUTED: main script called by pipeline]
+│   ├── transcribe_simple.py              [MAY BE IMPORTED]
+│   └── transcribe_audio_working.py       [MAY BE IMPORTED]
+
+Block 2 - DTW Alignment:
+├── block_2_dtw/
+│   └── align_symbolic_enhanced_with_metrics.py    [EXECUTED: main script called by pipeline]
+
+Block 4 - Beat Detection (optional):
+├── block_4_beats/
+│   └── estimate_beats.py                 [EXECUTED: optional, called by pipeline]
+
+Context Aligner (optional):
+└── context_aligner/
+    └── context_aligner.py                [IMPORTED: as module by pipeline]
+
+================================================================================
+LAYER 04: FEATURE EXTRACTION
+================================================================================
+
+MusicPerformanceAnalysis/layers/04_extraction/
+├── extraction_layer.py     [IMPORTED: from extraction_layer import ExtractionLayer]
+└── requirements_extraction.py    [MAY BE IMPORTED]
+
+Purpose: Extracts performance and score features
+
+================================================================================
+LAYER 05: PQG-A2SA (OPTIONAL BUT RECOMMENDED)
+================================================================================
+
+MusicPerformanceAnalysis/layers/05_pqg_a2sa/
+├── src/
+│   ├── __init__.py         [REQUIRED: makes src a package]
+│   ├── pipeline.py         [IMPORTED: PQGAligner class]
+│   ├── features.py         [IMPORTED by pipeline.py]
+│   ├── score_parser.py     [IMPORTED by pipeline.py]
+│   ├── nmf.py              [IMPORTED by pipeline.py]
+│   ├── vidtw.py            [IMPORTED by pipeline.py]
+│   ├── ioi_gm.py           [IMPORTED by pipeline.py]
+│   ├── articulation.py     [IMPORTED by pipeline.py]
+│   ├── baseline_dtw.py     [IMPORTED by pipeline.py]
+│   ├── evaluation.py       [IMPORTED by pipeline.py]
+│   └── config.py           [IMPORTED by pipeline.py]
+└── (other files are for testing/visualization, not required)
+
+Purpose: Precise onset/offset detection and alignment
+
+================================================================================
+LAYER 06: INFERENCE CORE
+================================================================================
+
+MusicPerformanceAnalysis/layers/06_inference/
+├── __init__.py
+├── inference_core.py
+├── inference_core_with_pqg.py
+├── data_collector.py
+├── pqg_metrics_recomputer.py
+├── analyzers/
+│   ├── __init__.py
+│   ├── sound_quality.py
+│   ├── technical_virtuosity.py
+│   ├── rhythm_tempo.py
+│   ├── phrasing_diction.py
+│   └── communicativeness.py
+└── utils/
+    ├── __init__.py
+    ├── data_utils.py
+    ├── metrics_extractor.py
+    ├── metric_utils.py
+    └── scoring_functions.py
+
+Purpose: Collects data from all layers and computes metrics
+
+================================================================================
+LAYER 07: GRADING
+================================================================================
+
+MusicPerformanceAnalysis/layers/07_grading/
+├── __init__.py
+└── grading_layer.py        [IMPORTED: for grading computation]
+
+Purpose: Computes final performance grade
+
+================================================================================
+CONFIGURATION & METADATA
+================================================================================
+
+MusicPerformanceAnalysis/
+├── config.yaml             [OPTIONAL: default config loaded by pipeline.py]
+└── README_RESEARCH_SUITE.md    [DOCUMENTATION]
+
+================================================================================
+SUMMARY OF FILES TO INCLUDE
+================================================================================
+
+TOP LEVEL:
+- run_analysis.sh
+
+MusicPerformanceAnalysis/:
+- pipeline.py
+- config.yaml (if exists)
+- README_RESEARCH_SUITE.md (optional documentation)
+
+MusicPerformanceAnalysis/layers/:
+- ALL files in 01_input/
+- ALL files in 02_processing/
+- ALL files in 03_temporal_alignment/ (entire directory tree)
+- ALL files in 04_extraction/
+- ALL files in 05_pqg_a2sa/ (entire directory tree)
+- ALL files in 06_inference/ (entire directory tree)
+- ALL files in 07_grading/
+
+TOTAL DIRECTORIES TO INCLUDE:
+- MusicPerformanceAnalysis/layers/01_input
+- MusicPerformanceAnalysis/layers/02_processing
+- MusicPerformanceAnalysis/layers/03_temporal_alignment
+- MusicPerformanceAnalysis/layers/04_extraction
+- MusicPerformanceAnalysis/layers/05_pqg_a2sa
+- MusicPerformanceAnalysis/layers/06_inference
+- MusicPerformanceAnalysis/layers/07_grading
+
+================================================================================
+EXCLUDED FROM BRANCH (NOT NEEDED FOR PIPELINE)
+================================================================================
+
+- All experiment scripts (experiment_*.py)
+- All test directories (test_*)
+- All sweep results (sweep_results/)
+- Archive directories
+- Sample directories
+- Batch analysis scripts (batch_*.py, simple_batch_analysis.py)
+- Sensitivity analysis scripts
+- Visualization scripts not part of pipeline
+- Output directories
+- Chat history
+- Documentation files (except README)
+- Result text files
+
+================================================================================
+END OF DEPENDENCY LIST
+================================================================================

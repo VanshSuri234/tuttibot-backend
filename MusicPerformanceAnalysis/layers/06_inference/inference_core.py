@@ -75,17 +75,17 @@ class InferenceCore:
         """
         start_time = datetime.now()
         
-        self.logger.info("\n" + "=" * 80)
+        # self.logger.info("\n" + "=" * 80)
         self.logger.info("INFERENCE CORE - PROCESSING PIPELINE")
-        self.logger.info("=" * 80)
+        # self.logger.info("=" * 80)
         
         try:
             # Step 1: Collect all upstream data
-            self.logger.info("\n🔍 STEP 1: Data Collection")
+            self.logger.info("\n STEP 1: Data Collection")
             self.inputs = self.data_collector.collect_all_data()
             
             # Step 2: Extract grading metrics from Block 2
-            self.logger.info("\n📊 STEP 2: Extracting Grading Metrics from Block 2")
+            self.logger.info("\n STEP 2: Extracting Grading Metrics from Block 2")
             
             raw_grading_metrics = self.metrics_extractor.extract_grading_metrics(
                 self.inputs.alignment_results
@@ -95,12 +95,12 @@ class InferenceCore:
             validation = self.metrics_extractor.validate_metrics(raw_grading_metrics)
             
             # Step 3: Score all dimensions (convert raw metrics to 0-100 scores)
-            self.logger.info("\n🎯 STEP 3: Scoring Dimensions")
+            self.logger.info("\n STEP 3: Scoring Dimensions")
             
             scored_dimensions = self.scoring_functions.score_all_dimensions(raw_grading_metrics)
             
             # Step 4: Create grading package
-            self.logger.info("\n📦 STEP 4: Creating Grading Package")
+            self.logger.info("\n STEP 4: Creating Grading Package")
             
             # Add metadata and validation from extraction
             extraction_metadata = self.metrics_extractor.get_metadata(self.inputs.alignment_results)
@@ -145,21 +145,21 @@ class InferenceCore:
             
             # Step 5: Save outputs
             if save_output:
-                self.logger.info("\n💾 STEP 5: Saving Outputs")
+                self.logger.info("\n STEP 5: Saving Outputs")
                 output_dir = self.output_base_dir / '05_inference_core'
                 self._save_outputs(output_dir)
             
             # Summary
             elapsed_time = (datetime.now() - start_time).total_seconds()
-            self.logger.info("\n" + "=" * 80)
-            self.logger.info("✅ INFERENCE CORE PROCESSING COMPLETE")
+            # self.logger.info("\n" + "=" * 80)
+            self.logger.info(" INFERENCE CORE PROCESSING COMPLETE")
             self.logger.info(f"   Processing time: {elapsed_time:.2f} seconds")
-            self.logger.info("=" * 80 + "\n")
+            # self.logger.info("=" * 80 + "\n")
             
             return self.grading_package
             
         except Exception as e:
-            self.logger.error(f"\n❌ INFERENCE CORE ERROR: {e}")
+            self.logger.error(f"\n INFERENCE CORE ERROR: {e}")
             import traceback
             traceback.print_exc()
             raise
@@ -239,18 +239,18 @@ class InferenceCore:
             }
             with open(dim_file, 'w') as f:
                 json.dump(dim_output, f, indent=2)
-            self.logger.info(f"   ✓ Saved dimension: {dim_file.name}")
+            self.logger.info(f"  Saved dimension: {dim_file.name}")
         
         # 3. Save validation report
         validation_file = output_dir / 'validation_report.json'
         with open(validation_file, 'w') as f:
             json.dump(self.grading_package['validation'], f, indent=2)
-        self.logger.info(f"   ✓ Saved validation: {validation_file.name}")
+        self.logger.info(f"  Saved validation: {validation_file.name}")
         
         # 4. Save human-readable summary
         summary_file = output_dir / 'inference_summary.txt'
         self._save_summary(summary_file)
-        self.logger.info(f"   ✓ Saved summary: {summary_file.name}")
+        self.logger.info(f"  Saved summary: {summary_file.name}")
     
     def _save_summary(self, summary_file: Path):
         """Save human-readable summary"""
@@ -265,7 +265,7 @@ class InferenceCore:
             f.write("DATA AVAILABILITY:\n")
             f.write("-" * 80 + "\n")
             for source, available in self.grading_package['data_availability'].items():
-                status = "✓ Available" if available else "✗ Missing"
+                status = " Available" if available else " Missing"
                 f.write(f"  {source:.<50} {status}\n")
             f.write("\n")
             
@@ -314,7 +314,7 @@ def main():
     inference_core = InferenceCore(Path(args.output_dir))
     grading_package = inference_core.process(save_output=not args.no_save)
     
-    print("\n✅ Inference Core processing complete!")
+    print("\n Inference Core processing complete!")
     print(f"   Grading package created with {len(grading_package['grading_dimensions'])} dimensions")
 
 

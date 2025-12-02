@@ -129,12 +129,14 @@ def compute_pitch_errors(score_pitches: List[int],
     errors_cents = [e * 100 for e in errors_semitones]
     errors_abs_cents = [abs(e) for e in errors_cents]
     
-    # Pitch match rate (within 50 cents = half semitone)
-    matches = sum(1 for e in errors_abs_cents if e <= 50)
+    # Pitch match rate - threshold from env or default 50 cents
+    import os as _os
+    pitch_threshold = int(_os.environ.get("PITCH_THRESHOLD", 50))
+    matches = sum(1 for e in errors_abs_cents if e <= pitch_threshold)
     pitch_match_rate = (matches / len(errors_cents)) * 100
     
-    # Out of tune notes (> 50 cents)
-    out_of_tune = sum(1 for e in errors_abs_cents if e > 50)
+    # Out of tune notes (beyond threshold)
+    out_of_tune = sum(1 for e in errors_abs_cents if e > pitch_threshold)
     
     return {
         'mean_pitch_error_cents': float(np.mean(errors_abs_cents)),

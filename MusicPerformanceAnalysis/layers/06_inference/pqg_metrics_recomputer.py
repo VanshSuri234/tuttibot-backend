@@ -325,8 +325,13 @@ class PQGMetricsRecomputer:
         pitch_errors_arr = np.array(pitch_errors)
         pitch_errors_abs = np.abs(pitch_errors_arr)
         
-        # Pitch accuracy within thresholds
-        accurate_50c = sum(1 for err in pitch_errors_abs if err < 50)
+        # Pitch accuracy - threshold from env or default 50 cents
+        import os as _os
+        pitch_threshold = int(_os.environ.get("PITCH_THRESHOLD", 50))
+        
+        # Main threshold (configurable)
+        accurate_50c = sum(1 for err in pitch_errors_abs if err < pitch_threshold)
+        # Also compute for 25 cents (stricter reference)
         accurate_25c = sum(1 for err in pitch_errors_abs if err < 25)
         
         pitch_accuracy_50c = (accurate_50c / len(pitch_errors)) * 100

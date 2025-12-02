@@ -606,9 +606,9 @@ def main():
         result = processor.process(audio_file, music_file)
         
         # Display summary
-        print("\n" + "="*50)
+        # print("\n" + "="*50)
         print("PROCESSING SUMMARY")
-        print("="*50)
+        # print("="*50)
         print(f"Audio segments found: {len(result.audio_segments)}")
         print(f"Musical notes extracted: {len(result.music_features.notes)}")
         print(f"Key signature: {result.music_features.key_signature}")
@@ -619,14 +619,14 @@ def main():
         print("\nProcessing steps applied:")
         steps = result.processing_metadata['processing_steps_applied']
         for step, applied in steps.items():
-            status = "✓" if applied else "✗"
+            status = "Done" if applied else "Not Done"
             print(f"  {status} {step.replace('_', ' ').title()}")
         
         print("\nOutput files created:")
-        print(f"  🎵 Processed audio: {Path(audio_file).stem}_processed.wav")
-        print(f"  📄 Audio segments: {Path(audio_file).stem}_audio_segments.json")
-        print(f"  🎼 Music features: {Path(audio_file).stem}_music_features.json")
-        print(f"  📁 Data directory: data/")
+        print(f"  Processed audio: {Path(audio_file).stem}_processed.wav")
+        print(f"  Audio segments: {Path(audio_file).stem}_audio_segments.json")
+        print(f"  Music features: {Path(audio_file).stem}_music_features.json")
+        print(f"  Data directory: data/")
         
         # Display audio segments info
         if result.audio_segments:

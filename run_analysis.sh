@@ -74,7 +74,7 @@ xml_file = Path("$XML_FILE")
 print(f"  Converting: {midi_file.name} → {xml_file.name}")
 score = converter.parse(midi_file)
 score.write('musicxml', fp=str(xml_file))
-print(f"  ✓ Created: {xml_file.name}")
+print(f" Created: {xml_file.name}")
 PYEOF
     
     echo ""
@@ -165,19 +165,19 @@ echo ""
 echo ""
 
 # Generate final summary
-python3 << 'PYEOF'
+python3 << PYEOF
 import json
 from pathlib import Path
 import sys
 
-output_dir = Path(sys.argv[1])
-piece_name = sys.argv[2]
+output_dir = Path("$OUTPUT_DIR")
+piece_name = "$PIECE_NAME"
 
-print("=" * 80)
+
 print(f"RESULTS SUMMARY: {piece_name}")
-print("=" * 80)
+
 print(f"{'Instrument':<12} {'Score':>8} {'Pitch Acc':>12} {'Note Acc':>12} {'Part':<10}")
-print("-" * 80)
+
 
 instruments = ['violin', 'bassoon', 'clarinet', 'saxophone']
 part_map = {
@@ -220,7 +220,7 @@ for inst in instruments:
     else:
         print(f"{inst:<12} {'FAILED':>8} {'N/A':>12} {'N/A':>12} {'N/A':<10}")
 
-print("=" * 80)
+
 print()
 
 # Save results
@@ -232,9 +232,8 @@ with open(summary_file, 'w') as f:
         'timestamp': str(Path('.').resolve())
     }, f, indent=2)
 
-print(f"✓ Summary saved to: {summary_file}")
-
-PYEOF "$OUTPUT_DIR" "$PIECE_NAME"
+print(f" Summary saved to: {summary_file}")
+PYEOF
 
 echo ""
 echo ""

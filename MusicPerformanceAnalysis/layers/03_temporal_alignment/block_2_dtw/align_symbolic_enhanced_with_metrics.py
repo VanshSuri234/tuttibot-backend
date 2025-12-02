@@ -665,11 +665,15 @@ class EnhancedSymbolicAligner:
         pitch_errors = [n['pitch_error_cents'] for n in note_alignments]
         pitch_errors_abs = [abs(e) for e in pitch_errors]
         
-        # Pitch accuracy within 50 cents (common threshold)
-        accurate_count = sum(1 for err in pitch_errors_abs if err < 50)
+        # Pitch accuracy - threshold from env or default 50 cents
+        import os as _os
+        pitch_threshold = int(_os.environ.get("PITCH_THRESHOLD", 50))
+        
+        # Main threshold (configurable)
+        accurate_count = sum(1 for err in pitch_errors_abs if err < pitch_threshold)
         pitch_accuracy_50c = (accurate_count / len(pitch_errors)) * 100
         
-        # Also compute for 25 cents (stricter)
+        # Also compute for 25 cents (stricter reference)
         accurate_count_25c = sum(1 for err in pitch_errors_abs if err < 25)
         pitch_accuracy_25c = (accurate_count_25c / len(pitch_errors)) * 100
         
@@ -1334,9 +1338,9 @@ def main():
             output_dir=args.output
         )
         
-        print("\n" + "="*70)
+        
         print("ENHANCED ALIGNMENT WITH GRADING METRICS - COMPLETE")
-        print("="*70)
+        # print("="*70)
         print(f"Confidence: {results['alignment']['confidence']:.3f}")
         print(f"DTW Distance: {results['alignment']['dtw_distance']:.4f}")
         print(f"Score Duration: {results['alignment']['score_duration']:.2f}s")
@@ -1344,17 +1348,17 @@ def main():
         
         metadata = results['alignment'].get('alignment_metadata', {})
         if metadata.get('beat_weighting_used'):
-            print("✓ Beat weighting: ENABLED")
+            print("Beat weighting: ENABLED")
         if metadata.get('adaptive_weights_used'):
-            print("✓ Fermata/cadence adaptation: ENABLED")
+            print(" Fermata/cadence adaptation: ENABLED")
         if results['metadata'].get('pqg_integration_used'):
-            print("✓ PQG-A2SA precise alignment: ENABLED")
+            print(" PQG-A2SA precise alignment: ENABLED")
         
         # Display grading metrics summary
         if 'grading_metrics' in results['alignment']:
-            print("\n" + "="*70)
+            
             print("GRADING METRICS SUMMARY")
-            print("="*70)
+            # print("="*70)
             gm = results['alignment']['grading_metrics']
             
             if 'rhythm_tempo' in gm and gm['rhythm_tempo']:
@@ -1390,9 +1394,9 @@ def main():
                 print(f"  - Structural sections: {cm.get('section_count', 0)}")
                 print(f"  - Climax position: {cm.get('climax_position_percent', 0):.1f}%")
         
-        print("\n" + "="*70)
+        # print("\n" + "="*70)
         print(f"Results saved to: {args.output}")
-        print("="*70)
+        # print("="*70)
         
     except Exception as e:
         print(f"\n✗ Alignment failed: {e}")
