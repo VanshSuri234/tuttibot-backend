@@ -1,0 +1,279 @@
+================================================================================
+MUSIC PERFORMANCE ANALYSIS PIPELINE - SETUP INSTRUCTIONS
+================================================================================
+
+This guide provides step-by-step commands to set up and run the pipeline.
+Follow each step in order.
+
+================================================================================
+PREREQUISITES
+================================================================================
+
+1. Operating System: Linux, macOS, or Windows (with WSL/Git Bash)
+2. Python: Version 3.10 or higher
+3. Git: For cloning the repository
+4. Internet connection: For downloading dependencies
+
+================================================================================
+STEP 1: CLONE THE REPOSITORY
+================================================================================
+
+Open a terminal and run:
+
+    git clone -b Integration-Ready-Branch https://github.com/nikhilsingh-parihar/Workspace.git
+
+Navigate into the directory:
+
+    cd Workspace
+
+Verify you're on the correct branch:
+
+    git branch
+
+You should see: * Integration-Ready-Branch
+
+================================================================================
+STEP 2: INSTALL SYSTEM DEPENDENCIES
+================================================================================
+
+These are required for audio processing.
+
+LINUX (Ubuntu/Debian):
+    sudo apt-get update
+    sudo apt-get install libsndfile1 ffmpeg
+
+MACOS:
+    brew install libsndfile ffmpeg
+
+WINDOWS:
+    1. Download ffmpeg from https://ffmpeg.org/download.html
+    2. Extract and add to PATH
+    3. Restart terminal
+
+Verify installation:
+    ffmpeg -version
+
+================================================================================
+STEP 3: CREATE PYTHON VIRTUAL ENVIRONMENT (RECOMMENDED)
+================================================================================
+
+Using venv (built-in):
+
+    python3 -m venv pipeline_env
+    source pipeline_env/bin/activate
+
+    On Windows:
+        pipeline_env\Scripts\activate
+
+Or using conda:
+
+    conda create -n music_pipeline python=3.10 -y
+    conda activate music_pipeline
+
+================================================================================
+STEP 4: INSTALL PYTHON DEPENDENCIES
+================================================================================
+
+OPTION A - CPU-ONLY (simpler, slower):
+
+    pip install --upgrade pip
+    pip install -r requirements.txt
+
+OPTION B - GPU (recommended for faster processing):
+
+    Step 1: Install PyTorch with CUDA
+    Visit: https://pytorch.org/get-started/locally/
+    
+    Example for CUDA 11.8:
+        pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu118
+    
+    Step 2: Install remaining dependencies
+        pip install --upgrade pip
+        pip install -r requirements.txt
+
+This will take several minutes. Wait for completion.
+
+================================================================================
+STEP 5: VERIFY INSTALLATION
+================================================================================
+
+Run these commands to check all dependencies are installed:
+
+    python -c "import librosa; print('librosa OK')"
+    python -c "import music21; print('music21 OK')"
+    python -c "import pretty_midi; print('pretty_midi OK')"
+    python -c "import basic_pitch; print('basic_pitch OK')"
+    python -c "import torch; print('torch OK')"
+
+All should print "OK" without errors.
+
+================================================================================
+STEP 6: MAKE RUN SCRIPT EXECUTABLE
+================================================================================
+
+    chmod +x run_analysis.sh
+
+Verify:
+    ls -l run_analysis.sh
+
+Should show: -rwxr-xr-x (executable)
+
+================================================================================
+STEP 7: PREPARE YOUR DATA
+================================================================================
+
+The pipeline expects datasets in this structure:
+
+    Dataset_Folder/
+        piece.mid or piece.midi         (score in MIDI format)
+        instrument1.wav                 (audio recording)
+        instrument2.wav
+        ...
+
+Example with Bach_10_Dataset:
+
+    Bach_10_Dataset/04_ChristeDuBeistand/
+        04_ChristeDuBeistand.mid
+        04_ChristeDuBeistand-violin.wav
+        04_ChristeDuBeistand-clarinet.wav
+        04_ChristeDuBeistand-saxphone.wav
+        04_ChristeDuBeistand-bassoon.wav
+
+Note: MusicXML (.xml, .musicxml) is also supported and will be auto-detected.
+
+================================================================================
+STEP 8: RUN THE PIPELINE
+================================================================================
+
+Basic command:
+
+    ./run_analysis.sh <dataset_folder>
+
+Example with provided Bach dataset:
+
+    ./run_analysis.sh Bach_10_Dataset/04_ChristeDuBeistand
+
+This will:
+    1. Find all instrument audio files
+    2. Process each instrument
+    3. Generate alignment and grading results
+    4. Save outputs to: Output/analysis_results/04_ChristeDuBeistand/
+
+Expected runtime: 2-5 minutes per instrument (depending on hardware)
+
+================================================================================
+STEP 9: CHECK THE OUTPUT
+================================================================================
+
+After completion, check results:
+
+    ls Output/analysis_results/04_ChristeDuBeistand/
+
+You should see folders for each instrument:
+    violin/
+    clarinet/
+    saxphone/
+    bassoon/
+
+Each folder contains:
+    07_grading/
+        final_grade.json            (numeric score)
+        performance_report.txt      (human-readable report)
+    06_inference/
+        grading_package_master.json (all metrics)
+    03_temporal_alignment/
+        alignment_output/
+            enhanced_alignment_complete.json (note-level data)
+
+View a report:
+
+    cat Output/analysis_results/04_ChristeDuBeistand/violin/07_grading/performance_report.txt
+
+================================================================================
+STEP 10: USING OUTPUT WITH LLM
+================================================================================
+
+The JSON files are ready for LLM consumption. Example in Python:
+
+    import json
+    
+    # Load the main results
+    with open('Output/analysis_results/04_ChristeDuBeistand/violin/07_grading/final_grade.json') as f:
+        grade = json.load(f)
+    
+    with open('Output/analysis_results/04_ChristeDuBeistand/violin/06_inference/grading_package_master.json') as f:
+        metrics = json.load(f)
+    
+    # Send to your LLM
+    llm_input = {
+        "performance_score": grade['overall_score'],
+        "detailed_metrics": metrics,
+        "task": "Analyze this music performance and provide feedback"
+    }
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+PROBLEM: "Command not found: ./run_analysis.sh"
+SOLUTION: Run: chmod +x run_analysis.sh
+
+PROBLEM: "No module named 'librosa'"
+SOLUTION: Activate your virtual environment and reinstall:
+          source pipeline_env/bin/activate
+          pip install -r requirements.txt
+
+PROBLEM: "No MIDI file found"
+SOLUTION: Ensure your dataset folder contains a .mid or .midi file
+
+PROBLEM: "basic_pitch import error"
+SOLUTION: Install explicitly: pip install basic-pitch
+
+PROBLEM: Pipeline runs but produces errors
+SOLUTION: Check Python version: python --version
+          Must be 3.10 or higher
+
+PROBLEM: Very slow processing
+SOLUTION: Install GPU version of PyTorch if you have an NVIDIA GPU:
+          Visit https://pytorch.org/get-started/locally/
+
+PROBLEM: "Permission denied" errors
+SOLUTION: Check file permissions: ls -la run_analysis.sh
+          Fix with: chmod +x run_analysis.sh
+
+================================================================================
+ADDITIONAL COMMANDS
+================================================================================
+
+To process a different dataset:
+
+    ./run_analysis.sh Bach_10_Dataset/01_AchGottundHerr
+
+To update the code:
+
+    git pull origin Integration-Ready-Branch
+
+To check pipeline status during run:
+
+    tail -f Output/analysis_results/<piece_name>/<instrument>/analysis.log
+
+To clean output directory:
+
+    rm -rf Output/analysis_results/*
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+1. Process your own datasets
+2. Integrate JSON outputs with your LLM system
+3. Build automated feedback generation
+4. Experiment with different pieces
+
+For detailed file descriptions, see:
+    INTEGRATION_BRANCH_FILES.txt
+    TEAM_HANDOFF_GUIDE.txt
+
+================================================================================
+END OF SETUP INSTRUCTIONS
+================================================================================
