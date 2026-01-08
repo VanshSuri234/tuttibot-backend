@@ -1,0 +1,16 @@
+{
+  "audio_analysis": {
+    "needs_noise_reduction": true,
+    "needs_normalization": true,
+    "needs_segmentation": true,
+    "current_db_level": -40.0,
+    "noise_estimate": 0.1
+  },
+  "processing_steps_applied": {
+    "noise_reduction": true,
+    "normalization": true,
+    "segmentation": true
+  },
+  "segments_count": 0,
+  "notes_count": 253
+}

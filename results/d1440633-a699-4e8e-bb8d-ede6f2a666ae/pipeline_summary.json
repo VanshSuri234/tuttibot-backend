@@ -1,0 +1,35 @@
+{
+  "start_time": "2025-12-04T11:38:00.344750",
+  "end_time": "2025-12-04T11:38:15.047098",
+  "duration_seconds": 14.702348,
+  "status": {
+    "input": true,
+    "processing": true,
+    "temporal_alignment": true,
+    "extraction": true,
+    "pqg_a2sa": true,
+    "inference": true,
+    "grading": true
+  },
+  "results": {
+    "processing_metadata": "/home/unitree/Documents/TuttiBot/Workspace/results/d1440633-a699-4e8e-bb8d-ede6f2a666ae/02_processing/processing_metadata.json",
+    "scoregraph": "/home/unitree/Documents/TuttiBot/Workspace/results/d1440633-a699-4e8e-bb8d-ede6f2a666ae/03_temporal_alignment/scoregraph.json",
+    "transcription": "/home/unitree/Documents/TuttiBot/Workspace/results/d1440633-a699-4e8e-bb8d-ede6f2a666ae/03_temporal_alignment/transcription.json",
+    "transcription_midi": "/home/unitree/Documents/TuttiBot/Workspace/results/d1440633-a699-4e8e-bb8d-ede6f2a666ae/03_temporal_alignment/performance.mid",
+    "alignment": "/home/unitree/Documents/TuttiBot/Workspace/results/d1440633-a699-4e8e-bb8d-ede6f2a666ae/03_temporal_alignment/alignment_output/alignment_results.json",
+    "extraction": {
+      "performance_features": "/home/unitree/Documents/TuttiBot/Workspace/results/d1440633-a699-4e8e-bb8d-ede6f2a666ae/04_extraction/performance_features.json",
+      "score_features": "/home/unitree/Documents/TuttiBot/Workspace/results/d1440633-a699-4e8e-bb8d-ede6f2a666ae/04_extraction/score_features.json",
+      "extraction_complete": true
+    },
+    "pqg_a2sa": "/home/unitree/Documents/TuttiBot/Workspace/results/d1440633-a699-4e8e-bb8d-ede6f2a666ae/05_pqg_a2sa/pqg_a2sa_results.json",
+    "grading_package": "/home/unitree/Documents/TuttiBot/Workspace/results/d1440633-a699-4e8e-bb8d-ede6f2a666ae/06_inference/grading_package_master.json",
+    "final_grade": "/home/unitree/Documents/TuttiBot/Workspace/results/d1440633-a699-4e8e-bb8d-ede6f2a666ae/07_grading/final_grade.json"
+  },
+  "inputs": {
+    "audio": "/home/unitree/Documents/TuttiBot/Workspace/results/d1440633-a699-4e8e-bb8d-ede6f2a666ae/02_processing/data/processed/d1440633-a699-4e8e-bb8d-ede6f2a666ae_audio_04-ChristeDuBeistand-bassoon_processed.wav",
+    "score": "/home/unitree/Documents/TuttiBot/Workspace/uploads/d1440633-a699-4e8e-bb8d-ede6f2a666ae_score_04-ChristeDuBeistand.mid",
+    "part": 3
+  },
+  "output_directory": "/home/unitree/Documents/TuttiBot/Workspace/results/d1440633-a699-4e8e-bb8d-ede6f2a666ae"
+}

@@ -1,0 +1,37 @@
+============================================================
+MUSIC PERFORMANCE ANALYSIS REPORT
+============================================================
+Generated: 2025-12-05 08:40:23
+Audio: 50177409-770f-48aa-b13a-c7b61ffda5d1_audio_04-ChristeDuBeistand-bassoon_processed.wav
+Score: 50177409-770f-48aa-b13a-c7b61ffda5d1_score_04-ChristeDuBeistand.mid
+
+FINAL GRADE
+------------------------------------------------------------
+Overall Score: 74.0/100
+
+COMPONENT SCORES
+------------------------------------------------------------
+Pitch: 24.2% (weight: 30%)
+Note Accuracy: 18.8% (weight: 20%)
+Rhythm: 12.4% (weight: 20%)
+Tempo: 12.9% (weight: 15%)
+Articulation: 5.8% (weight: 15%)
+
+DETAILED METRICS
+------------------------------------------------------------
+
+Sound Quality:
+  Pitch Accuracy (±50¢): 80.6%
+  Mean Pitch Error: 191.9 cents
+
+Technical Virtuosity:
+  Note Accuracy: 93.9%
+  Matched Notes: 62/66
+  Extra Notes: 43
+
+Rhythm & Tempo:
+  IOI Correlation: 0.620
+  Mean Onset Error: 80.5 ms
+  Tempo Consistency: 101.7% CV
+
+============================================================

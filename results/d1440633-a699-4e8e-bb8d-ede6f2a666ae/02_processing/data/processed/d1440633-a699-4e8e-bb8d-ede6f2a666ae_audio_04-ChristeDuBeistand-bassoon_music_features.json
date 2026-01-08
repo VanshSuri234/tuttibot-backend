@@ -1,0 +1,2058 @@
+{
+  "music_path": "/home/unitree/Documents/TuttiBot/Workspace/results/d1440633-a699-4e8e-bb8d-ede6f2a666ae/02_processing/data/original/d1440633-a699-4e8e-bb8d-ede6f2a666ae_score_04-ChristeDuBeistand.mid",
+  "music_features": {
+    "notes": [
+      {
+        "pitch": "rest",
+        "midi_number": -1,
+        "octave": -1,
+        "duration": 3.0,
+        "offset": 0.0,
+        "velocity": 0
+      },
+      {
+        "pitch": "D",
+        "midi_number": 62,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 3.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 62,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 4.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 5.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "F",
+        "midi_number": 65,
+        "octave": 4,
+        "duration": 2.0,
+        "offset": 6.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 2.0,
+        "offset": 8.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 69,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 10.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "B",
+        "midi_number": 71,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 11.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "C",
+        "midi_number": 72,
+        "octave": 5,
+        "duration": 1.0,
+        "offset": 12.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 74,
+        "octave": 5,
+        "duration": 0.5,
+        "offset": 13.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "C",
+        "midi_number": 72,
+        "octave": 5,
+        "duration": 0.5,
+        "offset": 13.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "B",
+        "midi_number": 71,
+        "octave": 4,
+        "duration": 2.0,
+        "offset": 14.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 69,
+        "octave": 4,
+        "duration": 2.0,
+        "offset": 16.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "rest",
+        "midi_number": -1,
+        "octave": -1,
+        "duration": 1.0,
+        "offset": 18.0,
+        "velocity": 0
+      },
+      {
+        "pitch": "C",
+        "midi_number": 72,
+        "octave": 5,
+        "duration": 1.0,
+        "offset": 19.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "B",
+        "midi_number": 71,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 20.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 69,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 21.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G",
+        "midi_number": 67,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 22.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G",
+        "midi_number": 67,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 23.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 69,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 24.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G",
+        "midi_number": 67,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 25.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "F",
+        "midi_number": 65,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 26.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "F",
+        "midi_number": 65,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 27.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 2.0,
+        "offset": 28.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "F",
+        "midi_number": 65,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 30.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 31.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 32.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "F",
+        "midi_number": 65,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 33.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G",
+        "midi_number": 67,
+        "octave": 4,
+        "duration": 2.0,
+        "offset": 34.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 2.0,
+        "offset": 36.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 69,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 38.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "B",
+        "midi_number": 71,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 39.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "C",
+        "midi_number": 72,
+        "octave": 5,
+        "duration": 1.0,
+        "offset": 40.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 74,
+        "octave": 5,
+        "duration": 0.5,
+        "offset": 41.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "C",
+        "midi_number": 72,
+        "octave": 5,
+        "duration": 0.5,
+        "offset": 41.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "B",
+        "midi_number": 71,
+        "octave": 4,
+        "duration": 2.0,
+        "offset": 42.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 69,
+        "octave": 4,
+        "duration": 2.0,
+        "offset": 44.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "rest",
+        "midi_number": -1,
+        "octave": -1,
+        "duration": 1.0,
+        "offset": 46.0,
+        "velocity": 0
+      },
+      {
+        "pitch": "F#",
+        "midi_number": 66,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 47.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G",
+        "midi_number": 67,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 48.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G",
+        "midi_number": 67,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 49.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G",
+        "midi_number": 67,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 50.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "F#",
+        "midi_number": 66,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 51.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G",
+        "midi_number": 67,
+        "octave": 4,
+        "duration": 2.0,
+        "offset": 52.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "rest",
+        "midi_number": -1,
+        "octave": -1,
+        "duration": 1.0,
+        "offset": 54.0,
+        "velocity": 0
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 55.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "F",
+        "midi_number": 65,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 56.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G",
+        "midi_number": 67,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 57.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 2.0,
+        "offset": 58.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 62,
+        "octave": 4,
+        "duration": 3.0,
+        "offset": 60.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "rest",
+        "midi_number": -1,
+        "octave": -1,
+        "duration": 1.0,
+        "offset": 63.0,
+        "velocity": 0
+      },
+      {
+        "pitch": "rest",
+        "midi_number": -1,
+        "octave": -1,
+        "duration": 3.0,
+        "offset": 0.0,
+        "velocity": 0
+      },
+      {
+        "pitch": "A",
+        "midi_number": 57,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 3.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 57,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 4.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 5.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 6.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 62,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 7.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "C#",
+        "midi_number": 61,
+        "octave": 4,
+        "duration": 2.0,
+        "offset": 8.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 10.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 11.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 69,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 12.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 69,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 13.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 69,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 14.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G#",
+        "midi_number": 68,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 15.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 2.0,
+        "offset": 16.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "rest",
+        "midi_number": -1,
+        "octave": -1,
+        "duration": 1.0,
+        "offset": 18.0,
+        "velocity": 0
+      },
+      {
+        "pitch": "A",
+        "midi_number": 69,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 19.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 69,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 20.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G",
+        "midi_number": 67,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 20.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "F",
+        "midi_number": 65,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 21.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 21.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 62,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 22.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G",
+        "midi_number": 67,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 23.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G",
+        "midi_number": 67,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 24.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "F",
+        "midi_number": 65,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 24.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "F",
+        "midi_number": 65,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 25.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 25.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 26.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 62,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 26.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "C",
+        "midi_number": 60,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 27.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 62,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 27.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "C",
+        "midi_number": 60,
+        "octave": 4,
+        "duration": 2.0,
+        "offset": 28.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "C",
+        "midi_number": 60,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 30.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "C#",
+        "midi_number": 61,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 31.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 62,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 31.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 32.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 33.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 62,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 33.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 62,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 34.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "C",
+        "midi_number": 60,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 34.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 62,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 35.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "B",
+        "midi_number": 59,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 35.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "C",
+        "midi_number": 60,
+        "octave": 4,
+        "duration": 2.0,
+        "offset": 36.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 69,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 38.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 69,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 39.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 69,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 40.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G#",
+        "midi_number": 68,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 40.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 69,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 41.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 69,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 42.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G#",
+        "midi_number": 68,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 43.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 2.0,
+        "offset": 44.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "rest",
+        "midi_number": -1,
+        "octave": -1,
+        "duration": 1.0,
+        "offset": 46.0,
+        "velocity": 0
+      },
+      {
+        "pitch": "C",
+        "midi_number": 60,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 47.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 62,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 48.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 62,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 49.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E-",
+        "midi_number": 63,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 50.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 62,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 51.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 62,
+        "octave": 4,
+        "duration": 2.0,
+        "offset": 52.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "rest",
+        "midi_number": -1,
+        "octave": -1,
+        "duration": 1.0,
+        "offset": 54.0,
+        "velocity": 0
+      },
+      {
+        "pitch": "C#",
+        "midi_number": 61,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 55.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 62,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 56.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 62,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 57.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 62,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 58.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "C#",
+        "midi_number": 61,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 59.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 57,
+        "octave": 3,
+        "duration": 3.0,
+        "offset": 60.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "rest",
+        "midi_number": -1,
+        "octave": -1,
+        "duration": 1.0,
+        "offset": 63.0,
+        "velocity": 0
+      },
+      {
+        "pitch": "rest",
+        "midi_number": -1,
+        "octave": -1,
+        "duration": 3.0,
+        "offset": 0.0,
+        "velocity": 0
+      },
+      {
+        "pitch": "F",
+        "midi_number": 53,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 3.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G",
+        "midi_number": 55,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 3.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 57,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 4.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 57,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 5.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 57,
+        "octave": 3,
+        "duration": 2.0,
+        "offset": 6.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 57,
+        "octave": 3,
+        "duration": 2.0,
+        "offset": 8.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 57,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 10.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 11.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 12.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 62,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 13.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 13.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "F",
+        "midi_number": 65,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 14.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 15.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 62,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 15.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "C",
+        "midi_number": 60,
+        "octave": 4,
+        "duration": 2.0,
+        "offset": 16.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "rest",
+        "midi_number": -1,
+        "octave": -1,
+        "duration": 1.0,
+        "offset": 18.0,
+        "velocity": 0
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 19.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "F",
+        "midi_number": 65,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 20.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 0.25,
+        "offset": 20.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 62,
+        "octave": 4,
+        "duration": 0.25,
+        "offset": 20.75,
+        "velocity": 64
+      },
+      {
+        "pitch": "C",
+        "midi_number": 60,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 21.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "B",
+        "midi_number": 59,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 22.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "C",
+        "midi_number": 60,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 23.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "C",
+        "midi_number": 60,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 24.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "C",
+        "midi_number": 60,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 25.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 57,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 26.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 57,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 27.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G",
+        "midi_number": 55,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 28.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 57,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 28.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "B-",
+        "midi_number": 58,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 29.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 57,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 30.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 57,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 31.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 57,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 32.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 57,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 33.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G",
+        "midi_number": 55,
+        "octave": 3,
+        "duration": 2.0,
+        "offset": 34.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G",
+        "midi_number": 55,
+        "octave": 3,
+        "duration": 2.0,
+        "offset": 36.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 38.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "F",
+        "midi_number": 65,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 39.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 40.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 62,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 41.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 41.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "F",
+        "midi_number": 65,
+        "octave": 4,
+        "duration": 1.0,
+        "offset": 42.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 64,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 43.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 62,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 43.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "C",
+        "midi_number": 60,
+        "octave": 4,
+        "duration": 2.0,
+        "offset": 44.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "rest",
+        "midi_number": -1,
+        "octave": -1,
+        "duration": 1.0,
+        "offset": 46.0,
+        "velocity": 0
+      },
+      {
+        "pitch": "A",
+        "midi_number": 57,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 47.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G",
+        "midi_number": 55,
+        "octave": 3,
+        "duration": 1.5,
+        "offset": 48.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "F",
+        "midi_number": 53,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 49.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "E-",
+        "midi_number": 51,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 50.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "B-",
+        "midi_number": 58,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 50.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 57,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 51.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "C",
+        "midi_number": 60,
+        "octave": 4,
+        "duration": 0.5,
+        "offset": 51.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "B-",
+        "midi_number": 58,
+        "octave": 3,
+        "duration": 2.0,
+        "offset": 52.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "rest",
+        "midi_number": -1,
+        "octave": -1,
+        "duration": 1.0,
+        "offset": 54.0,
+        "velocity": 0
+      },
+      {
+        "pitch": "A",
+        "midi_number": 57,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 55.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 57,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 56.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G",
+        "midi_number": 55,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 57.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "B-",
+        "midi_number": 58,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 57.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 57,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 58.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 52,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 58.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 57,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 59.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G",
+        "midi_number": 55,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 59.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "F#",
+        "midi_number": 54,
+        "octave": 3,
+        "duration": 3.0,
+        "offset": 60.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "rest",
+        "midi_number": -1,
+        "octave": -1,
+        "duration": 1.0,
+        "offset": 63.0,
+        "velocity": 0
+      },
+      {
+        "pitch": "rest",
+        "midi_number": -1,
+        "octave": -1,
+        "duration": 3.0,
+        "offset": 0.0,
+        "velocity": 0
+      },
+      {
+        "pitch": "D",
+        "midi_number": 50,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 3.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 52,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 3.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "F",
+        "midi_number": 53,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 4.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 52,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 4.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 50,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 5.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "C#",
+        "midi_number": 49,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 5.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 50,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 6.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 52,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 6.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "F",
+        "midi_number": 53,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 7.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 50,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 7.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 45,
+        "octave": 2,
+        "duration": 2.0,
+        "offset": 8.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "C",
+        "midi_number": 48,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 10.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "B",
+        "midi_number": 47,
+        "octave": 2,
+        "duration": 0.5,
+        "offset": 10.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 45,
+        "octave": 2,
+        "duration": 0.5,
+        "offset": 11.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G#",
+        "midi_number": 44,
+        "octave": 2,
+        "duration": 0.5,
+        "offset": 11.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 45,
+        "octave": 2,
+        "duration": 0.5,
+        "offset": 12.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "C",
+        "midi_number": 48,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 12.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "F",
+        "midi_number": 53,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 13.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 52,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 13.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 50,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 14.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "B",
+        "midi_number": 47,
+        "octave": 2,
+        "duration": 0.5,
+        "offset": 14.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 52,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 15.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 45,
+        "octave": 2,
+        "duration": 2.0,
+        "offset": 16.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "rest",
+        "midi_number": -1,
+        "octave": -1,
+        "duration": 1.0,
+        "offset": 18.0,
+        "velocity": 0
+      },
+      {
+        "pitch": "A",
+        "midi_number": 45,
+        "octave": 2,
+        "duration": 1.0,
+        "offset": 19.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 50,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 20.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 52,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 20.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "F",
+        "midi_number": 53,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 21.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "F",
+        "midi_number": 53,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 22.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 52,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 23.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "F",
+        "midi_number": 53,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 24.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "C",
+        "midi_number": 48,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 25.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 50,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 26.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 45,
+        "octave": 2,
+        "duration": 0.5,
+        "offset": 27.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "B-",
+        "midi_number": 46,
+        "octave": 2,
+        "duration": 0.5,
+        "offset": 27.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "C",
+        "midi_number": 48,
+        "octave": 3,
+        "duration": 2.0,
+        "offset": 28.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "F",
+        "midi_number": 41,
+        "octave": 2,
+        "duration": 1.0,
+        "offset": 30.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 45,
+        "octave": 2,
+        "duration": 1.0,
+        "offset": 31.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "C#",
+        "midi_number": 49,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 32.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 50,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 33.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "C",
+        "midi_number": 48,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 33.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "B",
+        "midi_number": 47,
+        "octave": 2,
+        "duration": 0.5,
+        "offset": 34.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 45,
+        "octave": 2,
+        "duration": 0.5,
+        "offset": 34.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "B",
+        "midi_number": 47,
+        "octave": 2,
+        "duration": 0.5,
+        "offset": 35.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G",
+        "midi_number": 43,
+        "octave": 2,
+        "duration": 0.5,
+        "offset": 35.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "C",
+        "midi_number": 48,
+        "octave": 3,
+        "duration": 2.0,
+        "offset": 36.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "C",
+        "midi_number": 48,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 38.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 50,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 39.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 52,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 40.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "F",
+        "midi_number": 53,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 41.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 52,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 41.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 50,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 42.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "E",
+        "midi_number": 52,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 43.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 45,
+        "octave": 2,
+        "duration": 2.0,
+        "offset": 44.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "rest",
+        "midi_number": -1,
+        "octave": -1,
+        "duration": 1.0,
+        "offset": 46.0,
+        "velocity": 0
+      },
+      {
+        "pitch": "A",
+        "midi_number": 45,
+        "octave": 2,
+        "duration": 1.0,
+        "offset": 47.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "B-",
+        "midi_number": 46,
+        "octave": 2,
+        "duration": 1.0,
+        "offset": 48.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "B",
+        "midi_number": 47,
+        "octave": 2,
+        "duration": 1.0,
+        "offset": 49.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "C",
+        "midi_number": 48,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 50.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 50,
+        "octave": 3,
+        "duration": 1.0,
+        "offset": 51.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G",
+        "midi_number": 43,
+        "octave": 2,
+        "duration": 2.0,
+        "offset": 52.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "rest",
+        "midi_number": -1,
+        "octave": -1,
+        "duration": 1.0,
+        "offset": 54.0,
+        "velocity": 0
+      },
+      {
+        "pitch": "A",
+        "midi_number": 45,
+        "octave": 2,
+        "duration": 1.0,
+        "offset": 55.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 50,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 56.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "C",
+        "midi_number": 48,
+        "octave": 3,
+        "duration": 0.5,
+        "offset": 56.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "B-",
+        "midi_number": 46,
+        "octave": 2,
+        "duration": 0.5,
+        "offset": 57.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "G",
+        "midi_number": 43,
+        "octave": 2,
+        "duration": 0.5,
+        "offset": 57.5,
+        "velocity": 64
+      },
+      {
+        "pitch": "A",
+        "midi_number": 45,
+        "octave": 2,
+        "duration": 2.0,
+        "offset": 58.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "D",
+        "midi_number": 50,
+        "octave": 3,
+        "duration": 3.0,
+        "offset": 60.0,
+        "velocity": 64
+      },
+      {
+        "pitch": "rest",
+        "midi_number": -1,
+        "octave": -1,
+        "duration": 1.0,
+        "offset": 63.0,
+        "velocity": 0
+      }
+    ],
+    "key_signature": "A minor minor",
+    "time_signature": "4/4",
+    "tempo": 84.0,
+    "tuning_info": {
+      "concert_pitch": 440.0,
+      "tuning_system": "equal_temperament"
+    },
+    "total_duration": 64.0,
+    "instruments": [
+      "Piano",
+      "Piano",
+      "Piano",
+      "Piano"
+    ]
+  },
+  "extraction_metadata": {
+    "total_notes": 253,
+    "key_signature": "A minor minor",
+    "time_signature": "4/4",
+    "tempo": 84.0,
+    "total_duration": 64.0,
+    "instruments": [
+      "Piano",
+      "Piano",
+      "Piano",
+      "Piano"
+    ]
+  }
+}

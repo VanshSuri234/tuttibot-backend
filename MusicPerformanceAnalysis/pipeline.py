@@ -1097,9 +1097,84 @@ class MusicPerformancePipeline:
         
         return "\n".join(report)
     
+    def get_chatbot_context(self):
+        """
+        Omni-Context Generator: Aggregates every JSON result from all 7 layers.
+        Synchronized with Block 0, 1, 2, 4, Context Aligner, and Grading.
+        """
+        logger.info("\n[Generating Complete Chatbot Context]")
+        
+        def load_json(key):
+            """Helper to load JSON from a path stored in self.results."""
+            path = self.results.get(key)
+            if path and Path(path).exists():
+                try:
+                    with open(path, 'r') as f:
+                        return json.load(f)
+                except Exception as e:
+                    return {"error": f"Read error: {e}"}
+            return None
+
+        # 1. Base Structure & Metadata
+        context = {
+            "meta": {
+                "timestamp": datetime.now().isoformat(),
+                "audio_file": self.audio_path.name,
+                "score_file": self.score_path.name,
+                "pipeline_status": self.status
+            },
+            "layers": {}
+        }
+
+        # --- Layer 1 & 2: Input & Processing ---
+        context['layers']['L1_Input'] = {"status": self.status.get('input')}
+        context['layers']['L2_Processing'] = load_json('processing_metadata')
+
+        # --- Layer 3: Temporal Alignment (Detailed Blocks) ---
+        context['layers']['L3_Temporal'] = {
+            "block_0_scoregraph": load_json('scoregraph'),
+            "block_1_transcription": load_json('transcription'),
+            "block_2_dtw_alignment": load_json('alignment'),
+            "block_4_beats_optional": load_json('beats'),
+            "context_aligner_optional": load_json('context_alignment')
+        }
+
+        # --- Layer 4: Feature Extraction ---
+        # Note: self.results['extraction'] contains paths to performance and score JSONs
+        extraction_paths = self.results.get('extraction', {})
+        if isinstance(extraction_paths, dict):
+            context['layers']['L4_Extraction'] = {
+                "performance_features": load_json(extraction_paths.get('performance_features')),
+                "score_features": load_json(extraction_paths.get('score_features'))
+            }
+
+        # --- Layer 5: PQG-A2SA (Micro-Timing) ---
+        context['layers']['L5_PQG'] = load_json('pqg_a2sa')
+
+        # --- Layer 6: Inference Package ---
+        context['layers']['L6_Inference'] = load_json('grading_package')
+
+        # --- Layer 7: Final Grading ---
+        context['layers']['L7_Grading'] = load_json('final_grade')
+
+        # Save the consolidated context for the Chatbot
+        context_path = self.output_dir / "chatbot_context.json"
+        try:
+            with open(context_path, 'w') as f:
+                json.dump(context, f, indent=2)
+            
+            # Store in results for final access
+            self.results['chatbot_context'] = str(context_path)
+            logger.info(f"✅ Full Chatbot Context saved: {context_path}")
+        except Exception as e:
+            logger.error(f"❌ Failed to save chatbot context: {e}")
+
+        return context_path
+    
     def run_pipeline(self):
         """Run complete pipeline"""
         logger.info("\n" + "="*70)
+        print("reached")
         logger.info("  MUSIC PERFORMANCE ANALYSIS PIPELINE")
         logger.info("="*70)
         logger.info(f"  Audio: {self.audio_path.name}")
@@ -1139,6 +1214,8 @@ class MusicPerformancePipeline:
         if not self.run_grading():
             logger.error("Grading failed")
             return False
+        logger.info("\n[Final Step: Generating Chatbot Context]")
+        self.get_chatbot_context()
         
         # Create pipeline summary
         self._save_summary(start_time)

@@ -1,0 +1,20 @@
+{
+  "audio_path": "/home/unitree/Documents/TuttiBot/Workspace/results/50177409-770f-48aa-b13a-c7b61ffda5d1/02_processing/data/original/50177409-770f-48aa-b13a-c7b61ffda5d1_audio_04-ChristeDuBeistand-bassoon.wav",
+  "processed_audio_path": "/home/unitree/Documents/TuttiBot/Workspace/results/50177409-770f-48aa-b13a-c7b61ffda5d1/02_processing/data/processed/50177409-770f-48aa-b13a-c7b61ffda5d1_audio_04-ChristeDuBeistand-bassoon_processed.wav",
+  "total_segments": 0,
+  "audio_segments": [],
+  "processing_metadata": {
+    "audio_analysis": {
+      "needs_noise_reduction": true,
+      "needs_normalization": true,
+      "needs_segmentation": true,
+      "current_db_level": -40.0,
+      "noise_estimate": 0.1
+    },
+    "processing_steps_applied": {
+      "noise_reduction": true,
+      "normalization": true,
+      "segmentation": true
+    }
+  }
+}

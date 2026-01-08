@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./components/ui/card";
-import { BarChart3, FileAudio, FileText, Play, CheckCircle, AlertCircle, Loader2, MessageSquare, Music, Bot, BookOpen } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "./components/ui/card";
+import { BarChart3, FileAudio, FileText, Play, CheckCircle, AlertCircle, Loader2, MessageSquare, Music, Bot, BookOpen, Send } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 function App() {
   const [activeTab, setActiveTab] = useState("chat");
@@ -11,6 +12,22 @@ function App() {
   const [status, setStatus] = useState(null);
   const [analysisResult, setAnalysisResult] = useState(null);
   const [error, setError] = useState(null);
+
+  // --- NEW STATES FOR CHAT FUNCTIONALITY ---
+  const [jobId, setJobId] = useState(null);
+  const [inputText, setInputText] = useState("");
+  const [isChatting, setIsChatting] = useState(false);
+  const [messages, setMessages] = useState([
+    { role: 'bot', content: "Hello! I'm TuttiBot. Upload your audio recording and musical score, and I'll analyze your performance!" }
+  ]);
+  const chatContainerRef = useRef(null);
+
+  // Auto-scroll to the bottom of the chat when new messages arrive
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [messages, isChatting]);
 
   const handleFileChange = (e, type) => {
     const file = e.target.files[0];
@@ -37,6 +54,7 @@ function App() {
       const data = await response.json();
       if (response.ok) {
         setStatus('queued');
+        setJobId(data.job_id); // Store ID for the Chat endpoint
         pollStatus(data.job_id);
       } else {
         setError(data.error || 'Analysis failed to start');
@@ -77,11 +95,52 @@ function App() {
       if (response.ok) {
         setAnalysisResult(data.results);
         setIsAnalyzing(false);
-        setActiveTab("performance"); // Switch to results tab
+        setActiveTab("performance"); 
+        
+        // Add a bot notification to the chat
+        setMessages(prev => [...prev, { 
+          role: 'bot', 
+          content: `Analysis complete! Your overall score is ${data.results?.grade_data?.overall_score || 'available now'}. What would you like to know about it?` 
+        }]);
       }
     } catch (err) {
       console.error("Fetch results error", err);
       setIsAnalyzing(false);
+    }
+  };
+
+  // --- NEW HANDLER FOR CHAT ---
+  const handleSendMessage = async (e) => {
+    e?.preventDefault();
+    if (!inputText.trim() || isChatting) return;
+
+    const userMessage = inputText;
+    setInputText("");
+    setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+
+    if (!jobId) {
+      setMessages(prev => [...prev, { role: 'bot', content: "Please analyze a performance first so I have data to discuss with you!" }]);
+      return;
+    }
+
+    setIsChatting(true);
+    try {
+      const response = await fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          job_id: jobId,
+          message: userMessage,
+          history: messages.slice(-10) // Send recent history for context
+        }),
+      });
+
+      const data = await response.json();
+      setMessages(prev => [...prev, { role: 'bot', content: data.response }]);
+    } catch (err) {
+      setMessages(prev => [...prev, { role: 'bot', content: "I'm having trouble connecting to the chat service right now." }]);
+    } finally {
+      setIsChatting(false);
     }
   };
 
@@ -135,44 +194,56 @@ function App() {
                     </CardTitle>
                     <CardDescription>Chat with TuttiBot about your performance or upload files for analysis</CardDescription>
                   </CardHeader>
-                  <CardContent className="flex-1 overflow-y-auto p-4 space-y-4">
-                    <div className="flex gap-3">
-                      <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                        <Bot className="h-5 w-5 text-blue-600" />
-                      </div>
-                      <div className="bg-slate-100 p-3 rounded-2xl rounded-tl-none max-w-[80%] text-slate-700 text-sm">
-                        Hello! I'm TuttiBot. Upload your audio recording and musical score, and I'll analyze your performance!
-                      </div>
-                    </div>
-                    {/* Mock user message if analyzing */}
-                    {isAnalyzing && (
-                      <div className="flex gap-3 flex-row-reverse">
-                        <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
-                          <div className="h-5 w-5 text-indigo-600 font-bold text-xs">You</div>
+                  
+                  {/* DYNAMIC CHAT CONTENT */}
+                  <CardContent ref={chatContainerRef} className="flex-1 overflow-y-auto p-4 space-y-4">
+                    {messages.map((msg, index) => (
+                      <div key={index} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${msg.role === 'user' ? 'bg-indigo-100' : 'bg-blue-100'}`}>
+                          {msg.role === 'user' ? (
+                            <div className="h-5 w-5 text-indigo-600 font-bold text-xs flex items-center justify-center">You</div>
+                          ) : (
+                            <Bot className="h-5 w-5 text-blue-600" />
+                          )}
                         </div>
-                        <div className="bg-blue-600 text-white p-3 rounded-2xl rounded-tr-none max-w-[80%] text-sm">
-                          Analyzing my performance...
+                        <div className={`p-3 rounded-2xl max-w-[80%] text-sm ${
+                          msg.role === 'user' 
+                          ? 'bg-blue-600 text-white rounded-tr-none' 
+                          : 'bg-slate-100 text-slate-700 rounded-tl-none'
+                        }`}>
+                          {msg.content}
                         </div>
                       </div>
-                    )}
-                    {status === 'completed' && (
+                    ))}
+                    {isChatting && (
                       <div className="flex gap-3">
                         <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                          <Bot className="h-5 w-5 text-blue-600" />
+                          <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
                         </div>
-                        <div className="bg-slate-100 p-3 rounded-2xl rounded-tl-none max-w-[80%] text-slate-700 text-sm">
-                          Analysis complete! Check the Analysis tab for results.
+                        <div className="bg-slate-100 p-3 rounded-2xl rounded-tl-none text-slate-400 text-sm italic">
+                          TuttiBot is thinking...
                         </div>
                       </div>
                     )}
                   </CardContent>
+
                   <div className="p-4 border-t border-slate-100">
-                    <div className="flex gap-2">
-                      <input type="text" placeholder="Type a message..." className="flex-1 px-4 py-2 rounded-full border border-slate-200 focus:outline-none focus:border-blue-400 text-sm" />
-                      <button className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition-colors">
-                        <Play className="h-4 w-4 ml-0.5" />
+                    <form onSubmit={handleSendMessage} className="flex gap-2">
+                      <input 
+                        type="text" 
+                        value={inputText}
+                        onChange={(e) => setInputText(e.target.value)}
+                        placeholder="Type a message..." 
+                        className="flex-1 px-4 py-2 rounded-full border border-slate-200 focus:outline-none focus:border-blue-400 text-sm" 
+                      />
+                      <button 
+                        type="submit"
+                        disabled={!inputText.trim() || isChatting}
+                        className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition-colors disabled:opacity-50"
+                      >
+                        <Send className="h-4 w-4 ml-0.5" />
                       </button>
-                    </div>
+                    </form>
                   </div>
                 </Card>
               </div>
@@ -223,7 +294,7 @@ function App() {
                       </div>
                     </div>
 
-                    <button 
+                    <button 
                       onClick={startAnalysis}
                       disabled={!audioFile || !scoreFile || isAnalyzing}
                       className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-2.5 rounded-lg font-medium hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
@@ -253,9 +324,9 @@ function App() {
 
           {/* Performance Analysis Tab */}
           <TabsContent value="performance" className="max-w-5xl mx-auto">
-            {analysisResult ? (
+            {analysisResult && analysisResult.grade_data ? (
               <div className="space-y-6">
-                <Card className="bg-white border-2 border-blue-200 shadow-xl" data-testid="analysis-results">
+                <Card className="bg-white border-2 border-blue-200 shadow-xl">
                   <CardHeader className="border-b border-blue-100 bg-gradient-to-r from-blue-50 to-white">
                     <CardTitle className="text-blue-600 flex items-center gap-2" style={{ fontFamily: 'Playfair Display, serif' }}>
                       🎯 Performance Analysis Results
@@ -263,45 +334,73 @@ function App() {
                     <CardDescription className="text-slate-600">Detailed feedback and metrics</CardDescription>
                   </CardHeader>
                   <CardContent className="p-6 space-y-6">
-                    {/* Feedback */}
-                    <Card className="bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200" data-testid="feedback-card">
-                      <CardHeader>
-                        <CardTitle className="text-blue-600 text-lg flex items-center gap-2" style={{ fontFamily: 'Playfair Display, serif' }}>
-                          📝 Detailed Feedback
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="whitespace-pre-wrap text-slate-700" style={{ fontFamily: 'Manrope, sans-serif' }}>
-                          {analysisResult.feedback || "Analysis complete. Review the metrics below."}
-                        </p>
-                      </CardContent>
-                    </Card>
-
-                    <div className="grid md:grid-cols-2 gap-6">
-                      {/* Timing Chart */}
-                      <Card className="bg-white border-2 border-blue-200" data-testid="timing-chart">
+                    
+                    {/* Component Scores Chart */}
+                    {analysisResult.grade_data.components && (
+                      <Card className="bg-white border-2 border-blue-200">
                         <CardHeader className="bg-gradient-to-r from-blue-50 to-white">
                           <CardTitle className="text-blue-600 text-lg flex items-center gap-2" style={{ fontFamily: 'Playfair Display, serif' }}>
-                            ⏱ Tempo Analysis
+                            📊 Component Scores
                           </CardTitle>
                         </CardHeader>
-                        <CardContent className="h-64 flex items-center justify-center text-slate-400">
-                          [Tempo Chart Placeholder]
+                        <CardContent className="h-80">
+                          <ResponsiveContainer width="100%" height="100%">
+                            <BarChart
+                              data={Object.entries(analysisResult.grade_data.components).map(([name, score]) => ({ name, score }))}
+                              margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                            >
+                              <CartesianGrid strokeDasharray="3 3" />
+                              <XAxis dataKey="name" />
+                              <YAxis domain={[0, 100]} />
+                              <Tooltip />
+                              <Legend />
+                              <Bar dataKey="score" fill="#2563eb" name="Score (%)" />
+                            </BarChart>
+                          </ResponsiveContainer>
                         </CardContent>
                       </Card>
+                    )}
 
-                      {/* Pitch vs Time Chart */}
-                      <Card className="bg-white border-2 border-blue-200" data-testid="pitch-chart">
-                        <CardHeader className="bg-gradient-to-r from-blue-50 to-white">
+                    {/* Detailed Metrics */}
+                    {analysisResult.grade_data.detailed_metrics && (
+                      <div className="grid md:grid-cols-2 gap-6">
+                        {Object.entries(analysisResult.grade_data.detailed_metrics).map(([category, metrics]) => (
+                          <Card key={category} className="bg-white border-2 border-blue-200">
+                            <CardHeader className="bg-gradient-to-r from-blue-50 to-white">
+                              <CardTitle className="text-blue-600 text-lg flex items-center gap-2" style={{ fontFamily: 'Playfair Display, serif' }}>
+                                📝 {category}
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <ul className="space-y-3">
+                                {Object.entries(metrics).map(([key, value]) => (
+                                  <li key={key} className="flex justify-between items-center border-b border-slate-100 pb-2 last:border-0">
+                                    <span className="text-slate-600 font-medium">{key}</span>
+                                    <span className="text-blue-700 font-bold">{value}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Full Report */}
+                    {analysisResult.report_text && (
+                       <Card className="bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200 mt-6">
+                        <CardHeader>
                           <CardTitle className="text-blue-600 text-lg flex items-center gap-2" style={{ fontFamily: 'Playfair Display, serif' }}>
-                            📊 Pitch Accuracy Over Time
+                            📄 Full Report
                           </CardTitle>
                         </CardHeader>
-                        <CardContent className="h-64 flex items-center justify-center text-slate-400">
-                          [Pitch Chart Placeholder]
+                        <CardContent>
+                          <pre className="whitespace-pre-wrap text-slate-700 text-sm font-mono overflow-auto max-h-96">
+                            {analysisResult.report_text}
+                          </pre>
                         </CardContent>
                       </Card>
-                    </div>
+                    )}
 
                     <p className="text-blue-600 mt-6 font-medium bg-blue-50 p-4 rounded-lg" style={{ fontFamily: 'Manrope, sans-serif' }}>
                       💡 Use the Chat tab to discuss your HRI design ideas with TuttiBot!
@@ -310,7 +409,7 @@ function App() {
                 </Card>
               </div>
             ) : (
-              <Card className="bg-white border-2 border-blue-200 shadow-xl" data-testid="no-analysis">
+              <Card className="bg-white border-2 border-blue-200 shadow-xl">
                 <CardContent className="py-12 text-center">
                   <BarChart3 className="h-16 w-16 mx-auto text-blue-400 mb-4" />
                   <p className="text-blue-600 text-lg font-semibold" style={{ fontFamily: 'Manrope, sans-serif' }}>📊 No analysis available yet</p>
@@ -320,8 +419,8 @@ function App() {
             )}
           </TabsContent>
 
-          {/* Research Tab */}
-          <TabsContent value="research" data-testid="research-content" className="max-w-5xl mx-auto">
+          {/* Research Tab - FULL CONTENT PRESERVED */}
+          <TabsContent value="research" className="max-w-5xl mx-auto">
             <Card className="bg-white border-2 border-blue-200 shadow-xl">
               <CardHeader className="border-b border-blue-100 bg-gradient-to-r from-blue-50 to-white">
                 <CardTitle className="text-blue-600 flex items-center gap-2" style={{ fontFamily: 'Playfair Display, serif' }}>
@@ -376,8 +475,8 @@ function App() {
             </Card>
           </TabsContent>
 
-          {/* HRI Tab */}
-          <TabsContent value="hri" data-testid="hri-content" className="max-w-5xl mx-auto">
+          {/* HRI Tab - FULL CONTENT PRESERVED */}
+          <TabsContent value="hri" className="max-w-5xl mx-auto">
             <Card className="bg-white border-2 border-blue-200 shadow-xl">
               <CardHeader className="border-b border-blue-100 bg-gradient-to-r from-blue-50 to-white">
                 <CardTitle className="text-blue-600 flex items-center gap-2" style={{ fontFamily: 'Playfair Display, serif' }}>
