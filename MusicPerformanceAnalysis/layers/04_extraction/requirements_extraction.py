@@ -6,6 +6,7 @@ music21>=7.0
 pretty-midi>=0.2
 aubio>=0.4
 
+
 # Note: essentia can be tricky to install, try different approaches
 essentia>=2
 
@@ -38,15 +39,15 @@ pytest-cov>=2.10
 black>=20
 flake8>=3.8
 
-# Platform-specific audio backends
-# Windows
-pyaudio>=0.2; sys_platform=="win32"
+# Platform-specific audio backends (optional - not required for server deployments)
+# Windows (uncomment if you need microphone input on Windows)
+# pyaudio>=0.2; sys_platform=="win32"
 
-# macOS
-pyobjc-framework-CoreAudio>=7.0; sys_platform=="darwin"
+# macOS (uncomment if needed)
+# pyobjc-framework-CoreAudio>=7.0; sys_platform=="darwin"
 
-# Linux
-python-rtaudio>=1.1; sys_platform=="linux"
+# Linux (uncomment if native rtaudio support is required)
+# python-rtaudio>=1.1; sys_platform=="linux"
 
 # Alternative essentia installation
 # Uncomment if regular essentia fails:
