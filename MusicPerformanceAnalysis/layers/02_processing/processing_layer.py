@@ -25,7 +25,10 @@ try:
     import noisereduce as nr
     from scipy.io import wavfile
     import librosa
+    import librosa.onset
     import soundfile as sf
+    from ffmpeg_normalize import FFmpegNormalize
+    import auditok
 except ImportError as e:
     print(f"Audio processing dependencies missing: {e}")
     print("Install with: pip install noisereduce scipy librosa soundfile")
