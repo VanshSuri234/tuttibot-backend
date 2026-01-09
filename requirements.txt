@@ -46,11 +46,10 @@ pydub>=0.25.0
 pretty_midi>=0.2.9
 music21>=7.1.0
 mido>=1.2.10
-python-rtmidi>=1.1.0
+# python-rtmidi>=1.1.0  # Commented: requires C compilation, optional for server
 jsonschema>=3.2.0
-plotly>=4.14.0
+# plotly>=4.14.0  # Commented: optional visualization, not needed for server
 mir-eval>=0.6.0
-madmom>=0.16.0
 
 # ============================================================================
 # DEEP LEARNING (for Transcription & PQG-A2SA)
