@@ -396,6 +396,11 @@ def analyze():
     
     return jsonify({'job_id': job_id, 'status': JobStatus.QUEUED}), 202
 
+@app.route('/upload', methods=['POST'])
+def upload():
+    """Alias for /analyze endpoint for frontend compatibility"""
+    return analyze()
+
 @app.route('/chat', methods=['POST'])
 def chat():
     data = request.json
