@@ -2,7 +2,7 @@
 # Python 3.10 or higher required
 # Optimized for Render deployment (pre-built wheels only)
 
-# Use constraints to prevent building problematic packages (e.g. pyaudio)
+# Constraints to prevent pyaudio build failure on Render (optional dependency)
 -c constraints.txt
 
 # ============================================================================
@@ -35,7 +35,7 @@ librosa>=0.9.0
 soundfile>=0.10.0
 noisereduce>=2.0.0
 ffmpeg-normalize>=1.26.0
-auditok>=0.2.1
+# auditok>=0.2.1  # Commented: depends on pyaudio (not needed for server file processing)
 resampy>=0.2.2
 audioread>=2.1.9
 pydub>=0.25.0
