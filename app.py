@@ -403,6 +403,22 @@ def run_analysis(job_id, audio_path, score_path):
 # ROUTES (ALL ORIGINAL ROUTES PRESERVED)
 # ==========================================
 
+@app.route('/', methods=['GET'])
+def root():
+    """Root endpoint - returns API info"""
+    return jsonify({
+        'service': 'TuttiBot Backend API',
+        'version': '1.0.0',
+        'status': 'healthy',
+        'endpoints': {
+            'POST /upload': 'Upload audio and score files',
+            'GET /status/<job_id>': 'Check analysis status',
+            'GET /results/<job_id>': 'Get analysis results',
+            'POST /chat': 'Chat about analysis results',
+            'GET /health': 'Health check'
+        }
+    })
+
 @app.route('/health', methods=['GET'])
 def health_check():
     return jsonify({'status': 'healthy', 'version': '1.0.0'})
