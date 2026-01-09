@@ -1,0 +1,7 @@
+# Constraints file for Render deployment
+# Prevents installation of packages that require C compilation
+# and are not essential for the backend
+
+# PyAudio is not needed (processes uploaded files, not microphone input)
+# It causes build failures due to missing portaudio headers
+pyaudio==0.0.0
