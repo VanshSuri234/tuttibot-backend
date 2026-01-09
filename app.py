@@ -31,12 +31,15 @@ except ImportError:
 # CONFIGURATION
 # ==========================================
 
-# NETWORK INTERFACE - MUST MATCH YOUR HARDWARE
-ROBOT_INTERFACE = "enp4s0" 
+# NETWORK INTERFACE - CONFIGURABLE FROM ENVIRONMENT
+ROBOT_INTERFACE = os.getenv("ROBOT_INTERFACE", "enp4s0")
 
 # Path to the compiled C++ executable
 current_dir = Path(__file__).parent
 PATH_TO_LED_EXE = current_dir / "led_control" / "build" / "g1_led_controller"
+
+# Check if LED controller is available
+LED_ENABLED = os.path.exists(PATH_TO_LED_EXE) and os.getenv("FLASK_ENV") != "production"
 
 # Add TuttiBot modules to path
 sys.path.insert(0, str(current_dir))
@@ -411,5 +414,8 @@ def download_file(job_id, filename):
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    print("🎵 TuttiBot Web API Ready")
-    app.run(host='0.0.0.0', port=5000, debug=True, threaded=True)
+    port = int(os.getenv("PORT", 5000))
+    debug_mode = os.getenv("FLASK_ENV", "development") != "production"
+    print("TuttiBot Web API Ready")
+    app.run(host="0.0.0.0", port=port, debug=debug_mode, threaded=True)
+
