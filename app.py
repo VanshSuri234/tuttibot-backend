@@ -95,6 +95,33 @@ class JobStatus:
     FAILED = "failed"
 
 # ==========================================
+# STATUS PERSISTENCE FUNCTIONS
+# ==========================================
+
+def save_job_status(job_id, status_dict):
+    """Save job status to disk for cross-worker consistency"""
+    try:
+        status_file = Path(app.config['RESULTS_FOLDER']) / job_id / 'status.json'
+        status_file.parent.mkdir(parents=True, exist_ok=True)
+        with open(status_file, 'w') as f:
+            json.dump(status_dict, f, indent=2)
+        logging.info(f"Status saved for job {job_id}: {status_dict.get('status', 'unknown')}")
+    except Exception as e:
+        logging.error(f"Failed to save status for job {job_id}: {e}")
+
+def load_job_status(job_id):
+    """Load job status from disk"""
+    try:
+        status_file = Path(app.config['RESULTS_FOLDER']) / job_id / 'status.json'
+        if status_file.exists():
+            with open(status_file, 'r') as f:
+                return json.load(f)
+        return None
+    except Exception as e:
+        logging.error(f"Failed to load status for job {job_id}: {e}")
+        return None
+
+# ==========================================
 # UPDATED: CHATBOT SERVICE (MAPPED TO BLOCKS)
 # ==========================================
 
