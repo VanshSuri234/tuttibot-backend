@@ -1,6 +1,16 @@
 # Music Performance Analysis Pipeline - Requirements
 # Python 3.10 or higher required
-# Optimized for Render deployment (pre-built wheels only)
+# Optimized for Render deployment
+
+# ============================================================================
+# IMPORTANT: Dependency Exclusion
+# ============================================================================
+# Some packages have optional dependencies we don't need:
+# - auditok tries to install pyaudio (microphone recording)
+# - We use auditok only for audio segmentation, not microphone input
+# Using --prefer-binary ensures we get pre-built wheels when available
+#
+# Install with: pip install --prefer-binary -r requirements.txt
 
 # ============================================================================
 # WEB FRAMEWORK & API
@@ -83,11 +93,11 @@ joblib>=1.0.0
 # No C compilation is required during pip install.
 #
 # CPU-only installation:
-#   pip install -r requirements.txt
+#   pip install --prefer-binary -r requirements.txt
 #
 # GPU installation (recommended):
 #   1. Install PyTorch with CUDA from pytorch.org
-#   2. pip install -r requirements.txt
+#   2. pip install --prefer-binary -r requirements.txt
 #
 # ============================================================================
 # SYSTEM DEPENDENCIES (pre-installed on Render)

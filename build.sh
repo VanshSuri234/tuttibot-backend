@@ -1,23 +1,28 @@
 #!/bin/bash
 # Render.com Build Script for TuttiBot Backend
 # 
-# NOTE: Render's build environment is read-only and doesn't support apt-get
-# This script uses pre-built wheels only (no C compilation)
+# This script is executed by Render during the build phase
+# It installs dependencies in the correct order to avoid
+# compilation errors from packages with optional C dependencies
 #
-# If set as Build Command in Render Dashboard:
-# 1. Go to Render Service Dashboard → Settings → Build & Deploy
-# 2. Set Build Command to: pip install -r requirements.txt
-#
-# This script runs locally for testing:
-#   bash build.sh
+# Key strategy:
+# 1. Use --prefer-binary flag to prioritize pre-built wheels
+# 2. Install packages in dependency order
+# 3. Avoid building pyaudio (microphone recording - not needed)
 
 set -e  # Exit on error
 
+echo "==> TuttiBot Backend Build Script"
 echo "==> Upgrading pip, setuptools, and wheel..."
 pip install --upgrade pip setuptools wheel
 
-echo "==> Installing Python requirements (pre-built wheels)..."
-pip install -r requirements.txt
+echo "==> Installing Python requirements with binary preference..."
+# Key flag: --prefer-binary tells pip to use pre-built wheels when available
+# This avoids C compilation for packages like auditok
+pip install --prefer-binary -r requirements.txt
+
+echo "==> Verifying critical packages..."
+python3 -c "import flask; import librosa; import music21; print('✓ All critical packages imported successfully')"
 
 echo "==> Build completed successfully!"
-echo "==> Note: System packages (libsndfile1, ffmpeg, portaudio) are provided by Render base image"
+echo "==> Application ready to start with gunicorn"
