@@ -433,6 +433,17 @@ def get_results(job_id):
 
 @app.route('/status/<job_id>', methods=['GET'])
 def get_status(job_id):
+    # First, try to read from disk (cross-worker consistency)
+    job_status_path = Path(app.config['RESULTS_FOLDER']) / job_id / 'status.json'
+    if job_status_path.exists():
+        try:
+            with open(job_status_path, 'r') as f:
+                status_data = json.load(f)
+                return jsonify(status_data), 200
+        except Exception as e:
+            logging.error(f"Error reading status from disk: {e}")
+    
+    # Fall back to in-memory dict
     with job_lock:
         if job_id not in jobs: 
             return jsonify({'error': 'Job not found'}), 404
