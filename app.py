@@ -58,7 +58,14 @@ except ImportError:
     llm_service = None
 
 app = Flask(__name__)
-CORS(app) 
+CORS(app, resources={
+    r"/*": {
+        "origins": ["https://music4-d.vercel.app", "http://localhost:3000", "*"],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": True
+    }
+})
 
 app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -118,91 +125,107 @@ from pathlib import Path
 from flask import current_app
 
 class ChatbotService:
+
+    @staticmethod
+    def detect_intent(message):
+        msg = message.lower()
+        if any(k in msg for k in ["timing", "rhythm", "tempo"]):
+            return "timing"
+        if "pitch" in msg or "intonation" in msg:
+            return "pitch"
+        if any(k in msg for k in ["dynamic", "loud", "soft", "accent"]):
+            return "dynamics"
+        if "match" in msg or "score" in msg:
+            return "score_match"
+        if any(k in msg for k in ["improve", "practice", "better"]):
+            return "improvement"
+        return "general"
+
     @staticmethod
     def generate_response(job_id, user_message, chat_history):
-        from app import groq_client 
-        
-        # 1. LOAD DATA
-        context_path = Path(current_app.config['RESULTS_FOLDER']) / job_id / "chatbot_context.json"
-        ctx = {}
-        if context_path.exists():
-            try:
-                with open(context_path, 'r') as f:
-                    ctx = json.load(f) or {}
-            except Exception as e:
-                logging.error(f"JSON Read Error: {e}")
+        from flask import current_app
+        from app import groq_client
+        import json
+        from pathlib import Path
 
-        # 2. EXTRACT LAYERS
-        layers = ctx.get('layers', {})
-        l3 = layers.get('L3_Temporal', {})
-        l7 = layers.get('L7_Grading', {})
-        comp = l7.get('components', {})
+        summary_path = Path(current_app.config["RESULTS_FOLDER"]) / job_id / "chatbot_summary.json"
 
-        # 3. GET MUSICAL CONTEXT (To find where errors happened)
-        # Since 'block_2' is missing, we use the low scores to trigger feedback
-        pitch_score = comp.get('pitch', 0)
-        rhythm_score = comp.get('rhythm', 0)
-        
-        # Identify "Problem Bars" based on your scoregraph (Total 9 bars found in file)
-        # For this version, we highlight bars where errors are statistically likely
-        bars = l3.get('block_0_scoregraph', {}).get('bars', [])
-        total_bars = len(bars)
-        
-        timing_evidence = ""
-        pitch_evidence = ""
+        if not summary_path.exists():
+            return "Your analysis is still being prepared. Please try again shortly."
 
-        # Logic: If scores are low, we must provide specific bars as evidence
-        if rhythm_score < 0.1: # Very low rhythm score
-            timing_evidence = "Bars 2, 5, and 8" # Placeholder: In a full fix, you'd calculate this from the dtw_path
-        
-        if pitch_score < 0.5: # Pitch needs work
-            pitch_evidence = "notes in Bar 3 and Bar 6"
+        with open(summary_path) as f:
+            data = json.load(f)
 
-        # 4. PREPARE THE DATA PACKAGE
-        stats = {
-            "overall": l7.get('overall_score', 0),
-            "pitch_pct": round(pitch_score * 100, 1),
-            "rhythm_pct": round(rhythm_score * 100, 1),
-            "timing_errs": timing_evidence or "no major bars",
-            "pitch_errs": pitch_evidence or "a few subtle deviations"
-        }
+        intent = ChatbotService.detect_intent(user_message)
 
-        # 5. THE STRICT SYSTEM PROMPT (Starts exactly with your format)
-        system_prompt = f"""
-        You are 'Tutti', an expert music tutor. 
-        
-        MANDATORY RESPONSE FORMAT:
-        - If asked about timing: "Your timing is [verdict], but you are slightly early/late in {stats['timing_errs']}..."
-        - If asked about pitch: "Your pitch is accurate except for {stats['pitch_errs']}..."
-        - If asked about score: "Yes/No, here are the places where it does not match: [List bars]..."
-        
-        DATA:
-        - Overall: {stats['overall']}/100
-        - Pitch Accuracy: {stats['pitch_pct']}%
-        - Rhythm Stability: {stats['rhythm_pct']}%
-        
-        INSTRUCTION: 
-        1. Start the answer IMMEDIATELY with the template sentence. 
-        2. Be specific about the bars provided in the data.
-        """
+        scores = data.get("scores", {})
+        pitch = data.get("pitch", {})
+        rhythm = data.get("rhythm", {})
+        dynamics = data.get("dynamics", {})
+        match = data.get("score_match", {})
 
-        # 6. MESSAGE ASSEMBLY
-        messages = [{"role": "system", "content": system_prompt}]
-        for msg in (chat_history or [])[-5:]:
-            role = "assistant" if str(msg.get("role")).lower() in ["tutti", "assistant", "bot"] else "user"
-            messages.append({"role": role, "content": msg.get("content", "")})
-        messages.append({"role": "user", "content": user_message})
-
-        # 7. EXECUTE
-        try:
-            response = groq_client.chat.completions.create(
-                model="llama-3.3-70b-versatile",
-                messages=messages,
-                temperature=0.1 # Lower temperature = stricter adherence to format
+        # =========================
+        # DATA-DRIVEN RESPONSES
+        # =========================
+        if intent == "pitch":
+            response = (
+                f"Your pitch accuracy is {pitch.get('accuracy_pct')}%. "
+                f"Pitch inconsistencies appear in bars {pitch.get('incorrect_bars')}. "
+                "Focus on slow practice and pitch reference for these sections."
             )
-            return response.choices[0].message.content
-        except Exception as e:
-            return f"Service Error: {str(e)}"
+
+        elif intent == "timing":
+            response = (
+                f"Your average timing deviation is {rhythm.get('mean_onset_error_ms')} ms. "
+                f"You tend to play early in bars {rhythm.get('early_bars')} "
+                f"and late in bars {rhythm.get('late_bars')}. "
+                "Practicing with a metronome will help stabilize this."
+            )
+
+        elif intent == "dynamics":
+            response = (
+                f"Your dynamic range is approximately {dynamics.get('dynamic_range_db')} dB. "
+                "There is room to exaggerate contrasts between soft and loud passages."
+            )
+
+        elif intent == "score_match":
+            response = (
+                f"Your note accuracy compared to the score is {match.get('note_accuracy_percent')}%. "
+                f"Extra notes: {match.get('extra_notes')}, "
+                f"Missing notes: {match.get('missing_notes')}."
+            )
+
+        elif intent == "improvement":
+            response = (
+                "To improve your performance, prioritize pitch stability in inaccurate bars, "
+                "then address rhythmic consistency and expressive dynamics."
+            )
+
+        else:
+            response = (
+                f"Your overall performance score is {scores.get('overall')} out of 100. "
+                "You can ask about pitch, timing, dynamics, score accuracy, or improvement strategies."
+            )
+
+        # =========================
+        # LLM POLISH (NO FACT ADDITION)
+        # =========================
+        system_prompt = (
+            "You are a calm, experienced music teacher. "
+            "Do not add new facts. Only rephrase clearly and supportively."
+        )
+
+        llm_resp = groq_client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": response}
+            ],
+            temperature=0.2
+        )
+
+        return llm_resp.choices[0].message.content
+
 # ==========================================
 # ROBOT CONTROL FUNCTIONS (PRESERVED)
 # ==========================================
@@ -254,15 +277,22 @@ def run_analysis(job_id, audio_path, score_path):
         job_output_dir.mkdir(exist_ok=True)
 
         # 1. RUN PIPELINE
-        if MusicPerformancePipeline:
-            pipeline_obj = MusicPerformancePipeline(audio_path, score_path, str(job_output_dir))
-            success = pipeline_obj.run_pipeline()
-            
-            # --- UPDATED: GENERATE CHATBOT CONTEXT ---
-            if success and hasattr(pipeline_obj, 'get_chatbot_context'):
-                pipeline_obj.get_chatbot_context()
-        else:
-            logging.error("Pipeline module not loaded")
+        success = False
+        try:
+            if MusicPerformancePipeline:
+                logging.info(f"Starting pipeline for job {job_id}")
+                pipeline_obj = MusicPerformancePipeline(audio_path, score_path, str(job_output_dir))
+                success = pipeline_obj.run_pipeline()
+                logging.info(f"Pipeline completed for job {job_id}: success={success}")
+                
+                # --- UPDATED: GENERATE CHATBOT CONTEXT ---
+                if success and hasattr(pipeline_obj, 'get_chatbot_context'):
+                    pipeline_obj.get_chatbot_context()
+            else:
+                logging.error("Pipeline module not loaded - MusicPerformancePipeline is None")
+                success = False
+        except Exception as e:
+            logging.error(f"Pipeline error for job {job_id}: {str(e)}", exc_info=True)
             success = False
 
         results = {'grade_data': {}}
@@ -399,8 +429,27 @@ def get_results(job_id):
 @app.route('/status/<job_id>', methods=['GET'])
 def get_status(job_id):
     with job_lock:
-        if job_id not in jobs: return jsonify({'error': 'Job not found'}), 404
-        return jsonify({'status': jobs[job_id]['status']})
+        if job_id not in jobs: 
+            return jsonify({'error': 'Job not found'}), 404
+        
+        job_info = jobs[job_id]
+        status = job_info['status']
+        
+        # Check for timeout (15 minutes)
+        if status == JobStatus.PROCESSING:
+            started_at = datetime.fromisoformat(job_info['started_at'])
+            elapsed = (datetime.now() - started_at).total_seconds()
+            if elapsed > 900:  # 15 minutes
+                status = JobStatus.FAILED
+                job_info['status'] = status
+                job_info['error'] = f'Analysis timeout after {elapsed:.0f} seconds'
+        
+        return jsonify({
+            'status': status, 
+            'error': job_info.get('error'),
+            'created_at': job_info.get('created_at'),
+            'started_at': job_info.get('started_at')
+        })
 
 @app.route('/download/<job_id>/<filename>', methods=['GET'])
 def download_file(job_id, filename):
