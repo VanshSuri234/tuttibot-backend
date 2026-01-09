@@ -461,6 +461,19 @@ def download_file(job_id, filename):
         return send_file(str(f), as_attachment=True)
     return jsonify({'error': 'File not found'}), 404
 
+@app.route('/debug', methods=['GET'])
+def debug_info():
+    """Debug endpoint to check system status"""
+    return jsonify({
+        'status': 'ok',
+        'pipeline_loaded': MusicPerformancePipeline is not None,
+        'groq_configured': groq_client is not None,
+        'upload_folder': str(Path(app.config['UPLOAD_FOLDER']).absolute()),
+        'results_folder': str(Path(app.config['RESULTS_FOLDER']).absolute()),
+        'active_jobs': len([j for j in jobs.values() if j['status'] == JobStatus.PROCESSING]),
+        'total_jobs': len(jobs)
+    })
+
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     port = int(os.getenv("PORT", 5000))
