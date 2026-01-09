@@ -2,6 +2,9 @@
 # Python 3.10 or higher required
 # Optimized for Render deployment (pre-built wheels only)
 
+# Use constraints to prevent building problematic packages (e.g. pyaudio)
+-c constraints.txt
+
 # ============================================================================
 # WEB FRAMEWORK & API
 # ============================================================================
