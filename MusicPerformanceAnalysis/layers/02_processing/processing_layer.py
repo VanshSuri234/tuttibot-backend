@@ -203,34 +203,50 @@ class AudioProcessor:
             import tempfile
             import soundfile as sf
             import os
+            from threading import Thread
             
             # Read audio
             data, sr = sf.read(audio_path)
+            duration = len(data) / sr
             
             # Create temp file with clean WAV format
             with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as tmp_file:
                 sf.write(tmp_file.name, data, sr, format='WAV', subtype='PCM_16')
                 clean_audio_path = tmp_file.name
             
+            audio_events = None
             try:
-                # Try auditok segmentation
-                audio_events = auditok.split(
-                    clean_audio_path,
-                    min_dur=0.2, max_dur=10.0, max_silence=0.5,
-                    energy_threshold=self.segmentation_energy_threshold
-                )
+                # Try auditok segmentation with timeout using threading
+                def run_auditok():
+                    nonlocal audio_events
+                    try:
+                        audio_events = auditok.split(
+                            clean_audio_path,
+                            min_dur=0.2, max_dur=10.0, max_silence=0.5,
+                            energy_threshold=self.segmentation_energy_threshold
+                        )
+                    except Exception as e:
+                        audio_events = None
                 
-                segments = [AudioSegment(
-                    start_time=region.meta.start,
-                    end_time=region.meta.end,
-                    duration=region.duration,
-                    confidence=1.0,
-                    segment_type="detected_audio"
-                ) for region in audio_events]
+                auditok_thread = Thread(target=run_auditok, daemon=True)
+                auditok_thread.start()
+                auditok_thread.join(timeout=5.0)  # Wait max 5 seconds
                 
-                os.unlink(clean_audio_path)
-                print(f"Audio segmentation completed: {len(segments)} segments")
-                return segments
+                if audio_events is not None:
+                    # Auditok succeeded
+                    segments = [AudioSegment(
+                        start_time=region.meta.start,
+                        end_time=region.meta.end,
+                        duration=region.duration,
+                        confidence=1.0,
+                        segment_type="detected_audio"
+                    ) for region in audio_events]
+                    
+                    os.unlink(clean_audio_path)
+                    print(f"Audio segmentation completed: {len(segments)} segments")
+                    return segments
+                else:
+                    raise TimeoutError("Auditok segmentation timeout or failed")
                 
             except Exception as auditok_err:
                 print(f"Auditok failed: {auditok_err}, using full audio as segment")
@@ -240,7 +256,6 @@ class AudioProcessor:
                     pass
                 
                 # Fallback: single segment for entire audio
-                duration = len(data) / sr
                 return [AudioSegment(
                     start_time=0.0, end_time=duration, duration=duration,
                     confidence=1.0, segment_type="full_audio"
@@ -258,10 +273,31 @@ class MusicProcessor:
         pass
     
     def extract_features(self, music_path: str) -> MusicFeatures:
-        """Extract musical features from MIDI/XML using music21"""
+        """Extract musical features from MIDI/XML using music21 with timeout"""
         try:
-            # Parse the music file
-            score = converter.parse(music_path)
+            from threading import Thread
+            import time
+            
+            score = None
+            parse_error = None
+            
+            def parse_music():
+                nonlocal score, parse_error
+                try:
+                    score = converter.parse(music_path)
+                except Exception as e:
+                    parse_error = e
+            
+            # Start parsing in thread with timeout
+            parse_thread = Thread(target=parse_music, daemon=True)
+            parse_thread.start()
+            parse_thread.join(timeout=10.0)  # Wait max 10 seconds for parsing
+            
+            if parse_error:
+                raise parse_error
+            
+            if score is None:
+                raise TimeoutError("Music21 parsing timeout - music file took too long to parse")
             
             # Extract notes using the proper music21 method
             notes_list = []
@@ -507,12 +543,17 @@ class ProcessingLayer:
                 print(f"Warning: Could not remove intermediate file {intermediate_file}: {e}")
         
         # Segment audio using the final processed version
+        print(f"[DEBUG] Starting audio segmentation. needs_segmentation={audio_analysis['needs_segmentation']}")
         segments = []
         if audio_analysis['needs_segmentation']:
+            print(f"[DEBUG] Calling segment_audio({processed_audio_path})")
             segments = self.audio_processor.segment_audio(processed_audio_path)
+            print(f"[DEBUG] Segmentation completed: {len(segments)} segments")
         
         # Extract music features
+        print(f"[DEBUG] Starting feature extraction from {original_music_path}")
         music_features = self.music_processor.extract_features(str(original_music_path))
+        print(f"[DEBUG] Feature extraction completed: {len(music_features.notes)} notes extracted")
         
         # Create processing result
         result = ProcessingResult(
