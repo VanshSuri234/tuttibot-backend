@@ -276,12 +276,29 @@ def run_analysis(job_id, audio_path, score_path):
         job_output_dir = Path(app.config['RESULTS_FOLDER']) / job_id
         job_output_dir.mkdir(exist_ok=True)
 
+        # Write initial status to disk
+        save_job_status(job_id, {
+            'status': JobStatus.PROCESSING,
+            'current_layer': 'Layer 0: Initializing',
+            'progress': 0,
+            'timestamp': datetime.now().isoformat()
+        })
+
         # 1. RUN PIPELINE
         success = False
         try:
             if MusicPerformancePipeline:
                 logging.info(f"Starting pipeline for job {job_id}")
                 pipeline_obj = MusicPerformancePipeline(audio_path, score_path, str(job_output_dir))
+                
+                # Update status to Layer 1
+                save_job_status(job_id, {
+                    'status': JobStatus.PROCESSING,
+                    'current_layer': 'Layer 1: Input Standardization',
+                    'progress': 15,
+                    'timestamp': datetime.now().isoformat()
+                })
+                
                 success = pipeline_obj.run_pipeline()
                 logging.info(f"Pipeline completed for job {job_id}: success={success}")
                 
@@ -353,6 +370,15 @@ def run_analysis(job_id, audio_path, score_path):
             jobs[job_id]['results'] = results
             jobs[job_id]['output_dir'] = str(job_output_dir)
         
+        # Write completion status to disk
+        save_job_status(job_id, {
+            'status': JobStatus.COMPLETED,
+            'current_layer': 'Layer 7: Grading Complete',
+            'progress': 100,
+            'timestamp': datetime.now().isoformat(),
+            'results': results
+        })
+        
         if llm_service:
             llm_response = llm_service.initialize_analysis(job_id, json.dumps(summary_data, indent=2), report_text)
             with job_lock:
@@ -362,6 +388,15 @@ def run_analysis(job_id, audio_path, score_path):
         with job_lock:
             jobs[job_id]['status'] = JobStatus.FAILED
             jobs[job_id]['error'] = str(e)
+        
+        # Write error status to disk
+        save_job_status(job_id, {
+            'status': JobStatus.FAILED,
+            'current_layer': 'Error',
+            'progress': 0,
+            'error': str(e),
+            'timestamp': datetime.now().isoformat()
+        })
         logging.exception(f"Analysis failed for job {job_id}")
 
 # ==========================================
