@@ -1,5 +1,6 @@
 # Music Performance Analysis Pipeline - Requirements
 # Python 3.10 or higher required
+# Optimized for Render deployment (pre-built wheels only)
 
 # ============================================================================
 # WEB FRAMEWORK & API
@@ -25,6 +26,7 @@ pandas>=1.3.0
 
 # ============================================================================
 # AUDIO PROCESSING
+# All these packages are available as pre-built wheels on PyPI
 # ============================================================================
 librosa>=0.9.0
 soundfile>=0.10.0
@@ -74,8 +76,12 @@ tqdm>=4.62.0
 joblib>=1.0.0
 
 # ============================================================================
-# INSTALLATION COMMAND
+# INSTALLATION NOTES
 # ============================================================================
+# This requirements file uses only pre-built wheel distributions
+# to ensure compatibility with Render's build environment.
+# No C compilation is required during pip install.
+#
 # CPU-only installation:
 #   pip install -r requirements.txt
 #
@@ -84,14 +90,10 @@ joblib>=1.0.0
 #   2. pip install -r requirements.txt
 #
 # ============================================================================
-# SYSTEM DEPENDENCIES (install via package manager)
+# SYSTEM DEPENDENCIES (pre-installed on Render)
 # ============================================================================
-# Ubuntu/Debian:
-#   sudo apt-get install libsndfile1 ffmpeg
-#
-# macOS:
-#   brew install libsndfile ffmpeg
-#
-# Windows:
-#   Install ffmpeg from https://ffmpeg.org/download.html
-#   Add to PATH
+# Render provides:
+#   - libsndfile1 (audio file support)
+#   - ffmpeg (audio/video processing)
+#   - libportaudio2 (audio I/O - if needed)
+#   - Python build tools (gcc, etc. - for build phase only)
