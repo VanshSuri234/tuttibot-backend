@@ -1,0 +1,5 @@
+libsndfile1
+libsndfile1-dev
+ffmpeg
+libportaudio2
+portaudio19-dev
