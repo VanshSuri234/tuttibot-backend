@@ -86,24 +86,29 @@ class InferenceCoreWithPQG:
             Complete grading package dictionary
         """
         start_time = datetime.now()
+        import sys
         
-        self.logger.info("\n" + "=" * 80)
-        self.logger.info("ENHANCED INFERENCE CORE - PROCESSING PIPELINE (with PQG-A2SA)")
-        self.logger.info("=" * 80)
+        print("\n" + "=" * 80)
+        print("ENHANCED INFERENCE CORE - PROCESSING PIPELINE (with PQG-A2SA)")
+        print("=" * 80)
+        sys.stdout.flush()
         
         try:
             # ===== STEP 1: Data Collection =====
-            self.logger.info("\n🔍 STEP 1: Data Collection")
+            print("\n🔍 STEP 1: Data Collection")
+            sys.stdout.flush()
             self.inputs = self.data_collector.collect_all_data()
             
             # ===== STEP 2: Extract DTW Metrics (Pass 1) =====
-            self.logger.info("\n📊 STEP 2: Extracting DTW-Based Metrics from Block 2 (Pass 1)")
+            print("\n📊 STEP 2: Extracting DTW-Based Metrics from Block 2 (Pass 1)")
+            sys.stdout.flush()
             
             dtw_grading_metrics = self.metrics_extractor.extract_grading_metrics(
                 self.inputs.alignment_results
             )
             
-            self.logger.info(f"  ✓ Extracted {len(dtw_grading_metrics)} dimensions from DTW")
+            print(f"  ✓ Extracted {len(dtw_grading_metrics)} dimensions from DTW")
+            sys.stdout.flush()
             
             # Validate DTW metrics
             validation = self.metrics_extractor.validate_metrics(dtw_grading_metrics)
@@ -112,8 +117,9 @@ class InferenceCoreWithPQG:
             final_metrics = dtw_grading_metrics
             
             if use_pqg_if_available and self.inputs.has_pqg_a2sa:
-                self.logger.info("\n🎯 STEP 3: PQG-A2SA Enhancement (Pass 2)")
-                self.logger.info("  PQG-A2SA results detected - recomputing metrics...")
+                print("\n🎯 STEP 3: PQG-A2SA Enhancement (Pass 2)")
+                print("  PQG-A2SA results detected - recomputing metrics...")
+                sys.stdout.flush()
                 
                 # Load PQG-A2SA results
                 pqg_dir = self.output_base_dir / '05_pqg_a2sa'
@@ -136,10 +142,12 @@ class InferenceCoreWithPQG:
                         if 'note_alignments' in self.inputs.alignment_results['alignment']:
                             dtw_note_alignments = self.inputs.alignment_results['alignment']['note_alignments']
                     
-                    self.logger.info(f"  Found {len(dtw_note_alignments)} DTW note alignments")
+                    print(f"  Found {len(dtw_note_alignments)} DTW note alignments")
+                    sys.stdout.flush()
                     
                     if not dtw_note_alignments:
-                        self.logger.warning("  ⚠ No DTW note alignments available - cannot merge with PQG")
+                        print("  ⚠ No DTW note alignments available - cannot merge with PQG")
+                        sys.stdout.flush()
                         self.metric_sources = {dim: 'DTW (Block 2)' for dim in dtw_grading_metrics}
                     else:
                         # Recompute metrics using PQG-A2SA merged with DTW alignments
@@ -157,27 +165,33 @@ class InferenceCoreWithPQG:
                             )
                             self.pqg_enhanced = True
                             
-                            self.logger.info("  ✓ Metrics enhanced with PQG-A2SA")
+                            print("  ✓ Metrics enhanced with PQG-A2SA")
+                            sys.stdout.flush()
                         else:
-                            self.logger.warning("  ⚠ PQG-A2SA recomputation failed - using DTW metrics")
+                            print("  ⚠ PQG-A2SA recomputation failed - using DTW metrics")
+                            sys.stdout.flush()
                             self.metric_sources = {dim: 'DTW (Block 2)' for dim in dtw_grading_metrics}
                 else:
-                    self.logger.warning("  ⚠ Could not load PQG-A2SA results - using DTW metrics")
+                    print("  ⚠ Could not load PQG-A2SA results - using DTW metrics")
+                    sys.stdout.flush()
                     self.metric_sources = {dim: 'DTW (Block 2)' for dim in dtw_grading_metrics}
             else:
                 if use_pqg_if_available:
-                    self.logger.info("\n📊 STEP 3: PQG-A2SA not available - using DTW metrics")
+                    print("\n📊 STEP 3: PQG-A2SA not available - using DTW metrics")
                 else:
-                    self.logger.info("\n📊 STEP 3: PQG-A2SA disabled - using DTW metrics")
+                    print("\n📊 STEP 3: PQG-A2SA disabled - using DTW metrics")
+                sys.stdout.flush()
                 self.metric_sources = {dim: 'DTW (Block 2)' for dim in dtw_grading_metrics}
             
             # ===== STEP 4: Score Dimensions =====
-            self.logger.info("\n🎯 STEP 4: Scoring Dimensions")
+            print("\n🎯 STEP 4: Scoring Dimensions")
+            sys.stdout.flush()
             
             scored_dimensions = self.scoring_functions.score_all_dimensions(final_metrics)
             
             # ===== STEP 5: Create Grading Package =====
-            self.logger.info("\n📦 STEP 5: Creating Grading Package")
+            print("\n📦 STEP 5: Creating Grading Package")
+            sys.stdout.flush()
             
             extraction_metadata = self.metrics_extractor.get_metadata(self.inputs.alignment_results)
             
@@ -227,26 +241,29 @@ class InferenceCoreWithPQG:
             
             # ===== STEP 6: Save Outputs =====
             if save_output:
-                self.logger.info("\n💾 STEP 6: Saving Outputs")
+                print("\n💾 STEP 6: Saving Outputs")
+                sys.stdout.flush()
                 output_dir = self.output_base_dir / '05_inference_core'
                 self._save_outputs(output_dir)
             
             # Summary
             elapsed_time = (datetime.now() - start_time).total_seconds()
-            self.logger.info("\n" + "=" * 80)
-            self.logger.info("✅ ENHANCED INFERENCE CORE PROCESSING COMPLETE")
+            print("\n" + "=" * 80)
+            print("✅ ENHANCED INFERENCE CORE PROCESSING COMPLETE")
             if self.pqg_enhanced:
-                self.logger.info("   🎯 PQG-A2SA enhancement: ACTIVE")
-                self.logger.info(f"   📊 Enhanced dimensions: {sum(1 for s in self.metric_sources.values() if 'PQG' in s)}")
+                print("   🎯 PQG-A2SA enhancement: ACTIVE")
+                print(f"   📊 Enhanced dimensions: {sum(1 for s in self.metric_sources.values() if 'PQG' in s)}")
             else:
-                self.logger.info("   📊 Using DTW-based metrics only")
-            self.logger.info(f"   ⏱️  Processing time: {elapsed_time:.2f} seconds")
-            self.logger.info("=" * 80 + "\n")
+                print("   📊 Using DTW-based metrics only")
+            print(f"   ⏱️  Processing time: {elapsed_time:.2f} seconds")
+            print("=" * 80 + "\n")
+            sys.stdout.flush()
             
             return self.grading_package
             
         except Exception as e:
-            self.logger.error(f"\n❌ ENHANCED INFERENCE CORE ERROR: {e}")
+            print(f"\n❌ ENHANCED INFERENCE CORE ERROR: {e}")
+            sys.stdout.flush()
             import traceback
             traceback.print_exc()
             raise
@@ -299,7 +316,10 @@ class InferenceCoreWithPQG:
         with open(package_file, 'w') as f:
             json.dump(self.grading_package, f, indent=2)
         
-        self.logger.info(f"  ✓ Saved enhanced grading package: {package_file.name}")
+        #self.logger.info(f"  ✓ Saved enhanced grading package: {package_file.name}")
+        print(f"  ✓ Saved enhanced grading package: {package_file.name}")
+        import sys
+        sys.stdout.flush()
         
         # Save metric source map
         if self.metric_sources:
@@ -311,7 +331,9 @@ class InferenceCoreWithPQG:
                     'timestamp': datetime.now().isoformat()
                 }, f, indent=2)
             
-            self.logger.info(f"  ✓ Saved metric source map: {source_map_file.name}")
+            #self.logger.info(f"  ✓ Saved metric source map: {source_map_file.name}")
+            print(f"  ✓ Saved metric source map: {source_map_file.name}")
+            sys.stdout.flush()
 
 
 def main():
