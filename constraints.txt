@@ -9,14 +9,8 @@
 # 3. It causes build failures even with --prefer-binary flag
 # 4. The pipeline processes audio files, doesn't play them
 #
-# The packages that would pull PyAudio are:
-# - pydub (optional feature for playback)
-# - audioread (optional PyAudio backend)
-#
-# These packages work fine WITHOUT PyAudio - they use other backends
+# auditok 0.3.0+ now depends on pyaudio, so we pin it to 0.2.1 in requirements.txt
+# pydub and audioread work fine without PyAudio (they have FFmpeg/other backends)
 
 # Explicitly exclude PyAudio
 pyaudio==0.0.0
-
-# Note: This is a valid constraint syntax that prevents installation
-# See: https://pip.pypa.io/en/latest/user_guide/#constraints-files
