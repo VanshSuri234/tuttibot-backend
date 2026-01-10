@@ -2,8 +2,10 @@
 
 ## What Was Added
 
-### 1. **Enhanced app.py** 
+### 1. **Enhanced app.py**
+
 Entry point logging that tracks:
+
 - Job initialization with audio/score file paths
 - Pipeline object creation checkpoint
 - Pipeline execution start/end with total time
@@ -22,6 +24,7 @@ Entry point logging that tracks:
 ### 2. **Enhanced pipeline.py Main Orchestrator**
 
 #### run_pipeline() Method
+
 - **Execution timeline**: Clear start/end with formatted output
 - **Layer-by-layer tracking**: Each of 7 layers with timing and memory
 - **Layer times dictionary**: Persists execution times for analysis
@@ -51,6 +54,7 @@ All 7 layer execution methods now include:
 - **Timing tracking**: Auto-calculated elapsed time per layer
 
 #### Example: run_processing_layer()
+
 ```python
 [PROCESSING LAYER] Starting audio processing...
 [PROCESSING LAYER] Importing ProcessingLayer...
@@ -66,6 +70,7 @@ All 7 layer execution methods now include:
 ### 4. **Block-by-Block Logging in Layer 3 (Temporal Alignment)**
 
 Each block now reports:
+
 - Start timestamp
 - Completion with timing
 - Failure with error context
@@ -84,6 +89,7 @@ Each block now reports:
 ### 5. **Memory Monitoring Function**
 
 New `log_memory_info()` function logs:
+
 - Resident Set Size (RSS): Actual physical memory used
 - Virtual Memory Size (VMS): Total virtual memory
 - Percentage: % of system memory used
@@ -93,7 +99,7 @@ def log_memory_info(stage: str, process=None):
     """Log memory usage information"""
     if process is None:
         process = psutil.Process(os.getpid())
-    
+
     try:
         mem_info = process.memory_info()
         mem_percent = process.memory_percent()
@@ -108,24 +114,25 @@ Updated `_save_summary()` to persist layer execution times:
 
 ```json
 {
-  "layer_execution_times": {
-    "L1": 2.34,
-    "L2": 45.67,
-    "L3": 52.45,
-    "L4": 8.92,
-    "L5": 3.45,
-    "L6": 1.23,
-    "L7": 0.87
-  },
-  "start_time": "2026-01-10T12:34:56.123",
-  "end_time": "2026-01-10T12:36:51.456",
-  "duration_seconds": 115.93
+	"layer_execution_times": {
+		"L1": 2.34,
+		"L2": 45.67,
+		"L3": 52.45,
+		"L4": 8.92,
+		"L5": 3.45,
+		"L6": 1.23,
+		"L7": 0.87
+	},
+	"start_time": "2026-01-10T12:34:56.123",
+	"end_time": "2026-01-10T12:36:51.456",
+	"duration_seconds": 115.93
 }
 ```
 
 ### 7. **Enhanced Error Handling**
 
 All exception blocks now include:
+
 - Full error message with context
 - Elapsed time at failure point
 - Full traceback logging (DEBUG level)
@@ -195,6 +202,7 @@ export LOGLEVEL=WARNING
 ## Key Logging Points
 
 ### Critical Flow Points
+
 - `[EXECUTION_START]` - Job started
 - `[PIPELINE_INIT_COMPLETE]` - Pipeline object ready
 - `[PIPELINE_EXECUTION_START]` - run_pipeline() called
@@ -202,6 +210,7 @@ export LOGLEVEL=WARNING
 - `✅ Layer X Complete: Y.ZZs` - Layer success
 
 ### Stuck Detection
+
 If you don't see "COMPLETE" for a layer, it's stuck there:
 
 ```
@@ -213,6 +222,7 @@ If you don't see "COMPLETE" for a layer, it's stuck there:
 ```
 
 ### Memory Leaks
+
 Compare memory before/after layers:
 
 ```
@@ -234,6 +244,7 @@ If memory keeps growing in subsequent layers, there's a leak.
 ## Files Modified
 
 1. **app.py**
+
    - Enhanced run_analysis() with detailed logging
    - Added system status logging
    - Checkpoint logging for pipeline creation
@@ -243,12 +254,13 @@ If memory keeps growing in subsequent layers, there's a leak.
    - Enhanced run_pipeline() with per-layer logging and timing
    - Enhanced all 7 layer execution methods
    - Enhanced run_temporal_alignment() with block logging
-   - Updated _save_summary() to include layer times
+   - Updated \_save_summary() to include layer times
    - Added timing variables and elapsed time calculations
 
 ## Summary
 
 You now have:
+
 - ✅ **Entry/exit logging** at every pipeline stage
 - ✅ **Timing information** for each layer (identifies slow parts)
 - ✅ **Memory monitoring** before/after each layer (identifies leaks)

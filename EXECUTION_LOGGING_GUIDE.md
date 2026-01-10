@@ -5,7 +5,7 @@
 You now have **comprehensive execution flow logging** throughout the entire pipeline to identify exactly where it gets stuck when running on Render. The logging tracks:
 
 - **Execution timing** at each stage
-- **Memory usage** before/after each layer  
+- **Memory usage** before/after each layer
 - **Entry/exit points** for every function
 - **Block-by-block progress** in temporal alignment
 - **Error context** with full tracebacks
@@ -228,16 +228,19 @@ Look for which layer's logs STOP appearing:
 ### Step 3: Common Stuck Points
 
 **If stuck in Layer 2 (Audio Processing)**
+
 - Check: Librosa or ffmpeg-normalize is hanging
 - Likely: Audio file too large or invalid format
 - Fix: Ensure audio is WAV/MP3 and under 10MB
 
 **If stuck in Layer 3, Block 1 (Transcription)**
+
 - Check: basic-pitch audio transcription taking too long
 - Likely: GPU not available or hanging
 - Fix: May need GPU optimization or timeout
 
 **If stuck in Layer 5 (PQG-A2SA)**
+
 - Check: MIDI alignment is taking too long
 - Likely: High-sample-rate audio or complex score
 - Fix: Downsample audio or simplify score
@@ -283,19 +286,21 @@ Add to `render.yaml` or set in Render dashboard:
 
 ```yaml
 env:
-  PYTHONUNBUFFERED: "1"           # Flush logs immediately
-  LOGLEVEL: "DEBUG"               # More detailed logs (optional)
+  PYTHONUNBUFFERED: "1" # Flush logs immediately
+  LOGLEVEL: "DEBUG" # More detailed logs (optional)
 ```
 
 ## Key Log Markers for Monitoring
 
 ### Success Indicators
+
 ```
 ✅ Layer X Complete: Y.ZZs
 [MEM LAYER_X_END] RSS: XXX.XMB | VMS: XXX.XMB | %: XX.X%
 ```
 
 ### Failure Indicators
+
 ```
 ❌ Layer X FAILED
 ❌ Layer X Exception: error message
@@ -303,6 +308,7 @@ env:
 ```
 
 ### Performance Warnings
+
 ```
 Layer 2 (Audio Processing): >60s = may hang on Render
 Layer 3, Block 1 (Transcription): >120s = GPU timeout possible

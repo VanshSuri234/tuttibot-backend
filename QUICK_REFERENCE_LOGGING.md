@@ -25,6 +25,7 @@ curl -X POST https://your-api.onrender.com/upload \
 ## Understanding the Logs
 
 ### Success Output (All Green ✅)
+
 ```
 [LAYER 1️⃣  INPUT STANDARDIZATION] Starting...
 [INPUT LAYER] ✅ COMPLETE in 2.34s
@@ -44,6 +45,7 @@ curl -X POST https://your-api.onrender.com/upload \
 ```
 
 ### Stuck Detection (Red ❌)
+
 ```
 ✅ Layer 2 Complete: 45.67s
 ✅ Layer 3 Complete: 52.45s
@@ -55,13 +57,13 @@ curl -X POST https://your-api.onrender.com/upload \
 
 ## Quick Diagnostics
 
-| What Happened | Check These Logs |
-|---|---|
-| Entire pipeline stuck | Last `[LAYER X]` line |
-| One layer very slow (>60s) | `✅ Layer X Complete: Y.ZZs` |
-| Memory keeps growing | `[MEM LAYER_X_START]` and `[MEM LAYER_X_END]` |
-| Specific block stuck (L3) | `[TEMPORAL ALIGNMENT] Block X` logs |
-| Error occurred | Search for `❌` or `Error:` |
+| What Happened              | Check These Logs                              |
+| -------------------------- | --------------------------------------------- |
+| Entire pipeline stuck      | Last `[LAYER X]` line                         |
+| One layer very slow (>60s) | `✅ Layer X Complete: Y.ZZs`                  |
+| Memory keeps growing       | `[MEM LAYER_X_START]` and `[MEM LAYER_X_END]` |
+| Specific block stuck (L3)  | `[TEMPORAL ALIGNMENT] Block X` logs           |
+| Error occurred             | Search for `❌` or `Error:`                   |
 
 ## Expected Timings (Baseline)
 
@@ -78,6 +80,7 @@ Total:                80-170s   ⏱️  Varies by audio
 ```
 
 If your times are **2-3x longer**, check:
+
 - Audio file size (should be <10MB)
 - Render memory limit (may need upgrade)
 - Score complexity (many instruments?)
@@ -99,6 +102,7 @@ If your times are **2-3x longer**, check:
 ```
 
 **Red flags**:
+
 - Any layer using >600MB (memory leak)
 - Memory not released between layers
 - Progressive growth: 256 → 384 → 512 → 640 → 780 (leak!)
@@ -106,53 +110,65 @@ If your times are **2-3x longer**, check:
 ## Top Troubleshooting Scenarios
 
 ### Scenario 1: Stuck in Layer 2 (Audio Processing)
+
 **Likely cause**: Librosa processing or ffmpeg-normalize hanging  
 **Fix**:
+
 1. Reduce audio file size (<5MB)
 2. Check audio format (must be WAV/MP3)
 3. Check audio duration (<10 minutes)
 
 ### Scenario 2: Stuck in Layer 3, Block 1 (Transcription)
+
 **Likely cause**: basic-pitch GPU timeout or slow CPU  
 **Fix**:
+
 1. Upgrade Render plan to include GPU
 2. OR reduce audio quality/length
 3. OR add timeout handling in code
 
 ### Scenario 3: Stuck in Layer 5 (PQG-A2SA)
+
 **Likely cause**: MIDI alignment too complex  
 **Fix**:
+
 1. Simplify score (fewer instruments)
 2. Reduce audio resolution
 3. May need timeout increase
 
 ### Scenario 4: All Layers Complete but API Hangs
+
 **Likely cause**: Chatbot context generation or JSON serialization  
 **Check logs** for:
+
 - `[FINAL STEP] Generating Chatbot Context...`
 - If this doesn't show "Complete", that's the issue
 
 ## Log Search Patterns
 
 ### Find Timing Summary
+
 ```
 Search logs for: "Layer Execution Times"
 or: "Layer X Complete:"
 ```
 
 ### Find Errors
+
 ```
 Search for: ❌
 or: Error
 ```
 
 ### Find Memory Issues
+
 ```
 Search for: [MEM
 Look for continuous growth across layers
 ```
 
 ### Find Block Progress (Layer 3)
+
 ```
 Search for: Block 0
 then: Block 1
@@ -163,6 +179,7 @@ If one doesn't appear, that block is stuck
 ## Files to Check After Pipeline Completes
 
 In `/results/{job_id}/`:
+
 ```
 pipeline_summary.json          ← Layer times and overall stats
 07_grading/
@@ -211,6 +228,7 @@ Log Excerpt:
 ## Environment Variables (if needed)
 
 Add to Render dashboard "Environment" settings:
+
 ```
 PYTHONUNBUFFERED=1    (flush logs immediately)
 LOGLEVEL=DEBUG        (optional, more verbose)

@@ -1,9 +1,10 @@
 # Render Deployment - Final Solution ✅
 
 ## Problem Summary
+
 - **Issue**: PyAudio compilation failure on Render's read-only filesystem
 - **Root Cause**: `auditok` has optional `pyaudio` dependency; can't compile C extensions on Render
-- **Previous Attempts**: 
+- **Previous Attempts**:
   - ❌ `apt-get` approach: Blocked by read-only filesystem
   - ❌ `constraints.txt` approach: Prevented transitive dependencies, broke auditok
   - ✅ `--prefer-binary` flag: Uses pre-built wheels (no compilation needed)
@@ -11,18 +12,22 @@
 ## Final Solution Implemented
 
 ### 1. Cleaned Up Files
+
 **Removed**:
+
 - `constraints.txt` - Prevented auditok from installing properly
 - `.buildpacks` - Heroku-only format, not needed for Render
 - `requirements-render.txt` - Unused duplicate
 
 **Modified**:
+
 - `requirements.txt` - Removed `-c constraints.txt` line, added explanatory comments
 - `build.sh` - Uses `pip install --prefer-binary -r requirements.txt`
 
 ### 2. Key Configuration Files
 
 #### `build.sh` (Render build script)
+
 ```bash
 #!/bin/bash
 set -e
@@ -36,6 +41,7 @@ pip install --prefer-binary -r requirements.txt
 ```
 
 **Why `--prefer-binary`?**
+
 - Tells pip to use pre-built wheels when available (avoid source compilation)
 - `auditok` has pre-built wheels that don't include optional `pyaudio`
 - All audio libraries have pre-built wheels:
@@ -43,6 +49,7 @@ pip install --prefer-binary -r requirements.txt
   - scipy, numpy, torch, torchaudio ✅
 
 #### `render.yaml` (Service configuration)
+
 ```yaml
 services:
   web:
@@ -53,7 +60,9 @@ services:
 ```
 
 #### `requirements.txt` (Dependencies)
+
 Key packages:
+
 - **Web Framework**: flask, flask-cors, gunicorn
 - **Audio Processing**: librosa, soundfile, auditok (✅ for segmentation), noisereduce, ffmpeg-normalize
 - **Deep Learning**: torch, torchaudio, basic-pitch (music transcription)
@@ -96,7 +105,9 @@ MusicPerformancePipeline (pipeline.py)
 ```
 
 ### Memory Monitoring Added
+
 Enhanced `run_pipeline()` with memory tracking:
+
 - Logs memory before/after each layer (RSS, VMS, percentage)
 - Uses `psutil` for accurate memory measurements
 - Helps identify memory leaks or high-usage layers
@@ -105,15 +116,18 @@ Enhanced `run_pipeline()` with memory tracking:
 ## Deployment Instructions
 
 ### Step 1: Connect to Render Dashboard
+
 1. Go to https://dashboard.render.com
 2. Select tuttibot-backend service
 3. Click "Deployment" tab
 
 ### Step 2: Deploy
+
 - Option A: Push to `deployment-ready` branch → auto-deploys
 - Option B: Click "Deploy latest commit" button
 
 ### Step 3: Monitor
+
 - Watch logs in Render dashboard
 - Expected output:
   ```
@@ -128,6 +142,7 @@ Enhanced `run_pipeline()` with memory tracking:
   ```
 
 ### Step 4: Verify
+
 - Test endpoint: `POST /upload` with audio + score files
 - Check logs for:
   - Layer 1-7 execution
@@ -138,11 +153,13 @@ Enhanced `run_pipeline()` with memory tracking:
 ## Files Modified in This Session
 
 **Commit 1**: `Fix: Remove constraints.txt, use only --prefer-binary flag for Render deployment`
+
 - Removed `constraints.txt` from git
 - Removed `-c constraints.txt` from requirements.txt
 - Updated documentation
 
 **Commit 2**: `Add: Enhanced memory monitoring and layer execution logging to pipeline`
+
 - Added `psutil` memory tracking
 - Added memory logging before/after each layer
 - Added layer headers to execution logs
@@ -150,17 +167,20 @@ Enhanced `run_pipeline()` with memory tracking:
 ## Key Takeaways
 
 ### Why PyAudio Fails
+
 - PyAudio requires C extensions (portaudio headers)
 - Render's build environment is read-only (can't install via apt-get)
 - PyAudio is **optional** dependency of auditok (not required for our use case)
 
 ### Why `--prefer-binary` Works
+
 - auditok has pre-built wheel distributions
 - Pre-built wheels are compiled binaries (no C extension compilation needed)
 - PyAudio not included in pre-built auditok wheel
 - Pip finds wheel first, skips source compilation
 
 ### Why auditok is Critical
+
 - **Used for audio segmentation** in processing_layer.py line 275
 - `auditok.split(...)` detects speech/music segments
 - Enables pipeline to identify where actual audio content exists
@@ -169,19 +189,22 @@ Enhanced `run_pipeline()` with memory tracking:
 ## Troubleshooting Checklist
 
 ✅ **Before Deploying**:
+
 - [ ] constraints.txt removed from repo
-- [ ] `-c constraints.txt` removed from requirements.txt  
+- [ ] `-c constraints.txt` removed from requirements.txt
 - [ ] requirements.txt has correct audio packages
 - [ ] build.sh uses `--prefer-binary` flag
 - [ ] render.yaml points to `bash build.sh`
 
 ✅ **During Deployment** (check logs):
+
 - [ ] "pip install --prefer-binary" message appears
 - [ ] No "fatal error: portaudio.h" messages
 - [ ] auditok installs successfully
 - [ ] Flask app starts with gunicorn
 
 ✅ **After Deployment** (test API):
+
 - [ ] POST /upload accepts audio + score files
 - [ ] Pipeline logs show all 7 layers
 - [ ] Memory logs show pre/post layer measurements

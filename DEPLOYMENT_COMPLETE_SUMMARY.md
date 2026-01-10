@@ -3,21 +3,25 @@
 ## What Was Fixed
 
 ### 1. **Removed Failed Approach** (constraints.txt)
+
 - ❌ Deleted `constraints.txt` - was preventing auditok installation
 - ❌ Removed `-c constraints.txt` from `requirements.txt`
 - ✅ Reason: Constraint files don't prevent transitive dependencies, only set version limits
 
 ### 2. **Implemented Correct Solution** (--prefer-binary flag)
+
 - ✅ Updated `build.sh` to use: `pip install --prefer-binary -r requirements.txt`
 - ✅ Why it works: Uses pre-built wheels instead of compiling from source
 - ✅ Result: auditok installs WITHOUT pyaudio (which requires C compilation)
 
 ### 3. **Added Production Monitoring**
+
 - ✅ Added memory tracking to `pipeline.py` using `psutil`
 - ✅ Logs memory usage before/after each of 7 layers
 - ✅ Helps identify memory leaks and performance bottlenecks
 
 ### 4. **Verified All Components**
+
 - ✅ All 7 layers exist and have entry points
 - ✅ auditok imported correctly in processing_layer.py (line 51, 66)
 - ✅ auditok.split() used for audio segmentation (line 275)
@@ -26,6 +30,7 @@
 ## Key Technical Insights
 
 ### Why PyAudio Failed
+
 ```
 PyAudio = C extension wrapper around PortAudio
 ↓
@@ -37,6 +42,7 @@ Result: "fatal error: portaudio.h: No such file or directory"
 ```
 
 ### Why --prefer-binary Works
+
 ```
 auditok on PyPI has:
   - Pre-built wheels (*.whl) for Linux ← Uses this ✅
@@ -48,6 +54,7 @@ Result: auditok installs without pyaudio C dependency ✅
 ```
 
 ### Why auditok is Essential
+
 - **File**: `MusicPerformanceAnalysis/layers/02_processing/processing_layer.py`
 - **Usage**: Line 275 calls `auditok.split()` for audio segmentation
 - **Purpose**: Detects speech/music segments in audio
@@ -56,6 +63,7 @@ Result: auditok installs without pyaudio C dependency ✅
 ## Current State
 
 ### Git Status
+
 ```
 Branch: deployment-ready
 Last 3 commits:
@@ -65,12 +73,13 @@ Last 3 commits:
 ```
 
 ### Files Modified This Session
+
 ```
 ✅ requirements.txt
    - Removed: -c constraints.txt
    - Added: Detailed comments about --prefer-binary approach
 
-✅ build.sh  
+✅ build.sh
    - Already had: pip install --prefer-binary -r requirements.txt
    - Status: READY FOR DEPLOYMENT
 
@@ -86,6 +95,7 @@ Last 3 commits:
 ```
 
 ### Pre-Deployment Checklist
+
 - ✅ constraints.txt removed from git
 - ✅ constraints reference removed from requirements.txt
 - ✅ --prefer-binary flag in build.sh
@@ -98,6 +108,7 @@ Last 3 commits:
 ## What to Do Next
 
 ### Immediate (Deploy Now)
+
 1. Go to https://dashboard.render.com
 2. Select tuttibot-backend service
 3. Click "Deploy latest commit" or wait for auto-deploy
@@ -108,23 +119,27 @@ Last 3 commits:
    - ✅ Flask server starts
 
 ### Testing (After Deploy)
+
 1. Upload audio + score files to `/upload` endpoint
 2. Check logs for layer execution:
+
    ```
    [Layer 1: Input Standardization]
    [MEM BEFORE_L1] RSS: X.XMB ...
    [MEM AFTER_L1] RSS: X.XMB ...
-   
+
    [Layer 2: Audio Processing]
    [MEM BEFORE_L2] RSS: X.XMB ...
    [MEM AFTER_L2] RSS: X.XMB ...
-   
+
    ... and so on for Layers 3-7
    ```
+
 3. Verify output files exist in results directory
 4. Check chatbot_context.json contains all 7 layers
 
 ### Monitoring (Ongoing)
+
 - Memory usage patterns (RSS growth between layers)
 - Pipeline execution time (duration_seconds)
 - Any layer failures (status: false)
