@@ -14,11 +14,32 @@ import threading
 import subprocess
 import logging
 import re
+import psutil
 from datetime import datetime
 from pathlib import Path
 from flask import Flask, request, jsonify, send_file
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
+
+# Setup logging with detailed diagnostics
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+def log_system_status(label: str):
+    """Log system resource usage for debugging"""
+    try:
+        process = psutil.Process(os.getpid())
+        mem_info = process.memory_info()
+        mem_percent = process.memory_percent()
+        cpu_percent = process.cpu_percent(interval=0.1)
+        thread_count = threading.active_count()
+        
+        logger.info(f"[SYSTEM {label}] RAM: {mem_info.rss / 1024 / 1024:.1f}MB ({mem_percent:.1f}%) | CPU: {cpu_percent:.1f}% | Threads: {thread_count}")
+    except Exception as e:
+        logger.warning(f"Could not get system status: {e}")
 
 # --- AI INTEGRATION ---
 try:
@@ -295,9 +316,12 @@ def trigger_robot_leds(score_data):
 # ==========================================
 
 def run_analysis(job_id, audio_path, score_path):
+    log_system_status(f"RUN_ANALYSIS_START_{job_id}")
+    start_time = datetime.now()
+    
     with job_lock:
         jobs[job_id]['status'] = JobStatus.PROCESSING
-        jobs[job_id]['started_at'] = datetime.now().isoformat()
+        jobs[job_id]['started_at'] = start_time.isoformat()
     
     try:
         job_output_dir = Path(app.config['RESULTS_FOLDER']) / job_id
@@ -315,7 +339,9 @@ def run_analysis(job_id, audio_path, score_path):
         success = False
         try:
             if MusicPerformancePipeline:
-                logging.info(f"Starting pipeline for job {job_id}")
+                logger.info(f"[PIPELINE_START] job {job_id}: {audio_path}")
+                log_system_status(f"BEFORE_PIPELINE__{job_id}")
+                
                 pipeline_obj = MusicPerformancePipeline(audio_path, score_path, str(job_output_dir))
                 
                 # Update status to Layer 1
@@ -326,17 +352,21 @@ def run_analysis(job_id, audio_path, score_path):
                     'timestamp': datetime.now().isoformat()
                 })
                 
+                logger.info(f"[PIPELINE_RUNNING] job {job_id}")
                 success = pipeline_obj.run_pipeline()
-                logging.info(f"Pipeline completed for job {job_id}: success={success}")
+                elapsed = (datetime.now() - start_time).total_seconds()
+                logger.info(f"[PIPELINE_END] job {job_id}: success={success}, elapsed={elapsed:.2f}s")
+                log_system_status(f"AFTER_PIPELINE__{job_id}")
                 
                 # --- UPDATED: GENERATE CHATBOT CONTEXT ---
                 if success and hasattr(pipeline_obj, 'get_chatbot_context'):
                     pipeline_obj.get_chatbot_context()
             else:
-                logging.error("Pipeline module not loaded - MusicPerformancePipeline is None")
+                logger.error("Pipeline module not loaded - MusicPerformancePipeline is None")
                 success = False
         except Exception as e:
-            logging.error(f"Pipeline error for job {job_id}: {str(e)}", exc_info=True)
+            logger.error(f"[PIPELINE_ERROR] job {job_id}: {str(e)}", exc_info=True)
+            log_system_status(f"AFTER_PIPELINE_ERROR__{job_id}")
             success = False
 
         results = {'grade_data': {}}

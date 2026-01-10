@@ -19,6 +19,26 @@ import numpy as np
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional, Union
 from dataclasses import dataclass, asdict
+import time
+import psutil
+import logging
+
+# Setup detailed logging for memory and timing diagnostics
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+def log_memory_usage(stage: str):
+    """Log current memory usage for debugging"""
+    try:
+        import psutil
+        process = psutil.Process(os.getpid())
+        mem_info = process.memory_info()
+        mem_percent = process.memory_percent()
+        logger.info(f"[MEMORY {stage}] RSS: {mem_info.rss / 1024 / 1024:.1f}MB | VMS: {mem_info.vms / 1024 / 1024:.1f}MB | %: {mem_percent:.1f}%")
+    except ImportError:
+        logger.warning("psutil not available for memory monitoring")
+    except Exception as e:
+        logger.warning(f"Could not get memory info: {e}")
 
 # Audio processing imports
 try:
@@ -29,9 +49,10 @@ try:
     import soundfile as sf
     from ffmpeg_normalize import FFmpegNormalize
     import auditok
+    logger.info("All audio processing dependencies loaded successfully")
 except ImportError as e:
-    print(f"Audio processing dependencies missing: {e}")
-    print("Install with: pip install noisereduce scipy librosa soundfile")
+    logger.error(f"Audio processing dependencies missing: {e}")
+    logger.error("Install with: pip install noisereduce scipy librosa soundfile")
 
 # FFmpeg normalization import
 try:
@@ -103,8 +124,15 @@ class AudioProcessor:
     def check_audio_quality(self, audio_path: str) -> Dict[str, bool]:
         """Check if audio requires noise reduction, normalization, or segmentation"""
         try:
-            # Load audio for analysis
-            data, sr = librosa.load(audio_path, sr=None)
+            log_memory_usage("BEFORE_LOAD_AUDIO")
+            start_time = time.time()
+            
+            # Load audio for analysis with REDUCED sample rate to save memory
+            logger.info(f"[AUDIO_CHECK] Loading {audio_path} with sr=22050 (memory-optimized)")
+            data, sr = librosa.load(audio_path, sr=22050, dtype=np.float32)  # Reduced SR + float32 = 50% less RAM
+            
+            logger.info(f"[AUDIO_CHECK] Loaded {len(data)} samples at {sr}Hz")
+            log_memory_usage("AFTER_LOAD_AUDIO")
             
             # Check noise levels (simple RMS-based approach)
             rms_values = librosa.feature.rms(y=data, frame_length=2048, hop_length=512)[0]
@@ -119,6 +147,10 @@ class AudioProcessor:
             # Always check for segmentation opportunities
             needs_segmentation = True
             
+            elapsed = time.time() - start_time
+            logger.info(f"[AUDIO_CHECK] Completed in {elapsed:.2f}s | SR: {needs_noise_reduction} | Norm: {needs_normalization} | Seg: {needs_segmentation}")
+            log_memory_usage("AFTER_AUDIO_CHECK")
+            
             return {
                 'needs_noise_reduction': needs_noise_reduction,
                 'needs_normalization': needs_normalization, 
@@ -127,7 +159,7 @@ class AudioProcessor:
                 'noise_estimate': noise_threshold
             }
         except Exception as e:
-            print(f"Error analyzing audio quality: {e}")
+            logger.error(f"Error analyzing audio quality: {e}")
             return {
                 'needs_noise_reduction': True,
                 'needs_normalization': True,
@@ -139,8 +171,14 @@ class AudioProcessor:
     def reduce_noise(self, audio_path: str, output_path: str) -> bool:
         """Apply spectral gating noise reduction using noisereduce"""
         try:
+            log_memory_usage("BEFORE_NOISE_REDUCTION")
+            start_time = time.time()
+            
+            logger.info(f"[NOISE_REDUCE] Starting noise reduction on {audio_path}")
             # Load audio
             rate, data = wavfile.read(audio_path)
+            logger.info(f"[NOISE_REDUCE] Loaded audio: {len(data)} samples at {rate}Hz, size: {data.nbytes / 1024 / 1024:.1f}MB")
+            log_memory_usage("AFTER_LOAD_NOISE")
             
             # Apply noise reduction using stationary algorithm
             reduced_noise = nr.reduce_noise(
@@ -150,13 +188,17 @@ class AudioProcessor:
                 prop_decrease=0.8  # Reduce noise by 80%
             )
             
+            log_memory_usage("AFTER_REDUCE_NOISE")
+            
             # Save processed audio
             wavfile.write(output_path, rate, reduced_noise.astype(data.dtype))
-            print(f"Noise reduction completed: {output_path}")
+            elapsed = time.time() - start_time
+            logger.info(f"[NOISE_REDUCE] Completed in {elapsed:.2f}s: {output_path}")
+            log_memory_usage("AFTER_SAVE_NOISE")
             return True
             
         except Exception as e:
-            print(f"Error in noise reduction: {e}")
+            logger.error(f"Error in noise reduction: {e}")
             return False
     
     def normalize_audio(self, audio_path: str, output_path: str) -> bool:
@@ -166,9 +208,15 @@ class AudioProcessor:
             import numpy as np
             import shutil
             
+            log_memory_usage("BEFORE_NORMALIZATION")
+            start_time = time.time()
+            
             try:
+                logger.info(f"[NORMALIZE] Starting normalization on {audio_path}")
                 # Load audio
                 rate, data = wavfile.read(audio_path)
+                logger.info(f"[NORMALIZE] Loaded audio: {len(data)} samples, {data.nbytes / 1024 / 1024:.1f}MB")
+                log_memory_usage("AFTER_LOAD_NORM")
                 
                 # Simple peak normalization
                 max_val = np.max(np.abs(data))
@@ -181,9 +229,13 @@ class AudioProcessor:
                 else:
                     normalized = data
                 
+                log_memory_usage("AFTER_NORMALIZE")
+                
                 # Save normalized audio
                 wavfile.write(output_path, rate, normalized)
-                print(f"Audio normalization completed (scipy): {output_path}")
+                elapsed = time.time() - start_time
+                logger.info(f"[NORMALIZE] Completed in {elapsed:.2f}s: {output_path}")
+                log_memory_usage("AFTER_SAVE_NORM")
                 return True
                 
             except Exception as scipy_error:
@@ -451,7 +503,9 @@ class ProcessingLayer:
         Returns:
             ProcessingResult containing all extracted data
         """
-        print(f"Starting processing for audio: {audio_path}, music: {music_path}")
+        start_time = time.time()
+        logger.info(f"Starting processing for audio: {audio_path}, music: {music_path}")
+        log_memory_usage("PROCESS_START")
         
         # Create organized directory structure and copy input files
         audio_filename = Path(audio_path).name
@@ -464,8 +518,8 @@ class ProcessingLayer:
         
         if not original_audio_path.exists():
             shutil.copy2(audio_path, original_audio_path)
-            print(f"Audio file copied to: {original_audio_path}")
-        
+            logger.info(f"Audio file copied to: {original_audio_path}")
+
         if not original_music_path.exists():
             shutil.copy2(music_path, original_music_path)
             print(f"Music file copied to: {original_music_path}")
