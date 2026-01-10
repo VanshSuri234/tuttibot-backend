@@ -351,7 +351,7 @@ def run_analysis(job_id, audio_path, score_path):
                 logger.info(f"[PIPELINE_INIT] Creating pipeline object for job {job_id}")
                 log_system_status(f"BEFORE_PIPELINE_INIT__{job_id}")
                 
-                pipeline_obj = MusicPerformancePipeline(audio_path, score_path, str(job_output_dir))
+                pipeline_obj = MusicPerformancePipeline(audio_path, score_path, str(job_output_dir), job_id=job_id)
                 logger.info(f"[PIPELINE_INIT_COMPLETE] Pipeline object created successfully")
                 log_system_status(f"AFTER_PIPELINE_INIT__{job_id}")
                 

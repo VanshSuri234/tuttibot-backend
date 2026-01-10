@@ -505,9 +505,11 @@ class MusicProcessor:
 class ProcessingLayer:
     """Main processing layer coordinating audio and music processing"""
     
-    def __init__(self, data_dir: str = "data", shared_output_dir: str = "../shared_data"):
+    def __init__(self, data_dir: str = "data", shared_output_dir: str = "../shared_data", job_id: str = None):
+        self.job_id = job_id
         logger.info(f"[INIT] 🚀 ProcessingLayer.__init__() STARTED")
         
+        self.job_id = job_id  # For real-time status updates
         self.data_dir = Path(data_dir)
         logger.info(f"[INIT] ▶️  Creating data directory: {data_dir}")
         self.data_dir.mkdir(exist_ok=True)
@@ -544,6 +546,58 @@ class ProcessingLayer:
         logger.info(f"[INIT] ✅ MusicProcessor created successfully")
         
         logger.info(f"[INIT] ✅✅✅ ProcessingLayer.__init__() COMPLETED SUCCESSFULLY")
+    
+    def _update_job_status(self, layer_name: str, progress: int, message: str = ""):
+        """Update job status for real-time progress tracking (non-blocking)"""
+        if not self.job_id:
+            return
+        try:
+            from datetime import datetime
+            from pathlib import Path
+            import json
+            # Try to save status to disk if running within the pipeline
+            # This helps cross-worker visibility on Render
+            try:
+                # Try to find the job output directory
+                import os
+                results_dir = os.environ.get('RESULTS_FOLDER')
+                if results_dir:
+                    status_file = Path(results_dir) / self.job_id / 'status.json'
+                    status_file.parent.mkdir(parents=True, exist_ok=True)
+                    with open(status_file, 'w') as f:
+                        json.dump({
+                            'status': 'processing',
+                            'current_layer': layer_name,
+                            'progress': progress,
+                            'message': message,
+                            'timestamp': datetime.now().isoformat()
+                        }, f)
+                    logger.info(f"[STATUS] Updated: {layer_name} ({progress}%)")
+            except Exception as e:
+                logger.debug(f"[STATUS] Could not save status file: {e}")
+        except Exception as e:
+            logger.debug(f"[STATUS] Error updating job status: {e}")
+    
+    def _update_status(self, step_name: str, progress: int):
+        """Update job status if job_id is available (for real-time progress tracking)"""
+        if self.job_id:
+            try:
+                from pathlib import Path
+                from datetime import datetime
+                import json
+                # Save status to disk for cross-worker consistency
+                status_file = Path("../results") / self.job_id / 'status.json'
+                status_file.parent.mkdir(parents=True, exist_ok=True)
+                with open(status_file, 'w') as f:
+                    json.dump({
+                        'status': 'processing',
+                        'current_layer': f'Layer 2: Processing - {step_name}',
+                        'progress': progress,
+                        'timestamp': datetime.now().isoformat()
+                    }, f, indent=2)
+                logger.info(f"[STATUS] Updated job {self.job_id}: {step_name} ({progress}%)")
+            except Exception as e:
+                logger.warning(f"[STATUS] Could not update status: {e}")
     
     def process(self, audio_path: str, music_path: str) -> ProcessingResult:
         """
@@ -590,88 +644,154 @@ class ProcessingLayer:
         shared_audio_path = self.shared_original_dir / audio_filename
         shared_music_path = self.shared_original_dir / music_filename
         
+        logger.info(f"[PROCESS] 🔍 Copying to shared directory: {self.shared_original_dir}")
+        logger.info(f"[PROCESS] 🔍 About to copy audio to: {shared_audio_path}")
         if not shared_audio_path.exists():
+            logger.info(f"[PROCESS] 🔍 Shared audio doesn't exist, copying...")
             shutil.copy2(audio_path, shared_audio_path)
+            logger.info(f"[PROCESS] ✅ Audio copied to shared successfully")
             print(f"Audio file copied to shared directory: {shared_audio_path}")
+        else:
+            logger.info(f"[PROCESS] ⏭️  Shared audio already exists")
         
+        logger.info(f"[PROCESS] 🔍 About to copy music to: {shared_music_path}")
         if not shared_music_path.exists():
+            logger.info(f"[PROCESS] 🔍 Shared music doesn't exist, copying...")
             shutil.copy2(music_path, shared_music_path)
+            logger.info(f"[PROCESS] ✅ Music copied to shared successfully")
             print(f"Music file copied to shared directory: {shared_music_path}")
+        else:
+            logger.info(f"[PROCESS] ⏭️  Shared music already exists")
+        
+        logger.info(f"[PROCESS] ✅ File copying to shared directory COMPLETE")
         
         # Validate input files
         logger.info(f"[PROCESS] ▶️  Step 0c: Validating input files...")
+        logger.info(f"[PROCESS] 🔍 Checking if audio exists: {original_audio_path}")
         if not original_audio_path.exists():
             logger.error(f"[PROCESS] ❌ Audio file not found: {original_audio_path}")
             raise FileNotFoundError(f"Audio file not found: {original_audio_path}")
+        logger.info(f"[PROCESS] ✅ Audio file exists")
+        
+        logger.info(f"[PROCESS] 🔍 Checking if music exists: {original_music_path}")
         if not original_music_path.exists():
             logger.error(f"[PROCESS] ❌ Music file not found: {original_music_path}")
             raise FileNotFoundError(f"Music file not found: {original_music_path}")
-        logger.info(f"[PROCESS] ✅ Both files validated successfully")
+        logger.info(f"[PROCESS] ✅ Music file exists")
+        logger.info(f"[PROCESS] ✅ Step 0c VALIDATION COMPLETE")
         
         # Check audio processing requirements
         logger.info(f"[PROCESS] ▶️  Step 0d: Analyzing audio quality...")
         logger.info(f"[PROCESS] About to call check_audio_quality on {original_audio_path}")
+        logger.info(f"[PROCESS] 🔍 BEFORE check_audio_quality() call")
         audio_analysis = self.audio_processor.check_audio_quality(str(original_audio_path))
-        logger.info(f"[PROCESS] ✅ Audio analysis completed: {audio_analysis}")
+        logger.info(f"[PROCESS] 🔍 AFTER check_audio_quality() returned")
+        logger.info(f"[PROCESS] ✅ Audio analysis result: {audio_analysis}")
         print(f"Audio analysis: {audio_analysis}")
+        logger.info(f"[PROCESS] ✅ Audio analysis completed successfully")
         
         # Prepare output paths (all in processed directory)
+        logger.info(f"[PROCESS] ✅✅✅ STEP 0 (PREPARATION) COMPLETE ✅✅✅")
+        logger.info(f"[PROCESS] 🔍 Preparing to enter Steps 1-5 processing...")
         base_name = Path(audio_path).stem
+        logger.info(f"[PROCESS] 🔍 Base name: {base_name}")
         processed_audio_path = self.processed_dir / f"{base_name}_processed.wav"
+        logger.info(f"[PROCESS] 🔍 Output will be: {processed_audio_path}")
         current_audio_path = str(original_audio_path)
+        logger.info(f"[PROCESS] 🔍 Current audio path: {current_audio_path}")
         
         # Track intermediate files for cleanup
         intermediate_files = []
         
         # Apply audio processing steps as needed
+        logger.info(f"[PROCESS] 🔍 Audio analysis needs: noise_reduction={audio_analysis['needs_noise_reduction']}, normalization={audio_analysis['needs_normalization']}, segmentation={audio_analysis['needs_segmentation']}")
         elapsed_checkpoint = time.time()
+        
+        # STEP 1: Noise Reduction
+        logger.info(f"[PROCESS] 🚀 ENTERING STEP 1: NOISE REDUCTION")
         if audio_analysis['needs_noise_reduction']:
+            logger.info(f"[PROCESS] ▶️ STARTING STEP 1: NOISE REDUCTION")
             logger.info(f"[PROCESS] ▶️ Step 1: Applying noise reduction...")
+            self._update_job_status("Layer 2: Noise Reduction", 35)
             noise_reduced_path = self.processed_dir / f"{base_name}_denoised.wav"
-            if self.audio_processor.reduce_noise(current_audio_path, str(noise_reduced_path)):
-                intermediate_files.append(str(noise_reduced_path))
-                current_audio_path = str(noise_reduced_path)
-                elapsed = time.time() - elapsed_checkpoint
-                logger.info(f"[PROCESS] ✅ Noise reduction completed in {elapsed:.2f}s")
-                elapsed_checkpoint = time.time()
+            try:
+                logger.info(f"[PROCESS] Calling reduce_noise on {current_audio_path}...")
+                if self.audio_processor.reduce_noise(current_audio_path, str(noise_reduced_path)):
+                    intermediate_files.append(str(noise_reduced_path))
+                    current_audio_path = str(noise_reduced_path)
+                    elapsed = time.time() - elapsed_checkpoint
+                    logger.info(f"[PROCESS] ✅ Noise reduction completed in {elapsed:.2f}s")
+                    self._update_job_status("Layer 2: Noise Reduction Complete", 40)
+                    elapsed_checkpoint = time.time()
+            except Exception as e:
+                logger.error(f"[PROCESS] ❌ Noise reduction error: {e}", exc_info=True)
+                logger.info(f"[PROCESS] Continuing without noise reduction...")
         else:
             logger.info(f"[PROCESS] ⏭️  Skipping noise reduction (not needed)")
         
+        logger.info(f"[PROCESS] ✅ STEP 1 COMPLETE")
+        logger.info(f"[PROCESS] 🚀 ENTERING STEP 2: NORMALIZATION")
         if audio_analysis['needs_normalization']:
-            logger.info(f"[PROCESS] ▶️ Step 2: Applying normalization...")
+            logger.info(f"[PROCESS] ▶️ Normalization needed, calling normalize_audio...")
+            self._update_job_status("Layer 2: Normalization", 45)
             normalized_path = self.processed_dir / f"{base_name}_normalized.wav"
-            if self.audio_processor.normalize_audio(current_audio_path, str(normalized_path)):
-                intermediate_files.append(str(normalized_path))
-                current_audio_path = str(normalized_path)
-                elapsed = time.time() - elapsed_checkpoint
-                logger.info(f"[PROCESS] ✅ Normalization completed in {elapsed:.2f}s")
-                elapsed_checkpoint = time.time()
+            logger.info(f"[PROCESS] 🔍 Input: {current_audio_path}, Output: {normalized_path}")
+            try:
+                logger.info(f"[PROCESS] 🔍 BEFORE normalize_audio() call")
+                if self.audio_processor.normalize_audio(current_audio_path, str(normalized_path)):
+                    logger.info(f"[PROCESS] 🔍 AFTER normalize_audio() - success")
+                    intermediate_files.append(str(normalized_path))
+                    current_audio_path = str(normalized_path)
+                    elapsed = time.time() - elapsed_checkpoint
+                    logger.info(f"[PROCESS] ✅ Normalization completed in {elapsed:.2f}s")
+                    self._update_job_status("Layer 2: Normalization Complete", 50)
+                    elapsed_checkpoint = time.time()
+                else:
+                    logger.warning(f"[PROCESS] ⚠️  normalize_audio returned False")
+            except Exception as e:
+                logger.error(f"[PROCESS] ❌ Normalization error: {e}", exc_info=True)
+                logger.info(f"[PROCESS] Continuing without normalization...")
+            except Exception as e:
+                logger.error(f"[PROCESS] ❌ Normalization error: {e}", exc_info=True)
+                logger.info(f"[PROCESS] Continuing without normalization...")
         else:
             logger.info(f"[PROCESS] ⏭️  Skipping normalization (not needed)")
         
-        # Always save the final processed audio with a consistent name
-        logger.info(f"[PROCESS] ▶️ Step 3: Saving final processed audio...")
+        logger.info(f"[PROCESS] ✅ STEP 2 COMPLETE")
+        logger.info(f"[PROCESS] 🚀 ENTERING STEP 3: SAVING PROCESSED AUDIO")
+        self._update_job_status("Layer 2: Saving Processed Audio", 55)
         final_processed_path = self.processed_dir / f"{base_name}_processed.wav"
         shared_processed_audio_path = self.shared_processed_dir / f"{base_name}_processed.wav"
+        logger.info(f"[PROCESS] 🔍 Final path: {final_processed_path}")
+        logger.info(f"[PROCESS] 🔍 Shared path: {shared_processed_audio_path}")
+        logger.info(f"[PROCESS] 🔍 Current audio to save: {current_audio_path}")
         
-        if current_audio_path != str(original_audio_path):
-            # Audio was processed, copy to final location
-            import shutil
-            shutil.copy2(current_audio_path, final_processed_path)
-            shutil.copy2(current_audio_path, shared_processed_audio_path)
-            processed_audio_path = str(final_processed_path)
-            logger.info(f"[PROCESS] ✅ Final processed audio saved to: {processed_audio_path}")
-            logger.info(f"[PROCESS] ✅ Final processed audio saved to shared directory: {shared_processed_audio_path}")
-        else:
-            # No processing was needed, but still create a copy for consistency
-            import shutil
-            shutil.copy2(str(original_audio_path), final_processed_path)
-            shutil.copy2(str(original_audio_path), shared_processed_audio_path)
-            processed_audio_path = str(final_processed_path)
-            logger.info(f"[PROCESS] ⏭️  Original audio copied (no processing needed): {processed_audio_path}")
-            logger.info(f"[PROCESS] ✅ Original audio copied to shared directory: {shared_processed_audio_path}")
+        try:
+            logger.info(f"[PROCESS] 🔍 Checking if audio was processed: {current_audio_path} != {str(original_audio_path)}")
+            if current_audio_path != str(original_audio_path):
+                # Audio was processed, copy to final location
+                import shutil
+                logger.info(f"[PROCESS] Copying processed audio to {final_processed_path}...")
+                shutil.copy2(current_audio_path, final_processed_path)
+                shutil.copy2(current_audio_path, shared_processed_audio_path)
+                processed_audio_path = str(final_processed_path)
+                logger.info(f"[PROCESS] ✅ Final processed audio saved to: {processed_audio_path}")
+                logger.info(f"[PROCESS] ✅ Final processed audio saved to shared directory: {shared_processed_audio_path}")
+            else:
+                # No processing was needed, but still create a copy for consistency
+                import shutil
+                logger.info(f"[PROCESS] Copying original audio (no processing) to {final_processed_path}...")
+                shutil.copy2(str(original_audio_path), final_processed_path)
+                shutil.copy2(str(original_audio_path), shared_processed_audio_path)
+                processed_audio_path = str(final_processed_path)
+                logger.info(f"[PROCESS] ⏭️  Original audio copied (no processing needed): {processed_audio_path}")
+                logger.info(f"[PROCESS] ✅ Original audio copied to shared directory: {shared_processed_audio_path}")
+        except Exception as e:
+            logger.error(f"[PROCESS] ❌ Step 3 error saving audio: {e}", exc_info=True)
+            raise
         
         # Clean up intermediate files automatically
+        logger.info(f"[PROCESS] ▶️ Cleaning up intermediate files...")
         for intermediate_file in intermediate_files:
             try:
                 os.remove(intermediate_file)
@@ -679,24 +799,47 @@ class ProcessingLayer:
             except Exception as e:
                 logger.warning(f"[PROCESS] ⚠️  Could not remove intermediate file {intermediate_file}: {e}")
         
-        # Segment audio using the final processed version
-        logger.info(f"[PROCESS] ▶️ Step 4: Starting audio segmentation (auditok)...")
+        logger.info(f"[PROCESS] ✅ STEP 3 COMPLETE")
+        logger.info(f"[PROCESS] 🚀 ENTERING STEP 4: AUDIO SEGMENTATION (auditok)")
+        self._update_job_status("Layer 2: Audio Segmentation", 60)
         segments_start = time.time()
         segments = []
+        logger.info(f"[PROCESS] 🔍 needs_segmentation={audio_analysis['needs_segmentation']}")
         if audio_analysis['needs_segmentation']:
-            logger.info(f"[PROCESS] Calling segment_audio({processed_audio_path})...")
-            segments = self.audio_processor.segment_audio(processed_audio_path)
-            segments_elapsed = time.time() - segments_start
-            logger.info(f"[PROCESS] ✅ Segmentation completed in {segments_elapsed:.2f}s: {len(segments)} segments")
+            logger.info(f"[PROCESS] 🔍 Segmentation needed")
+            logger.info(f"[PROCESS] 🔍 BEFORE segment_audio() call with input: {processed_audio_path}")
+            try:
+                segments = self.audio_processor.segment_audio(processed_audio_path)
+                logger.info(f"[PROCESS] 🔍 AFTER segment_audio() returned {len(segments)} segments")
+                segments_elapsed = time.time() - segments_start
+                logger.info(f"[PROCESS] ✅ Segmentation completed in {segments_elapsed:.2f}s: {len(segments)} segments")
+                self._update_job_status("Layer 2: Audio Segmentation Complete", 65)
+            except Exception as e:
+                logger.error(f"[PROCESS] ❌ Segmentation error: {e}", exc_info=True)
+                logger.info(f"[PROCESS] Using fallback: single full-audio segment...")
+                segments = []
         else:
             logger.info(f"[PROCESS] ⏭️  Skipping segmentation (not needed)")
         
-        # Extract music features
-        logger.info(f"[PROCESS] ▶️ Step 5: Extracting music features from {Path(original_music_path).name}...")
+        logger.info(f"[PROCESS] ✅ STEP 4 COMPLETE")
+        logger.info(f"[PROCESS] 🚀 ENTERING STEP 5: MUSIC FEATURE EXTRACTION")
+        self._update_job_status("Layer 2: Music Feature Extraction", 70)
+        logger.info(f"[PROCESS] 🔍 Extracting from: {Path(original_music_path).name}")
+        logger.info(f"[PROCESS] 🔍 BEFORE extract_features() call")
         features_start = time.time()
-        music_features = self.music_processor.extract_features(str(original_music_path))
-        features_elapsed = time.time() - features_start
-        logger.info(f"[PROCESS] ✅ Feature extraction completed in {features_elapsed:.2f}s: {len(music_features.notes)} notes extracted")
+        try:
+            logger.info(f"[PROCESS] 🔍 Calling extract_features({original_music_path})...")
+            music_features = self.music_processor.extract_features(str(original_music_path))
+            logger.info(f"[PROCESS] 🔍 AFTER extract_features() returned successfully")
+            features_elapsed = time.time() - features_start
+            logger.info(f"[PROCESS] ✅ Feature extraction completed in {features_elapsed:.2f}s: {len(music_features.notes)} notes extracted")
+            self._update_job_status("Layer 2: Music Feature Extraction Complete", 75)
+        except Exception as e:
+            logger.error(f"[PROCESS] ❌ Feature extraction error: {e}", exc_info=True)
+            raise
+        
+        logger.info(f"[PROCESS] ✅ STEP 5 COMPLETE")
+        logger.info(f"[PROCESS] 🚀 ENTERING STEP 6: SAVING RESULTS")
         
         # Create processing result
         result = ProcessingResult(
@@ -718,12 +861,22 @@ class ProcessingLayer:
         )
         
         # Save results as separate JSON files
+        logger.info(f"[PROCESS] ▶️ STARTING STEP 6: SAVING RESULTS")
         logger.info(f"[PROCESS] ▶️ Step 6: Saving processing results...")
-        self.save_results(result, base_name)
+        self._update_job_status("Layer 2: Saving Results", 85)
+        try:
+            logger.info(f"[PROCESS] Calling save_results()...")
+            self.save_results(result, base_name)
+            logger.info(f"[PROCESS] ✅ Results saved successfully")
+        except Exception as e:
+            logger.error(f"[PROCESS] ❌ Error saving results: {e}", exc_info=True)
+            raise
         
         elapsed_total = time.time() - start_time
-        logger.info(f"[PROCESS] ✅ Processing completed successfully in {elapsed_total:.2f}s!")
+        logger.info(f"[PROCESS] ✅✅✅ Processing completed successfully in {elapsed_total:.2f}s!")
+        self._update_job_status("Layer 2: Processing Complete", 100)
         log_memory_usage("PROCESS_END")
+        logger.info(f"[PROCESS] 🎵 RETURNING RESULT OBJECT")
         return result
     
     def save_results(self, result: ProcessingResult, base_name: str):

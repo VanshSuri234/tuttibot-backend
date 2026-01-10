@@ -55,10 +55,11 @@ def log_memory_info(stage: str, process=None):
 class MusicPerformancePipeline:
     """Complete music performance analysis pipeline orchestrator"""
     
-    def __init__(self, audio_path, score_path, output_dir, config_path=None, score_part=None):
+    def __init__(self, audio_path, score_path, output_dir, config_path=None, score_part=None, job_id=None):
         self.audio_path = Path(audio_path).resolve()  # Convert to absolute path
         self.score_path = Path(score_path).resolve()  # Convert to absolute path
         self.output_dir = Path(output_dir).resolve()  # Convert to absolute path
+        self.job_id = job_id  # For status tracking in processing layers
         
         # Auto-detect part from audio filename if not specified
         if score_part is None:
@@ -270,7 +271,8 @@ class MusicPerformancePipeline:
             logger.info(f"[PROCESSING LAYER] Creating processor with data_dir: {self.processing_dir / 'data'}")
             processing_layer = ProcessingLayer(
                 data_dir=str(self.processing_dir / "data"),
-                shared_output_dir=str(self.processing_dir / "shared")
+                shared_output_dir=str(self.processing_dir / "shared"),
+                job_id=self.job_id
             )
             logger.info("[PROCESSING LAYER] Calling processing_layer.process()...")
             
