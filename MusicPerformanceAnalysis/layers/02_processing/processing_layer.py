@@ -257,14 +257,20 @@ class AudioProcessor:
             import os
             from threading import Thread
             
+            logger.info(f"[SEGMENT] 🚀 Starting audio segmentation for: {audio_path}")
+            
             # Read audio
+            logger.info(f"[SEGMENT] ▶️  Loading audio file with soundfile...")
             data, sr = sf.read(audio_path)
             duration = len(data) / sr
+            logger.info(f"[SEGMENT] ✅ Loaded: {len(data)} samples at {sr}Hz, duration: {duration:.2f}s")
             
             # Create temp file with clean WAV format
+            logger.info(f"[SEGMENT] ▶️  Creating temporary WAV file for auditok...")
             with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as tmp_file:
                 sf.write(tmp_file.name, data, sr, format='WAV', subtype='PCM_16')
                 clean_audio_path = tmp_file.name
+            logger.info(f"[SEGMENT] ✅ Temp file created: {clean_audio_path}")
             
             audio_events = None
             try:
@@ -272,20 +278,32 @@ class AudioProcessor:
                 def run_auditok():
                     nonlocal audio_events
                     try:
+                        logger.info(f"[SEGMENT] 🔧 Calling auditok.split() with 2s timeout...")
                         audio_events = auditok.split(
                             clean_audio_path,
                             min_dur=0.2, max_dur=10.0, max_silence=0.5,
                             energy_threshold=self.segmentation_energy_threshold
                         )
+                        logger.info(f"[SEGMENT] ✅ auditok.split() succeeded: {len(list(audio_events)) if audio_events else 0} regions found")
                     except Exception as e:
+                        logger.error(f"[SEGMENT] ❌ auditok.split() failed with exception: {e}")
                         audio_events = None
                 
                 auditok_thread = Thread(target=run_auditok, daemon=True)
+                logger.info(f"[SEGMENT] Starting auditok thread...")
                 auditok_thread.start()
+                logger.info(f"[SEGMENT] Waiting for auditok thread with 2s timeout...")
                 auditok_thread.join(timeout=2.0)  # REDUCED from 5s to 2s - fail fast if slow
+                
+                if auditok_thread.is_alive():
+                    logger.warning(f"[SEGMENT] ⚠️  auditok thread still alive after 2s timeout - using fallback")
+                    audio_events = None
+                else:
+                    logger.info(f"[SEGMENT] ✅ auditok thread completed within timeout")
                 
                 if audio_events is not None:
                     # Auditok succeeded
+                    logger.info(f"[SEGMENT] Converting auditok regions to AudioSegment objects...")
                     segments = [AudioSegment(
                         start_time=region.meta.start,
                         end_time=region.meta.end,
@@ -295,12 +313,15 @@ class AudioProcessor:
                     ) for region in audio_events]
                     
                     os.unlink(clean_audio_path)
+                    logger.info(f"[SEGMENT] ✅ Audio segmentation completed: {len(segments)} segments")
                     print(f"Audio segmentation completed: {len(segments)} segments")
                     return segments
                 else:
+                    logger.warning(f"[SEGMENT] ⚠️  audio_events is None, raising TimeoutError for fallback handling")
                     raise TimeoutError("Auditok segmentation timeout or failed")
                 
             except Exception as auditok_err:
+                logger.warning(f"[SEGMENT] ⚠️  auditok failed: {auditok_err}, using full audio as segment")
                 print(f"Auditok failed: {auditok_err}, using full audio as segment")
                 try:
                     os.unlink(clean_audio_path)
@@ -308,12 +329,14 @@ class AudioProcessor:
                     pass
                 
                 # Fallback: single segment for entire audio
+                logger.info(f"[SEGMENT] Creating fallback: single segment for entire {duration:.2f}s audio")
                 return [AudioSegment(
                     start_time=0.0, end_time=duration, duration=duration,
                     confidence=1.0, segment_type="full_audio"
                 )]
             
         except Exception as e:
+            logger.error(f"[SEGMENT] ❌ Critical error in audio segmentation: {e}")
             print(f"Error in audio segmentation: {e}")
             return []
 
@@ -503,26 +526,35 @@ class ProcessingLayer:
         Returns:
             ProcessingResult containing all extracted data
         """
+        logger.info(f"[PROCESS] 🚀 PROCESS METHOD STARTED")
         start_time = time.time()
-        logger.info(f"Starting processing for audio: {audio_path}, music: {music_path}")
+        logger.info(f"[PROCESS] Input: audio={audio_path}, music={music_path}")
+        logger.info(f"[PROCESS] Starting processing for audio: {audio_path}, music: {music_path}")
         log_memory_usage("PROCESS_START")
         
         # Create organized directory structure and copy input files
+        logger.info(f"[PROCESS] ▶️  Step 0a: Preparing directory structure...")
         audio_filename = Path(audio_path).name
         music_filename = Path(music_path).name
+        logger.info(f"[PROCESS] Audio filename: {audio_filename}, Music filename: {music_filename}")
         
         # Copy input files to original data directory
         import shutil
         original_audio_path = self.original_dir / audio_filename
         original_music_path = self.original_dir / music_filename
         
+        logger.info(f"[PROCESS] ▶️  Step 0b: Copying files...")
         if not original_audio_path.exists():
             shutil.copy2(audio_path, original_audio_path)
-            logger.info(f"Audio file copied to: {original_audio_path}")
+            logger.info(f"[PROCESS] ✅ Audio file copied to: {original_audio_path}")
+        else:
+            logger.info(f"[PROCESS] ⏭️  Audio file already exists at: {original_audio_path}")
 
         if not original_music_path.exists():
             shutil.copy2(music_path, original_music_path)
-            print(f"Music file copied to: {original_music_path}")
+            logger.info(f"[PROCESS] ✅ Music file copied to: {original_music_path}")
+        else:
+            logger.info(f"[PROCESS] ⏭️  Music file already exists at: {original_music_path}")
         
         # Also copy to shared directory for other layers to access
         shared_audio_path = self.shared_original_dir / audio_filename
@@ -537,13 +569,20 @@ class ProcessingLayer:
             print(f"Music file copied to shared directory: {shared_music_path}")
         
         # Validate input files
+        logger.info(f"[PROCESS] ▶️  Step 0c: Validating input files...")
         if not original_audio_path.exists():
+            logger.error(f"[PROCESS] ❌ Audio file not found: {original_audio_path}")
             raise FileNotFoundError(f"Audio file not found: {original_audio_path}")
         if not original_music_path.exists():
+            logger.error(f"[PROCESS] ❌ Music file not found: {original_music_path}")
             raise FileNotFoundError(f"Music file not found: {original_music_path}")
+        logger.info(f"[PROCESS] ✅ Both files validated successfully")
         
         # Check audio processing requirements
+        logger.info(f"[PROCESS] ▶️  Step 0d: Analyzing audio quality...")
+        logger.info(f"[PROCESS] About to call check_audio_quality on {original_audio_path}")
         audio_analysis = self.audio_processor.check_audio_quality(str(original_audio_path))
+        logger.info(f"[PROCESS] ✅ Audio analysis completed: {audio_analysis}")
         print(f"Audio analysis: {audio_analysis}")
         
         # Prepare output paths (all in processed directory)
