@@ -42,39 +42,53 @@ def log_memory_usage(stage: str):
 
 # Audio processing imports
 try:
+    logger.info("[IMPORT] ▶️  Starting noisereduce import...")
     import noisereduce as nr
+    logger.info("[IMPORT] ✅ noisereduce imported")
+    
+    logger.info("[IMPORT] ▶️  Starting scipy.io.wavfile import...")
     from scipy.io import wavfile
+    logger.info("[IMPORT] ✅ scipy.io.wavfile imported")
+    
+    logger.info("[IMPORT] ▶️  Starting librosa import (HEAVY)...")
     import librosa
+    logger.info("[IMPORT] ✅ librosa imported")
+    
+    logger.info("[IMPORT] ▶️  Starting librosa.onset import...")
     import librosa.onset
+    logger.info("[IMPORT] ✅ librosa.onset imported")
+    
+    logger.info("[IMPORT] ▶️  Starting soundfile import...")
     import soundfile as sf
+    logger.info("[IMPORT] ✅ soundfile imported")
+    
+    logger.info("[IMPORT] ▶️  Starting FFmpegNormalize import...")
     from ffmpeg_normalize import FFmpegNormalize
+    logger.info("[IMPORT] ✅ FFmpegNormalize imported")
+    
+    logger.info("[IMPORT] ▶️  Starting auditok import...")
     import auditok
-    logger.info("All audio processing dependencies loaded successfully")
+    logger.info("[IMPORT] ✅ auditok imported")
+    
+    logger.info("[IMPORT] ✅✅✅ All audio processing dependencies loaded successfully")
 except ImportError as e:
-    logger.error(f"Audio processing dependencies missing: {e}")
-    logger.error("Install with: pip install noisereduce scipy librosa soundfile")
-
-# FFmpeg normalization import
-try:
-    from ffmpeg_normalize import FFmpegNormalize
-except ImportError as e:
-    print(f"FFmpeg normalization missing: {e}")
-    print("Install with: pip install ffmpeg-normalize")
-
-# Audio segmentation import  
-try:
-    import auditok
-except ImportError as e:
-    print(f"Auditok missing: {e}")
-    print("Install with: pip install auditok")
+    logger.error(f"[IMPORT] ❌ Audio processing dependencies missing: {e}")
+    logger.error("[IMPORT] Install with: pip install noisereduce scipy librosa soundfile")
 
 # Music notation processing import
 try:
+    logger.info("[IMPORT] ▶️  Starting music21 import (HEAVY)...")
     from music21 import converter, corpus, interval, roman, key, meter, tempo, pitch, stream
+    logger.info("[IMPORT] ✅ music21 base modules imported")
+    
+    logger.info("[IMPORT] ▶️  Starting music21.analysis import...")
     from music21.analysis import discrete
+    logger.info("[IMPORT] ✅ music21.analysis imported")
+    
+    logger.info("[IMPORT] ✅✅✅ All music notation dependencies loaded successfully")
 except ImportError as e:
-    print(f"Music21 missing: {e}")
-    print("Install with: pip install music21")
+    logger.error(f"[IMPORT] ❌ Music21 missing: {e}")
+    logger.error("[IMPORT] Install with: pip install music21")
 
 
 @dataclass
@@ -493,27 +507,44 @@ class ProcessingLayer:
     """Main processing layer coordinating audio and music processing"""
     
     def __init__(self, data_dir: str = "data", shared_output_dir: str = "../shared_data"):
+        logger.info(f"[INIT] 🚀 ProcessingLayer.__init__() STARTED")
+        
         self.data_dir = Path(data_dir)
+        logger.info(f"[INIT] ▶️  Creating data directory: {data_dir}")
         self.data_dir.mkdir(exist_ok=True)
+        logger.info(f"[INIT] ✅ Data directory ready: {self.data_dir}")
         
         # Create shared output directory for inter-layer communication
+        logger.info(f"[INIT] ▶️  Creating shared output directory: {shared_output_dir}")
         self.shared_output_dir = Path(shared_output_dir)
         self.shared_output_dir.mkdir(exist_ok=True)
+        logger.info(f"[INIT] ✅ Shared output directory ready: {self.shared_output_dir}")
         
         # Create subdirectories for organization
+        logger.info(f"[INIT] ▶️  Creating subdirectories...")
         self.original_dir = self.data_dir / "original"
         self.processed_dir = self.data_dir / "processed"
         self.original_dir.mkdir(exist_ok=True)
         self.processed_dir.mkdir(exist_ok=True)
+        logger.info(f"[INIT] ✅ Local subdirectories created")
         
         # Create shared subdirectories
+        logger.info(f"[INIT] ▶️  Creating shared subdirectories...")
         self.shared_original_dir = self.shared_output_dir / "original"
         self.shared_processed_dir = self.shared_output_dir / "processed"
         self.shared_original_dir.mkdir(exist_ok=True)
         self.shared_processed_dir.mkdir(exist_ok=True)
+        logger.info(f"[INIT] ✅ Shared subdirectories created")
         
+        logger.info(f"[INIT] ▶️  Creating AudioProcessor...")
         self.audio_processor = AudioProcessor()
+        logger.info(f"[INIT] ✅ AudioProcessor created successfully")
+        
+        logger.info(f"[INIT] ▶️  Creating MusicProcessor...")
         self.music_processor = MusicProcessor()
+        logger.info(f"[INIT] ✅ MusicProcessor created successfully")
+        
+        logger.info(f"[INIT] ✅✅✅ ProcessingLayer.__init__() COMPLETED SUCCESSFULLY")
     
     def process(self, audio_path: str, music_path: str) -> ProcessingResult:
         """
