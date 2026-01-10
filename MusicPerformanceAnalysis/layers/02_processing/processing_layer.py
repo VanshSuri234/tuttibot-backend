@@ -54,9 +54,8 @@ try:
     import librosa
     logger.info("[IMPORT] ✅ librosa imported")
     
-    logger.info("[IMPORT] ▶️  Starting librosa.onset import...")
-    import librosa.onset
-    logger.info("[IMPORT] ✅ librosa.onset imported")
+    # NOTE: librosa.onset removed - it was hanging indefinitely during import
+    # and is not used anywhere in the codebase
     
     logger.info("[IMPORT] ▶️  Starting soundfile import...")
     import soundfile as sf
