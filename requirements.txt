@@ -1,19 +1,17 @@
 # Music Performance Analysis Pipeline - Requirements
 # Python 3.10 or higher required
-# Optimized for Render deployment
+# Optimized for Render deployment with --prefer-binary flag
 
 # ============================================================================
-# IMPORTANT: Dependency Exclusion
+# BUILD STRATEGY
 # ============================================================================
-# Some packages have optional dependencies we don't need:
-# - auditok tries to install pyaudio (microphone recording)
-# - We use auditok only for audio segmentation, not microphone input
-# Using --prefer-binary ensures we get pre-built wheels when available
-#
-# Install with: pip install --prefer-binary -r requirements.txt
-
-# Constraints to prevent pyaudio build failure on Render (optional dependency)
--c constraints.txt
+# Install using: pip install --prefer-binary -r requirements.txt
+# 
+# The --prefer-binary flag tells pip to use pre-built wheels when available.
+# This solves the pyaudio compilation issue because:
+# - auditok has a pre-built wheel on PyPI (no C compilation)
+# - The pre-built wheel doesn't include pyaudio (optional dependency)
+# - No portaudio headers needed!
 
 # ============================================================================
 # WEB FRAMEWORK & API
