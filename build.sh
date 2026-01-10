@@ -26,12 +26,14 @@ EOF
 echo "==> Installing Python requirements with binary preference..."
 # The --prefer-binary flag ensures:
 # 1. All available pre-built wheels are used (faster, no compilation)
-# 2. PyAudio is NOT required - it's used by pydub for playback only
-# 3. The pipeline only READS audio files, doesn't play them
+# 2. PyAudio is excluded via constraints.txt (causes compilation errors)
+# 3. The pipeline only READS audio files, doesn't need playback
 echo "==> Using pip configuration with prefer-binary = True"
+echo "==> Excluding PyAudio via constraints file..."
 
 # Install with maximum compatibility flags
-pip install --prefer-binary --upgrade --upgrade-strategy eager -r requirements.txt
+# --constraint constraints.txt: Prevents PyAudio installation (it's optional for pydub/audioread)
+pip install --prefer-binary --constraint constraints.txt --upgrade --upgrade-strategy eager -r requirements.txt
 
 echo "==> Verifying critical packages..."
 python3 -c "import flask; import librosa; import music21; print('✓ All critical packages imported successfully')"

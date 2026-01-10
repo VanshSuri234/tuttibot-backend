@@ -1,0 +1,22 @@
+# Constraints file for Render deployment
+# 
+# Purpose: Explicitly exclude packages that cause compilation issues
+# while not blocking any essential dependencies
+#
+# PyAudio is excluded because:
+# 1. It requires PortAudio C headers which aren't available on Render
+# 2. It's used for AUDIO PLAYBACK (not needed - we only READ files)
+# 3. It causes build failures even with --prefer-binary flag
+# 4. The pipeline processes audio files, doesn't play them
+#
+# The packages that would pull PyAudio are:
+# - pydub (optional feature for playback)
+# - audioread (optional PyAudio backend)
+#
+# These packages work fine WITHOUT PyAudio - they use other backends
+
+# Explicitly exclude PyAudio
+pyaudio==0.0.0
+
+# Note: This is a valid constraint syntax that prevents installation
+# See: https://pip.pypa.io/en/latest/user_guide/#constraints-files
