@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-bg: #FAFAFA; /* Very light gray/off-white */
+  --secondary-bg: #FFFFFF; /* Pure white for cards */
+  --text-main: #1F2937; /* Gray-900 */
+  --text-secondary: #6B7280; /* Gray-500 */
+  --accent-base: #2563EB; /* Premium Blue */
+  --accent-hover: #1D4ED8;
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+}
+
+@layer base {
+  body {
+    @apply bg-primary-bg text-text-main font-sans antialiased text-gray-900;
+    min-height: 100vh;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply backdrop-blur-md bg-white/70 border border-white/40 shadow-sm;
+  }
+  .glass-card {
+    @apply backdrop-blur-lg bg-white/80 border border-white/50 shadow-lg rounded-2xl;
+  }
+}

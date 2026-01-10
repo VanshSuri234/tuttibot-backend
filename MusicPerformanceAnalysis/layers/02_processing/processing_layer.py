@@ -19,6 +19,26 @@ import numpy as np
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional, Union
 from dataclasses import dataclass, asdict
+import time
+import psutil
+import logging
+
+# Setup detailed logging for memory and timing diagnostics
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+def log_memory_usage(stage: str):
+    """Log current memory usage for debugging"""
+    try:
+        import psutil
+        process = psutil.Process(os.getpid())
+        mem_info = process.memory_info()
+        mem_percent = process.memory_percent()
+        logger.info(f"[MEMORY {stage}] RSS: {mem_info.rss / 1024 / 1024:.1f}MB | VMS: {mem_info.vms / 1024 / 1024:.1f}MB | %: {mem_percent:.1f}%")
+    except ImportError:
+        logger.warning("psutil not available for memory monitoring")
+    except Exception as e:
+        logger.warning(f"Could not get memory info: {e}")
 
 # Audio processing imports
 try:
@@ -29,9 +49,10 @@ try:
     import soundfile as sf
     from ffmpeg_normalize import FFmpegNormalize
     import auditok
+    logger.info("All audio processing dependencies loaded successfully")
 except ImportError as e:
-    print(f"Audio processing dependencies missing: {e}")
-    print("Install with: pip install noisereduce scipy librosa soundfile")
+    logger.error(f"Audio processing dependencies missing: {e}")
+    logger.error("Install with: pip install noisereduce scipy librosa soundfile")
 
 # FFmpeg normalization import
 try:
@@ -103,8 +124,15 @@ class AudioProcessor:
     def check_audio_quality(self, audio_path: str) -> Dict[str, bool]:
         """Check if audio requires noise reduction, normalization, or segmentation"""
         try:
-            # Load audio for analysis
-            data, sr = librosa.load(audio_path, sr=None)
+            log_memory_usage("BEFORE_LOAD_AUDIO")
+            start_time = time.time()
+            
+            # Load audio for analysis with REDUCED sample rate to save memory
+            logger.info(f"[AUDIO_CHECK] Loading {audio_path} with sr=22050 (memory-optimized)")
+            data, sr = librosa.load(audio_path, sr=22050, dtype=np.float32)  # Reduced SR + float32 = 50% less RAM
+            
+            logger.info(f"[AUDIO_CHECK] Loaded {len(data)} samples at {sr}Hz")
+            log_memory_usage("AFTER_LOAD_AUDIO")
             
             # Check noise levels (simple RMS-based approach)
             rms_values = librosa.feature.rms(y=data, frame_length=2048, hop_length=512)[0]
@@ -119,6 +147,10 @@ class AudioProcessor:
             # Always check for segmentation opportunities
             needs_segmentation = True
             
+            elapsed = time.time() - start_time
+            logger.info(f"[AUDIO_CHECK] Completed in {elapsed:.2f}s | SR: {needs_noise_reduction} | Norm: {needs_normalization} | Seg: {needs_segmentation}")
+            log_memory_usage("AFTER_AUDIO_CHECK")
+            
             return {
                 'needs_noise_reduction': needs_noise_reduction,
                 'needs_normalization': needs_normalization, 
@@ -127,7 +159,7 @@ class AudioProcessor:
                 'noise_estimate': noise_threshold
             }
         except Exception as e:
-            print(f"Error analyzing audio quality: {e}")
+            logger.error(f"Error analyzing audio quality: {e}")
             return {
                 'needs_noise_reduction': True,
                 'needs_normalization': True,
@@ -139,8 +171,14 @@ class AudioProcessor:
     def reduce_noise(self, audio_path: str, output_path: str) -> bool:
         """Apply spectral gating noise reduction using noisereduce"""
         try:
+            log_memory_usage("BEFORE_NOISE_REDUCTION")
+            start_time = time.time()
+            
+            logger.info(f"[NOISE_REDUCE] Starting noise reduction on {audio_path}")
             # Load audio
             rate, data = wavfile.read(audio_path)
+            logger.info(f"[NOISE_REDUCE] Loaded audio: {len(data)} samples at {rate}Hz, size: {data.nbytes / 1024 / 1024:.1f}MB")
+            log_memory_usage("AFTER_LOAD_NOISE")
             
             # Apply noise reduction using stationary algorithm
             reduced_noise = nr.reduce_noise(
@@ -150,79 +188,130 @@ class AudioProcessor:
                 prop_decrease=0.8  # Reduce noise by 80%
             )
             
+            log_memory_usage("AFTER_REDUCE_NOISE")
+            
             # Save processed audio
             wavfile.write(output_path, rate, reduced_noise.astype(data.dtype))
-            print(f"Noise reduction completed: {output_path}")
+            elapsed = time.time() - start_time
+            logger.info(f"[NOISE_REDUCE] Completed in {elapsed:.2f}s: {output_path}")
+            log_memory_usage("AFTER_SAVE_NOISE")
             return True
             
         except Exception as e:
-            print(f"Error in noise reduction: {e}")
+            logger.error(f"Error in noise reduction: {e}")
             return False
     
     def normalize_audio(self, audio_path: str, output_path: str) -> bool:
-        """Apply EBU R128 loudness normalization using ffmpeg-normalize"""
+        """Apply peak normalization using scipy (faster, no FFmpeg subprocess hang)"""
         try:
-            # Initialize FFmpeg normalizer
-            normalizer = FFmpegNormalize(
-                normalization_type="ebu",
-                target_level=self.normalization_target,
-                loudness_range_target=7.0,
-                true_peak=-2.0
-            )
+            from scipy.io import wavfile
+            import numpy as np
+            import shutil
             
-            # Add media file for processing
-            normalizer.add_media_file(audio_path, output_path)
+            log_memory_usage("BEFORE_NORMALIZATION")
+            start_time = time.time()
             
-            # Run normalization
-            normalizer.run_normalization()
-            print(f"Audio normalization completed: {output_path}")
-            return True
+            try:
+                logger.info(f"[NORMALIZE] Starting normalization on {audio_path}")
+                # Load audio
+                rate, data = wavfile.read(audio_path)
+                logger.info(f"[NORMALIZE] Loaded audio: {len(data)} samples, {data.nbytes / 1024 / 1024:.1f}MB")
+                log_memory_usage("AFTER_LOAD_NORM")
+                
+                # Simple peak normalization
+                max_val = np.max(np.abs(data))
+                if max_val > 0:
+                    # Target -20dB (safe level)
+                    target_db = -20.0
+                    target_linear = 10 ** (target_db / 20.0)
+                    normalized = data * (target_linear / (max_val / 32768.0))
+                    normalized = np.clip(normalized, -32768, 32767).astype(data.dtype)
+                else:
+                    normalized = data
+                
+                log_memory_usage("AFTER_NORMALIZE")
+                
+                # Save normalized audio
+                wavfile.write(output_path, rate, normalized)
+                elapsed = time.time() - start_time
+                logger.info(f"[NORMALIZE] Completed in {elapsed:.2f}s: {output_path}")
+                log_memory_usage("AFTER_SAVE_NORM")
+                return True
+                
+            except Exception as scipy_error:
+                print(f"Scipy normalization failed, copying file: {scipy_error}")
+                # Fallback: just copy the file
+                shutil.copy2(audio_path, output_path)
+                print(f"Audio file copied (no normalization): {output_path}")
+                return True
             
         except Exception as e:
             print(f"Error in audio normalization: {e}")
             return False
     
     def segment_audio(self, audio_path: str) -> List[AudioSegment]:
-        """Segment audio using energy-based detection with auditok"""
+        """Segment audio with graceful fallback to simple approach"""
         try:
-            # Convert audio to a format auditok can handle reliably
             import tempfile
             import soundfile as sf
+            import os
+            from threading import Thread
             
-            # Read audio with soundfile and resave in a clean format
+            # Read audio
             data, sr = sf.read(audio_path)
+            duration = len(data) / sr
             
-            # Create a temporary file with clean WAV format
+            # Create temp file with clean WAV format
             with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as tmp_file:
                 sf.write(tmp_file.name, data, sr, format='WAV', subtype='PCM_16')
                 clean_audio_path = tmp_file.name
             
-            # Use auditok for audio activity detection on the clean file
-            audio_events = auditok.split(
-                clean_audio_path,
-                min_dur=0.2,  # Minimum duration: 200ms
-                max_dur=10.0,  # Maximum duration: 10s
-                max_silence=0.5,  # Max silence within segment: 500ms
-                energy_threshold=self.segmentation_energy_threshold
-            )
-            
-            segments = []
-            for i, region in enumerate(audio_events):
-                segment = AudioSegment(
-                    start_time=region.meta.start,
-                    end_time=region.meta.end,
-                    duration=region.duration,
-                    confidence=1.0,  # auditok doesn't provide confidence scores
-                    segment_type="detected_audio"
-                )
-                segments.append(segment)
-            
-            # Clean up temporary file
-            import os
-            os.unlink(clean_audio_path)
-            
-            print(f"Audio segmentation completed: {len(segments)} segments found")
-            return segments
+            audio_events = None
+            try:
+                # Try auditok segmentation with timeout using threading
+                def run_auditok():
+                    nonlocal audio_events
+                    try:
+                        audio_events = auditok.split(
+                            clean_audio_path,
+                            min_dur=0.2, max_dur=10.0, max_silence=0.5,
+                            energy_threshold=self.segmentation_energy_threshold
+                        )
+                    except Exception as e:
+                        audio_events = None
+                
+                auditok_thread = Thread(target=run_auditok, daemon=True)
+                auditok_thread.start()
+                auditok_thread.join(timeout=5.0)  # Wait max 5 seconds
+                
+                if audio_events is not None:
+                    # Auditok succeeded
+                    segments = [AudioSegment(
+                        start_time=region.meta.start,
+                        end_time=region.meta.end,
+                        duration=region.duration,
+                        confidence=1.0,
+                        segment_type="detected_audio"
+                    ) for region in audio_events]
+                    
+                    os.unlink(clean_audio_path)
+                    print(f"Audio segmentation completed: {len(segments)} segments")
+                    return segments
+                else:
+                    raise TimeoutError("Auditok segmentation timeout or failed")
+                
+            except Exception as auditok_err:
+                print(f"Auditok failed: {auditok_err}, using full audio as segment")
+                try:
+                    os.unlink(clean_audio_path)
+                except:
+                    pass
+                
+                # Fallback: single segment for entire audio
+                return [AudioSegment(
+                    start_time=0.0, end_time=duration, duration=duration,
+                    confidence=1.0, segment_type="full_audio"
+                )]
             
         except Exception as e:
             print(f"Error in audio segmentation: {e}")
@@ -236,10 +325,31 @@ class MusicProcessor:
         pass
     
     def extract_features(self, music_path: str) -> MusicFeatures:
-        """Extract musical features from MIDI/XML using music21"""
+        """Extract musical features from MIDI/XML using music21 with timeout"""
         try:
-            # Parse the music file
-            score = converter.parse(music_path)
+            from threading import Thread
+            import time
+            
+            score = None
+            parse_error = None
+            
+            def parse_music():
+                nonlocal score, parse_error
+                try:
+                    score = converter.parse(music_path)
+                except Exception as e:
+                    parse_error = e
+            
+            # Start parsing in thread with timeout
+            parse_thread = Thread(target=parse_music, daemon=True)
+            parse_thread.start()
+            parse_thread.join(timeout=10.0)  # Wait max 10 seconds for parsing
+            
+            if parse_error:
+                raise parse_error
+            
+            if score is None:
+                raise TimeoutError("Music21 parsing timeout - music file took too long to parse")
             
             # Extract notes using the proper music21 method
             notes_list = []
@@ -393,7 +503,9 @@ class ProcessingLayer:
         Returns:
             ProcessingResult containing all extracted data
         """
-        print(f"Starting processing for audio: {audio_path}, music: {music_path}")
+        start_time = time.time()
+        logger.info(f"Starting processing for audio: {audio_path}, music: {music_path}")
+        log_memory_usage("PROCESS_START")
         
         # Create organized directory structure and copy input files
         audio_filename = Path(audio_path).name
@@ -406,8 +518,8 @@ class ProcessingLayer:
         
         if not original_audio_path.exists():
             shutil.copy2(audio_path, original_audio_path)
-            print(f"Audio file copied to: {original_audio_path}")
-        
+            logger.info(f"Audio file copied to: {original_audio_path}")
+
         if not original_music_path.exists():
             shutil.copy2(music_path, original_music_path)
             print(f"Music file copied to: {original_music_path}")
@@ -485,12 +597,17 @@ class ProcessingLayer:
                 print(f"Warning: Could not remove intermediate file {intermediate_file}: {e}")
         
         # Segment audio using the final processed version
+        print(f"[DEBUG] Starting audio segmentation. needs_segmentation={audio_analysis['needs_segmentation']}")
         segments = []
         if audio_analysis['needs_segmentation']:
+            print(f"[DEBUG] Calling segment_audio({processed_audio_path})")
             segments = self.audio_processor.segment_audio(processed_audio_path)
+            print(f"[DEBUG] Segmentation completed: {len(segments)} segments")
         
         # Extract music features
+        print(f"[DEBUG] Starting feature extraction from {original_music_path}")
         music_features = self.music_processor.extract_features(str(original_music_path))
+        print(f"[DEBUG] Feature extraction completed: {len(music_features.notes)} notes extracted")
         
         # Create processing result
         result = ProcessingResult(

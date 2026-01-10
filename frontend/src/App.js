@@ -335,6 +335,21 @@ function App() {
                   </CardHeader>
                   <CardContent className="p-6 space-y-6">
                     
+                    {/* Overall Score Display */}
+                    {analysisResult.grade_data.overall_score !== undefined && (
+                      <div className="bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg p-8 text-center border-2 border-blue-300">
+                        <p className="text-slate-600 font-semibold text-sm uppercase tracking-wide">Your Performance Score</p>
+                        <div className="text-6xl font-bold text-blue-600 my-4">{analysisResult.grade_data.overall_score.toFixed(1)}</div>
+                        <p className="text-slate-600">out of 100</p>
+                        <div className="mt-4 w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+                          <div 
+                            className="bg-gradient-to-r from-blue-500 to-purple-500 h-full rounded-full transition-all" 
+                            style={{ width: `${Math.min(analysisResult.grade_data.overall_score, 100)}%` }}
+                          />
+                        </div>
+                      </div>
+                    )}
+                    
                     {/* Component Scores Chart */}
                     {analysisResult.grade_data.components && (
                       <Card className="bg-white border-2 border-blue-200">

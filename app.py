@@ -14,11 +14,32 @@ import threading
 import subprocess
 import logging
 import re
+import psutil
 from datetime import datetime
 from pathlib import Path
 from flask import Flask, request, jsonify, send_file
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
+
+# Setup logging with detailed diagnostics
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+def log_system_status(label: str):
+    """Log system resource usage for debugging"""
+    try:
+        process = psutil.Process(os.getpid())
+        mem_info = process.memory_info()
+        mem_percent = process.memory_percent()
+        cpu_percent = process.cpu_percent(interval=0.1)
+        thread_count = threading.active_count()
+        
+        logger.info(f"[SYSTEM {label}] RAM: {mem_info.rss / 1024 / 1024:.1f}MB ({mem_percent:.1f}%) | CPU: {cpu_percent:.1f}% | Threads: {thread_count}")
+    except Exception as e:
+        logger.warning(f"Could not get system status: {e}")
 
 # --- AI INTEGRATION ---
 try:
@@ -93,6 +114,33 @@ class JobStatus:
     PROCESSING = "processing" 
     COMPLETED = "completed"
     FAILED = "failed"
+
+# ==========================================
+# STATUS PERSISTENCE FUNCTIONS
+# ==========================================
+
+def save_job_status(job_id, status_dict):
+    """Save job status to disk for cross-worker consistency"""
+    try:
+        status_file = Path(app.config['RESULTS_FOLDER']) / job_id / 'status.json'
+        status_file.parent.mkdir(parents=True, exist_ok=True)
+        with open(status_file, 'w') as f:
+            json.dump(status_dict, f, indent=2)
+        logging.info(f"Status saved for job {job_id}: {status_dict.get('status', 'unknown')}")
+    except Exception as e:
+        logging.error(f"Failed to save status for job {job_id}: {e}")
+
+def load_job_status(job_id):
+    """Load job status from disk"""
+    try:
+        status_file = Path(app.config['RESULTS_FOLDER']) / job_id / 'status.json'
+        if status_file.exists():
+            with open(status_file, 'r') as f:
+                return json.load(f)
+        return None
+    except Exception as e:
+        logging.error(f"Failed to load status for job {job_id}: {e}")
+        return None
 
 # ==========================================
 # UPDATED: CHATBOT SERVICE (MAPPED TO BLOCKS)
@@ -268,31 +316,57 @@ def trigger_robot_leds(score_data):
 # ==========================================
 
 def run_analysis(job_id, audio_path, score_path):
+    log_system_status(f"RUN_ANALYSIS_START_{job_id}")
+    start_time = datetime.now()
+    
     with job_lock:
         jobs[job_id]['status'] = JobStatus.PROCESSING
-        jobs[job_id]['started_at'] = datetime.now().isoformat()
+        jobs[job_id]['started_at'] = start_time.isoformat()
     
     try:
         job_output_dir = Path(app.config['RESULTS_FOLDER']) / job_id
         job_output_dir.mkdir(exist_ok=True)
 
+        # Write initial status to disk
+        save_job_status(job_id, {
+            'status': JobStatus.PROCESSING,
+            'current_layer': 'Layer 0: Initializing',
+            'progress': 0,
+            'timestamp': datetime.now().isoformat()
+        })
+
         # 1. RUN PIPELINE
         success = False
         try:
             if MusicPerformancePipeline:
-                logging.info(f"Starting pipeline for job {job_id}")
+                logger.info(f"[PIPELINE_START] job {job_id}: {audio_path}")
+                log_system_status(f"BEFORE_PIPELINE__{job_id}")
+                
                 pipeline_obj = MusicPerformancePipeline(audio_path, score_path, str(job_output_dir))
+                
+                # Update status to Layer 1
+                save_job_status(job_id, {
+                    'status': JobStatus.PROCESSING,
+                    'current_layer': 'Layer 1: Input Standardization',
+                    'progress': 15,
+                    'timestamp': datetime.now().isoformat()
+                })
+                
+                logger.info(f"[PIPELINE_RUNNING] job {job_id}")
                 success = pipeline_obj.run_pipeline()
-                logging.info(f"Pipeline completed for job {job_id}: success={success}")
+                elapsed = (datetime.now() - start_time).total_seconds()
+                logger.info(f"[PIPELINE_END] job {job_id}: success={success}, elapsed={elapsed:.2f}s")
+                log_system_status(f"AFTER_PIPELINE__{job_id}")
                 
                 # --- UPDATED: GENERATE CHATBOT CONTEXT ---
                 if success and hasattr(pipeline_obj, 'get_chatbot_context'):
                     pipeline_obj.get_chatbot_context()
             else:
-                logging.error("Pipeline module not loaded - MusicPerformancePipeline is None")
+                logger.error("Pipeline module not loaded - MusicPerformancePipeline is None")
                 success = False
         except Exception as e:
-            logging.error(f"Pipeline error for job {job_id}: {str(e)}", exc_info=True)
+            logger.error(f"[PIPELINE_ERROR] job {job_id}: {str(e)}", exc_info=True)
+            log_system_status(f"AFTER_PIPELINE_ERROR__{job_id}")
             success = False
 
         results = {'grade_data': {}}
@@ -353,6 +427,15 @@ def run_analysis(job_id, audio_path, score_path):
             jobs[job_id]['results'] = results
             jobs[job_id]['output_dir'] = str(job_output_dir)
         
+        # Write completion status to disk
+        save_job_status(job_id, {
+            'status': JobStatus.COMPLETED,
+            'current_layer': 'Layer 7: Grading Complete',
+            'progress': 100,
+            'timestamp': datetime.now().isoformat(),
+            'results': results
+        })
+        
         if llm_service:
             llm_response = llm_service.initialize_analysis(job_id, json.dumps(summary_data, indent=2), report_text)
             with job_lock:
@@ -362,11 +445,36 @@ def run_analysis(job_id, audio_path, score_path):
         with job_lock:
             jobs[job_id]['status'] = JobStatus.FAILED
             jobs[job_id]['error'] = str(e)
+        
+        # Write error status to disk
+        save_job_status(job_id, {
+            'status': JobStatus.FAILED,
+            'current_layer': 'Error',
+            'progress': 0,
+            'error': str(e),
+            'timestamp': datetime.now().isoformat()
+        })
         logging.exception(f"Analysis failed for job {job_id}")
 
 # ==========================================
 # ROUTES (ALL ORIGINAL ROUTES PRESERVED)
 # ==========================================
+
+@app.route('/', methods=['GET'])
+def root():
+    """Root endpoint - returns API info"""
+    return jsonify({
+        'service': 'TuttiBot Backend API',
+        'version': '1.0.0',
+        'status': 'healthy',
+        'endpoints': {
+            'POST /upload': 'Upload audio and score files',
+            'GET /status/<job_id>': 'Check analysis status',
+            'GET /results/<job_id>': 'Get analysis results',
+            'POST /chat': 'Chat about analysis results',
+            'GET /health': 'Health check'
+        }
+    })
 
 @app.route('/health', methods=['GET'])
 def health_check():
@@ -433,6 +541,17 @@ def get_results(job_id):
 
 @app.route('/status/<job_id>', methods=['GET'])
 def get_status(job_id):
+    # First, try to read from disk (cross-worker consistency)
+    job_status_path = Path(app.config['RESULTS_FOLDER']) / job_id / 'status.json'
+    if job_status_path.exists():
+        try:
+            with open(job_status_path, 'r') as f:
+                status_data = json.load(f)
+                return jsonify(status_data), 200
+        except Exception as e:
+            logging.error(f"Error reading status from disk: {e}")
+    
+    # Fall back to in-memory dict
     with job_lock:
         if job_id not in jobs: 
             return jsonify({'error': 'Job not found'}), 404
