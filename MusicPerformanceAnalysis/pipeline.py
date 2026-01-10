@@ -23,6 +23,7 @@ import argparse
 import json
 import sys
 import yaml
+import gc
 from pathlib import Path
 from datetime import datetime
 import logging
@@ -1389,6 +1390,10 @@ class MusicPerformancePipeline:
             layer_times['L4'] = (datetime.now() - layer_start).total_seconds()
             log_memory_info("LAYER_4_END", process)
             logger.info(f"✅ Layer 4 Complete: {layer_times['L4']:.2f}s\n")
+            
+            # Garbage collection after Layer 4 (memory-intensive feature extraction)
+            gc.collect()
+            log_memory_info("LAYER_4_GC", process)
         except Exception as e:
             logger.error(f"❌ Layer 4 Exception: {e}", exc_info=True)
             layer_times['L4'] = (datetime.now() - layer_start).total_seconds()
@@ -1408,6 +1413,10 @@ class MusicPerformancePipeline:
         except Exception as e:
             logger.warning(f"⚠️  Layer 5 Optional Error: {e}")
             layer_times['L5'] = (datetime.now() - layer_start).total_seconds()
+        
+        # Garbage collection after Layer 5 (memory-intensive PQG-A2SA alignment)
+        gc.collect()
+        log_memory_info("LAYER_5_GC", process)
         
         # Layer 6 - Inference Core
         #logger.info("-"*80)

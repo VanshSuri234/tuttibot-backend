@@ -30,6 +30,7 @@ Layer 2 (ProcessingLayer) was hanging indefinitely after `check_audio_quality()`
 ```
 
 **What Happened:**
+
 1. ✅ check_audio_quality() completed successfully (prints visible)
 2. ✅ Code execution continued past that function
 3. ❌ Next line with `logger.info()` executed but BLOCKED/HUNG
@@ -67,12 +68,14 @@ sys.stdout.flush()
 **File**: `MusicPerformanceAnalysis/layers/02_processing/processing_layer.py`
 
 **Changes**:
+
 - Commented out **ALL** `logger.info()` calls in the `process()` method (lines 615-970)
 - Replaced critical execution checkpoints with `print() + sys.stdout.flush()`
 - Preserved logger calls in other methods (imports, initialization) - they work fine
 - Added `import sys` at top (already present)
 
 **Scope of Changes**:
+
 - Lines 615-630: Process method start, file preparation
 - Lines 630-700: File copying and validation (Steps 0a-0c)
 - Lines 700-890: Audio quality check through Step 5 (critical hang point)
@@ -81,12 +84,14 @@ sys.stdout.flush()
 ## Why This Is The Real Issue
 
 ### Local Development
+
 ```
 Direct Python → stdout → Terminal → Visible ✅
 Logger thread → Local file system → Works fine ✅
 ```
 
 ### Render.com Gunicorn
+
 ```
 Gunicorn Worker 1 → Logger thread (DEADLOCK?) → File I/O hangs ❌
 Status polls continue (worker process alive) ❌
@@ -96,6 +101,7 @@ No error visible (hung in logger, not in code) ❌
 ## Verification
 
 The fix will be verified by new test logs showing:
+
 - `[STDOUT]` markers appearing for each step
 - Process completing without hangs
 - Full execution path visible in logs
@@ -112,8 +118,8 @@ The fix will be verified by new test logs showing:
 ## Next Steps if Still Hanging
 
 If the process still hangs after this fix:
+
 1. Check if remaining `logger.info()` calls exist before print statements
 2. Look for other module-level logger initialization that might block
 3. Check if stdout itself is being redirected/captured differently
 4. Consider moving to structured logging (JSON logs) that bypass the logger
-
