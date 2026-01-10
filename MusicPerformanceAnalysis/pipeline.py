@@ -26,6 +26,8 @@ import yaml
 from pathlib import Path
 from datetime import datetime
 import logging
+import os
+import psutil
 
 # Add layers to path
 LAYERS_DIR = Path(__file__).parent / "layers"
@@ -36,6 +38,18 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+def log_memory_info(stage: str, process=None):
+    """Log memory usage information"""
+    if process is None:
+        process = psutil.Process(os.getpid())
+    
+    try:
+        mem_info = process.memory_info()
+        mem_percent = process.memory_percent()
+        logger.info(f"[MEM {stage}] RSS: {mem_info.rss / (1024*1024):.1f}MB | VMS: {mem_info.vms / (1024*1024):.1f}MB | %: {mem_percent:.1f}%")
+    except Exception as e:
+        logger.warning(f"Could not get memory info: {e}")
 
 
 class MusicPerformancePipeline:
@@ -1182,44 +1196,73 @@ class MusicPerformancePipeline:
         logger.info(f"  Output: {self.output_dir.name}")
         logger.info("="*70)
         
+        # Initialize process monitor
+        process = psutil.Process(os.getpid())
+        log_memory_info("START", process)
+        
         start_time = datetime.now()
         
         # Layer 1 - Input Standardization
+        logger.info("\n[Layer 1: Input Standardization]")
+        log_memory_info("BEFORE_L1", process)
         if not self.run_input_layer():
             logger.warning("Input layer had issues (continuing)")
+        log_memory_info("AFTER_L1", process)
         
         # Layer 2 - Processing (noise reduction, normalization, segmentation)
+        logger.info("\n[Layer 2: Audio Processing]")
+        log_memory_info("BEFORE_L2", process)
         if not self.run_processing_layer():
             logger.warning("Processing layer had issues (continuing)")
+        log_memory_info("AFTER_L2", process)
         
         # Layer 3 - Temporal Alignment
+        logger.info("\n[Layer 3: Temporal Alignment]")
+        log_memory_info("BEFORE_L3", process)
         if not self.run_temporal_alignment():
             logger.error("Temporal alignment failed - stopping pipeline")
             return False
+        log_memory_info("AFTER_L3", process)
         
         # Layer 4 - Extraction (parallel with PQG-A2SA)
         # Note: In full implementation, this would run in parallel with Layer 3
+        logger.info("\n[Layer 4: Feature Extraction]")
+        log_memory_info("BEFORE_L4", process)
         if not self.run_extraction_layer():
             logger.warning("Extraction layer had issues (continuing)")
+        log_memory_info("AFTER_L4", process)
         
         # Layer 5 - PQG-A2SA (optional, parallel with extraction)
+        logger.info("\n[Layer 5: PQG-A2SA Analysis]")
+        log_memory_info("BEFORE_L5", process)
         self.run_pqg_a2sa()  # Continue even if fails
+        log_memory_info("AFTER_L5", process)
         
         # Layer 6 - Inference Core
+        logger.info("\n[Layer 6: Inference Core]")
+        log_memory_info("BEFORE_L6", process)
         if not self.run_inference():
             logger.error("Inference failed - stopping pipeline")
             return False
+        log_memory_info("AFTER_L6", process)
         
         # Layer 7 - Grading Layer
+        logger.info("\n[Layer 7: Final Grading]")
+        log_memory_info("BEFORE_L7", process)
         if not self.run_grading():
             logger.error("Grading failed")
             return False
+        log_memory_info("AFTER_L7", process)
+        
         logger.info("\n[Final Step: Generating Chatbot Context]")
+        log_memory_info("BEFORE_CONTEXT", process)
         self.get_chatbot_context()
+        log_memory_info("AFTER_CONTEXT", process)
         
         # Create pipeline summary
         self._save_summary(start_time)
         
+        log_memory_info("END", process)
         logger.info("\n" + "="*70)
         logger.info("   PIPELINE COMPLETE")
         logger.info("="*70)
