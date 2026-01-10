@@ -815,34 +815,49 @@ class MusicPerformancePipeline:
         Layer 6: Inference Core
         Collect data from ALL layers and compute comprehensive metrics
         """
-        logger.info("[INFERENCE LAYER] Starting inference core...")
+        #logger.info("[INFERENCE LAYER] Starting inference core...")
+        print("[INFERENCE LAYER] Starting inference core...")
+        import sys as sys_module
+        sys_module.stdout.flush()
         layer_start = datetime.now()
         
         try:
             # Import inference core
-            logger.info("[INFERENCE LAYER] Importing inference modules...")
+            #logger.info("[INFERENCE LAYER] Importing inference modules...")
+            print("[INFERENCE LAYER] Importing inference modules...")
+            sys_module.stdout.flush()
             inference_dir = self.layers_dir / "06_inference"
             sys.path.insert(0, str(inference_dir))
-            logger.info("[INFERENCE LAYER] Inference modules imported")
+            #logger.info("[INFERENCE LAYER] Inference modules imported")
+            print("[INFERENCE LAYER] Inference modules imported")
+            sys_module.stdout.flush()
             
             # Load alignment results (required)
             alignment_file = self.results.get('alignment')
             if not alignment_file:
-                logger.error("[INFERENCE LAYER] ❌ No alignment results for inference")
+                #logger.error("[INFERENCE LAYER] ❌ No alignment results for inference")
+                print("[INFERENCE LAYER] ❌ No alignment results for inference")
+                sys_module.stdout.flush()
                 return False
             
-            logger.info(f"[INFERENCE LAYER] Loading alignment results: {alignment_file}")
+            #logger.info(f"[INFERENCE LAYER] Loading alignment results: {alignment_file}")
+            print(f"[INFERENCE LAYER] Loading alignment results: {alignment_file}")
+            sys_module.stdout.flush()
             with open(alignment_file) as f:
                 alignment_data = json.load(f)
             
             # Extract metrics from alignment results
             grading_metrics = alignment_data.get('grading_metrics', {})
-            logger.info(f"[INFERENCE LAYER] ✅ Alignment metrics loaded ({len(grading_metrics)} items)")
+            #logger.info(f"[INFERENCE LAYER] ✅ Alignment metrics loaded ({len(grading_metrics)} items)")
+            print(f"[INFERENCE LAYER] ✅ Alignment metrics loaded ({len(grading_metrics)} items)")
+            sys_module.stdout.flush()
             
             # Load extraction results (optional but recommended)
             extraction_results = {}
             if 'extraction' in self.results:
-                logger.info("[INFERENCE LAYER] Loading extraction features...")
+                #logger.info("[INFERENCE LAYER] Loading extraction features...")
+                print("[INFERENCE LAYER] Loading extraction features...")
+                sys_module.stdout.flush()
                 try:
                     perf_features_file = self.results['extraction'].get('performance_features')
                     score_features_file = self.results['extraction'].get('score_features')
@@ -850,14 +865,20 @@ class MusicPerformancePipeline:
                     if perf_features_file and Path(perf_features_file).exists():
                         with open(perf_features_file) as f:
                             extraction_results['performance'] = json.load(f)
-                        logger.info(f"[INFERENCE LAYER] ✅ Performance features loaded")
+                        #logger.info(f"[INFERENCE LAYER] ✅ Performance features loaded")
+                        print(f"[INFERENCE LAYER] ✅ Performance features loaded")
+                        sys_module.stdout.flush()
                     
                     if score_features_file and Path(score_features_file).exists():
                         with open(score_features_file) as f:
                             extraction_results['score'] = json.load(f)
-                        logger.info(f"[INFERENCE LAYER] ✅ Score features loaded")
+                        #logger.info(f"[INFERENCE LAYER] ✅ Score features loaded")
+                        print(f"[INFERENCE LAYER] ✅ Score features loaded")
+                        sys_module.stdout.flush()
                 except Exception as e:
-                    logger.warning(f"[INFERENCE LAYER] ⚠️  Could not load extraction features: {e}")
+                    #logger.warning(f"[INFERENCE LAYER] ⚠️  Could not load extraction features: {e}")
+                    print(f"[INFERENCE LAYER] ⚠️  Could not load extraction features: {e}")
+                    sys_module.stdout.flush()
             
             # Load PQG-A2SA results (optional)
             pqg_results = {}
@@ -867,12 +888,18 @@ class MusicPerformancePipeline:
                     try:
                         with open(pqg_file) as f:
                             pqg_results = json.load(f)
-                        logger.info(f"[INFERENCE LAYER] ✅ PQG-A2SA metrics loaded")
+                        #logger.info(f"[INFERENCE LAYER] ✅ PQG-A2SA metrics loaded")
+                        print(f"[INFERENCE LAYER] ✅ PQG-A2SA metrics loaded")
+                        sys_module.stdout.flush()
                     except Exception as e:
-                        logger.warning(f"[INFERENCE LAYER] ⚠️  Could not load PQG-A2SA results: {e}")
+                        #logger.warning(f"[INFERENCE LAYER] ⚠️  Could not load PQG-A2SA results: {e}")
+                        print(f"[INFERENCE LAYER] ⚠️  Could not load PQG-A2SA results: {e}")
+                        sys_module.stdout.flush()
             
             # Create comprehensive grading package with ALL metrics
-            logger.info("[INFERENCE LAYER] Creating comprehensive grading package...")
+            #logger.info("[INFERENCE LAYER] Creating comprehensive grading package...")
+            print("[INFERENCE LAYER] Creating comprehensive grading package...")
+            sys_module.stdout.flush()
             grading_package = {
                 'timestamp': datetime.now().isoformat(),
                 'audio_path': str(self.audio_path),
@@ -888,20 +915,28 @@ class MusicPerformancePipeline:
             }
             
             # Save grading package
-            logger.info("[INFERENCE LAYER] Saving grading package...")
+            #logger.info("[INFERENCE LAYER] Saving grading package...")
+            print("[INFERENCE LAYER] Saving grading package...")
+            sys_module.stdout.flush()
             output_file = self.inference_dir / "grading_package_master.json"
             with open(output_file, 'w') as f:
                 json.dump(grading_package, f, indent=2)
             
             elapsed = (datetime.now() - layer_start).total_seconds()
-            logger.info(f"[INFERENCE LAYER] ✅ Inference package saved: {output_file} ({elapsed:.2f}s)")
+            #logger.info(f"[INFERENCE LAYER] ✅ Inference package saved: {output_file} ({elapsed:.2f}s)")
+            print(f"[INFERENCE LAYER] ✅ Inference package saved: {output_file} ({elapsed:.2f}s)")
+            sys_module.stdout.flush()
             self.results['grading_package'] = str(output_file)
             self.status['inference'] = True
             return True
             
         except Exception as e:
             elapsed = (datetime.now() - layer_start).total_seconds()
-            logger.error(f"[INFERENCE LAYER] ❌ Error: {e} - elapsed: {elapsed:.2f}s", exc_info=True)
+            #logger.error(f"[INFERENCE LAYER] ❌ Error: {e} - elapsed: {elapsed:.2f}s", exc_info=True)
+            print(f"[INFERENCE LAYER] ❌ Error: {e} - elapsed: {elapsed:.2f}s")
+            import traceback
+            traceback.print_exc()
+            sys_module.stdout.flush()
             return False
     
     def run_grading(self):
@@ -1375,21 +1410,38 @@ class MusicPerformancePipeline:
             layer_times['L5'] = (datetime.now() - layer_start).total_seconds()
         
         # Layer 6 - Inference Core
-        logger.info("-"*80)
-        logger.info("[LAYER 6️⃣  INFERENCE CORE] Starting...")
-        logger.info("   - Metric computation and analysis")
-        logger.info("-"*80)
+        #logger.info("-"*80)
+        print("-"*80)
+        import sys as sys_module
+        sys_module.stdout.flush()
+        #logger.info("[LAYER 6️⃣  INFERENCE CORE] Starting...")
+        print("[LAYER 6️⃣  INFERENCE CORE] Starting...")
+        sys_module.stdout.flush()
+        #logger.info("   - Metric computation and analysis")
+        print("   - Metric computation and analysis")
+        sys_module.stdout.flush()
+        #logger.info("-"*80)
+        print("-"*80)
+        sys_module.stdout.flush()
         layer_start = datetime.now()
         log_memory_info("LAYER_6_START", process)
         try:
             if not self.run_inference():
-                logger.error("❌ Layer 6: Inference failed - stopping pipeline")
+                #logger.error("❌ Layer 6: Inference failed - stopping pipeline")
+                print("❌ Layer 6: Inference failed - stopping pipeline")
+                sys_module.stdout.flush()
                 return False
             layer_times['L6'] = (datetime.now() - layer_start).total_seconds()
             log_memory_info("LAYER_6_END", process)
-            logger.info(f"✅ Layer 6 Complete: {layer_times['L6']:.2f}s\n")
+            #logger.info(f"✅ Layer 6 Complete: {layer_times['L6']:.2f}s\n")
+            print(f"✅ Layer 6 Complete: {layer_times['L6']:.2f}s\n")
+            sys_module.stdout.flush()
         except Exception as e:
-            logger.error(f"❌ Layer 6 Exception: {e}", exc_info=True)
+            #logger.error(f"❌ Layer 6 Exception: {e}", exc_info=True)
+            print(f"❌ Layer 6 Exception: {e}")
+            import traceback
+            traceback.print_exc()
+            sys_module.stdout.flush()
             layer_times['L6'] = (datetime.now() - layer_start).total_seconds()
             return False
         
