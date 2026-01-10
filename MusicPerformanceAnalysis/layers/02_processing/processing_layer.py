@@ -22,6 +22,8 @@ from dataclasses import dataclass, asdict
 import time
 import psutil
 import logging
+import sys
+import traceback
 
 # Setup detailed logging for memory and timing diagnostics
 logging.basicConfig(level=logging.DEBUG)
@@ -610,11 +612,12 @@ class ProcessingLayer:
         Returns:
             ProcessingResult containing all extracted data
         """
-        logger.info(f"[PROCESS] 🚀 PROCESS METHOD STARTED")
-        start_time = time.time()
-        logger.info(f"[PROCESS] Input: audio={audio_path}, music={music_path}")
-        logger.info(f"[PROCESS] Starting processing for audio: {audio_path}, music: {music_path}")
-        log_memory_usage("PROCESS_START")
+        try:
+            logger.info(f"[PROCESS] 🚀 PROCESS METHOD STARTED")
+            start_time = time.time()
+            logger.info(f"[PROCESS] Input: audio={audio_path}, music={music_path}")
+            logger.info(f"[PROCESS] Starting processing for audio: {audio_path}, music: {music_path}")
+            log_memory_usage("PROCESS_START")
         
         # Create organized directory structure and copy input files
         logger.info(f"[PROCESS] ▶️  Step 0a: Preparing directory structure...")
@@ -684,162 +687,238 @@ class ProcessingLayer:
         logger.info(f"[PROCESS] ▶️  Step 0d: Analyzing audio quality...")
         logger.info(f"[PROCESS] About to call check_audio_quality on {original_audio_path}")
         logger.info(f"[PROCESS] 🔍 BEFORE check_audio_quality() call")
-        audio_analysis = self.audio_processor.check_audio_quality(str(original_audio_path))
+        print(f"[EMERGENCY] 🔍 BEFORE check_audio_quality() call")
+        sys.stdout.flush()
+        
+        try:
+            audio_analysis = self.audio_processor.check_audio_quality(str(original_audio_path))
+            print(f"[EMERGENCY] 🔍 AFTER check_audio_quality() returned successfully")
+            sys.stdout.flush()
+        except Exception as e:
+            print(f"[EMERGENCY] ❌ ERROR IN check_audio_quality(): {e}")
+            print(f"[EMERGENCY] Traceback: {traceback.format_exc()}")
+            sys.stdout.flush()
+            raise
+        
         logger.info(f"[PROCESS] 🔍 AFTER check_audio_quality() returned")
         logger.info(f"[PROCESS] ✅ Audio analysis result: {audio_analysis}")
         print(f"Audio analysis: {audio_analysis}")
         logger.info(f"[PROCESS] ✅ Audio analysis completed successfully")
+        print(f"[EMERGENCY] ✅ About to prepare output paths")
+        sys.stdout.flush()
         
         # Prepare output paths (all in processed directory)
-        logger.info(f"[PROCESS] ✅✅✅ STEP 0 (PREPARATION) COMPLETE ✅✅✅")
-        logger.info(f"[PROCESS] 🔍 Preparing to enter Steps 1-5 processing...")
+        print(f"[STDOUT] ✅✅✅ STEP 0 (PREPARATION) COMPLETE ✅✅✅")
+        sys.stdout.flush()
+        print(f"[STDOUT] 🔍 Preparing to enter Steps 1-5 processing...")
+        sys.stdout.flush()
         base_name = Path(audio_path).stem
-        logger.info(f"[PROCESS] 🔍 Base name: {base_name}")
+        print(f"[STDOUT] 🔍 Base name: {base_name}")
+        sys.stdout.flush()
         processed_audio_path = self.processed_dir / f"{base_name}_processed.wav"
-        logger.info(f"[PROCESS] 🔍 Output will be: {processed_audio_path}")
+        print(f"[STDOUT] 🔍 Output will be: {processed_audio_path}")
+        sys.stdout.flush()
         current_audio_path = str(original_audio_path)
-        logger.info(f"[PROCESS] 🔍 Current audio path: {current_audio_path}")
+        print(f"[STDOUT] 🔍 Current audio path: {current_audio_path}")
+        sys.stdout.flush()
         
         # Track intermediate files for cleanup
         intermediate_files = []
+        print(f"[STDOUT] ✅ intermediate_files list created")
+        sys.stdout.flush()
         
         # Apply audio processing steps as needed
-        logger.info(f"[PROCESS] 🔍 Audio analysis needs: noise_reduction={audio_analysis['needs_noise_reduction']}, normalization={audio_analysis['needs_normalization']}, segmentation={audio_analysis['needs_segmentation']}")
+        print(f"[STDOUT] 🔍 Audio analysis needs: noise_reduction={audio_analysis['needs_noise_reduction']}, normalization={audio_analysis['needs_normalization']}, segmentation={audio_analysis['needs_segmentation']}")
+        sys.stdout.flush()
         elapsed_checkpoint = time.time()
+        print(f"[STDOUT] ✅ elapsed_checkpoint set")
+        sys.stdout.flush()
         
         # STEP 1: Noise Reduction
-        logger.info(f"[PROCESS] 🚀 ENTERING STEP 1: NOISE REDUCTION")
+        print(f"[STDOUT] 🚀 ENTERING STEP 1: NOISE REDUCTION")
+        sys.stdout.flush()
         if audio_analysis['needs_noise_reduction']:
-            logger.info(f"[PROCESS] ▶️ STARTING STEP 1: NOISE REDUCTION")
-            logger.info(f"[PROCESS] ▶️ Step 1: Applying noise reduction...")
+            print(f"[STDOUT] ▶️ STARTING STEP 1: NOISE REDUCTION")
+            sys.stdout.flush()
+            print(f"[STDOUT] ▶️ Step 1: Applying noise reduction...")
+            sys.stdout.flush()
             self._update_job_status("Layer 2: Noise Reduction", 35)
             noise_reduced_path = self.processed_dir / f"{base_name}_denoised.wav"
             try:
-                logger.info(f"[PROCESS] Calling reduce_noise on {current_audio_path}...")
+                print(f"[STDOUT] Calling reduce_noise on {current_audio_path}...")
+                sys.stdout.flush()
                 if self.audio_processor.reduce_noise(current_audio_path, str(noise_reduced_path)):
                     intermediate_files.append(str(noise_reduced_path))
                     current_audio_path = str(noise_reduced_path)
                     elapsed = time.time() - elapsed_checkpoint
-                    logger.info(f"[PROCESS] ✅ Noise reduction completed in {elapsed:.2f}s")
+                    print(f"[STDOUT] ✅ Noise reduction completed in {elapsed:.2f}s")
+                    sys.stdout.flush()
                     self._update_job_status("Layer 2: Noise Reduction Complete", 40)
                     elapsed_checkpoint = time.time()
             except Exception as e:
-                logger.error(f"[PROCESS] ❌ Noise reduction error: {e}", exc_info=True)
-                logger.info(f"[PROCESS] Continuing without noise reduction...")
+                print(f"[STDOUT] ❌ Noise reduction error: {e}")
+                sys.stdout.flush()
+                print(f"[STDOUT] Continuing without noise reduction...")
+                sys.stdout.flush()
         else:
-            logger.info(f"[PROCESS] ⏭️  Skipping noise reduction (not needed)")
+            print(f"[STDOUT] ⏭️  Skipping noise reduction (not needed)")
+            sys.stdout.flush()
         
-        logger.info(f"[PROCESS] ✅ STEP 1 COMPLETE")
-        logger.info(f"[PROCESS] 🚀 ENTERING STEP 2: NORMALIZATION")
+        print(f"[STDOUT] ✅ STEP 1 COMPLETE")
+        sys.stdout.flush()
+        print(f"[STDOUT] 🚀 ENTERING STEP 2: NORMALIZATION")
+        sys.stdout.flush()
         if audio_analysis['needs_normalization']:
-            logger.info(f"[PROCESS] ▶️ Normalization needed, calling normalize_audio...")
+            print(f"[STDOUT] ▶️ Normalization needed, calling normalize_audio...")
+            sys.stdout.flush()
             self._update_job_status("Layer 2: Normalization", 45)
             normalized_path = self.processed_dir / f"{base_name}_normalized.wav"
-            logger.info(f"[PROCESS] 🔍 Input: {current_audio_path}, Output: {normalized_path}")
+            print(f"[STDOUT] 🔍 Input: {current_audio_path}, Output: {normalized_path}")
+            sys.stdout.flush()
             try:
-                logger.info(f"[PROCESS] 🔍 BEFORE normalize_audio() call")
+                print(f"[STDOUT] 🔍 BEFORE normalize_audio() call")
+                sys.stdout.flush()
                 if self.audio_processor.normalize_audio(current_audio_path, str(normalized_path)):
-                    logger.info(f"[PROCESS] 🔍 AFTER normalize_audio() - success")
+                    print(f"[STDOUT] 🔍 AFTER normalize_audio() - success")
+                    sys.stdout.flush()
                     intermediate_files.append(str(normalized_path))
                     current_audio_path = str(normalized_path)
                     elapsed = time.time() - elapsed_checkpoint
-                    logger.info(f"[PROCESS] ✅ Normalization completed in {elapsed:.2f}s")
+                    print(f"[STDOUT] ✅ Normalization completed in {elapsed:.2f}s")
+                    sys.stdout.flush()
                     self._update_job_status("Layer 2: Normalization Complete", 50)
                     elapsed_checkpoint = time.time()
                 else:
-                    logger.warning(f"[PROCESS] ⚠️  normalize_audio returned False")
+                    print(f"[STDOUT] ⚠️  normalize_audio returned False")
+                    sys.stdout.flush()
             except Exception as e:
-                logger.error(f"[PROCESS] ❌ Normalization error: {e}", exc_info=True)
-                logger.info(f"[PROCESS] Continuing without normalization...")
-            except Exception as e:
-                logger.error(f"[PROCESS] ❌ Normalization error: {e}", exc_info=True)
-                logger.info(f"[PROCESS] Continuing without normalization...")
+                print(f"[STDOUT] ❌ Normalization error: {e}")
+                sys.stdout.flush()
+                print(f"[STDOUT] Continuing without normalization...")
+                sys.stdout.flush()
         else:
-            logger.info(f"[PROCESS] ⏭️  Skipping normalization (not needed)")
+            print(f"[STDOUT] ⏭️  Skipping normalization (not needed)")
+            sys.stdout.flush()
         
-        logger.info(f"[PROCESS] ✅ STEP 2 COMPLETE")
-        logger.info(f"[PROCESS] 🚀 ENTERING STEP 3: SAVING PROCESSED AUDIO")
+        print(f"[STDOUT] ✅ STEP 2 COMPLETE")
+        sys.stdout.flush()
+        print(f"[STDOUT] 🚀 ENTERING STEP 3: SAVING PROCESSED AUDIO")
+        sys.stdout.flush()
         self._update_job_status("Layer 2: Saving Processed Audio", 55)
         final_processed_path = self.processed_dir / f"{base_name}_processed.wav"
         shared_processed_audio_path = self.shared_processed_dir / f"{base_name}_processed.wav"
-        logger.info(f"[PROCESS] 🔍 Final path: {final_processed_path}")
-        logger.info(f"[PROCESS] 🔍 Shared path: {shared_processed_audio_path}")
-        logger.info(f"[PROCESS] 🔍 Current audio to save: {current_audio_path}")
+        print(f"[STDOUT] 🔍 Final path: {final_processed_path}")
+        sys.stdout.flush()
+        print(f"[STDOUT] 🔍 Shared path: {shared_processed_audio_path}")
+        sys.stdout.flush()
+        print(f"[STDOUT] 🔍 Current audio to save: {current_audio_path}")
+        sys.stdout.flush()
         
         try:
-            logger.info(f"[PROCESS] 🔍 Checking if audio was processed: {current_audio_path} != {str(original_audio_path)}")
+            print(f"[STDOUT] 🔍 Checking if audio was processed: {current_audio_path} != {str(original_audio_path)}")
+            sys.stdout.flush()
             if current_audio_path != str(original_audio_path):
                 # Audio was processed, copy to final location
                 import shutil
-                logger.info(f"[PROCESS] Copying processed audio to {final_processed_path}...")
+                print(f"[STDOUT] Copying processed audio to {final_processed_path}...")
+                sys.stdout.flush()
                 shutil.copy2(current_audio_path, final_processed_path)
                 shutil.copy2(current_audio_path, shared_processed_audio_path)
                 processed_audio_path = str(final_processed_path)
-                logger.info(f"[PROCESS] ✅ Final processed audio saved to: {processed_audio_path}")
-                logger.info(f"[PROCESS] ✅ Final processed audio saved to shared directory: {shared_processed_audio_path}")
+                print(f"[STDOUT] ✅ Final processed audio saved to: {processed_audio_path}")
+                sys.stdout.flush()
+                print(f"[STDOUT] ✅ Final processed audio saved to shared directory: {shared_processed_audio_path}")
+                sys.stdout.flush()
             else:
                 # No processing was needed, but still create a copy for consistency
                 import shutil
-                logger.info(f"[PROCESS] Copying original audio (no processing) to {final_processed_path}...")
+                print(f"[STDOUT] Copying original audio (no processing) to {final_processed_path}...")
+                sys.stdout.flush()
                 shutil.copy2(str(original_audio_path), final_processed_path)
                 shutil.copy2(str(original_audio_path), shared_processed_audio_path)
                 processed_audio_path = str(final_processed_path)
-                logger.info(f"[PROCESS] ⏭️  Original audio copied (no processing needed): {processed_audio_path}")
-                logger.info(f"[PROCESS] ✅ Original audio copied to shared directory: {shared_processed_audio_path}")
+                print(f"[STDOUT] ⏭️  Original audio copied (no processing needed): {processed_audio_path}")
+                sys.stdout.flush()
+                print(f"[STDOUT] ✅ Original audio copied to shared directory: {shared_processed_audio_path}")
+                sys.stdout.flush()
         except Exception as e:
-            logger.error(f"[PROCESS] ❌ Step 3 error saving audio: {e}", exc_info=True)
+            print(f"[STDOUT] ❌ Step 3 error saving audio: {e}")
+            sys.stdout.flush()
             raise
         
         # Clean up intermediate files automatically
-        logger.info(f"[PROCESS] ▶️ Cleaning up intermediate files...")
+        print(f"[STDOUT] ▶️ Cleaning up intermediate files...")
+        sys.stdout.flush()
         for intermediate_file in intermediate_files:
             try:
                 os.remove(intermediate_file)
-                logger.info(f"[PROCESS] 🗑️  Cleaned up intermediate file: {intermediate_file}")
+                print(f"[STDOUT] 🗑️  Cleaned up intermediate file: {intermediate_file}")
+                sys.stdout.flush()
             except Exception as e:
-                logger.warning(f"[PROCESS] ⚠️  Could not remove intermediate file {intermediate_file}: {e}")
+                print(f"[STDOUT] ⚠️  Could not remove intermediate file {intermediate_file}: {e}")
+                sys.stdout.flush()
         
-        logger.info(f"[PROCESS] ✅ STEP 3 COMPLETE")
-        logger.info(f"[PROCESS] 🚀 ENTERING STEP 4: AUDIO SEGMENTATION (auditok)")
+        print(f"[STDOUT] ✅ STEP 3 COMPLETE")
+        sys.stdout.flush()
+        print(f"[STDOUT] 🚀 ENTERING STEP 4: AUDIO SEGMENTATION (auditok)")
+        sys.stdout.flush()
         self._update_job_status("Layer 2: Audio Segmentation", 60)
         segments_start = time.time()
         segments = []
-        logger.info(f"[PROCESS] 🔍 needs_segmentation={audio_analysis['needs_segmentation']}")
+        print(f"[STDOUT] 🔍 needs_segmentation={audio_analysis['needs_segmentation']}")
+        sys.stdout.flush()
         if audio_analysis['needs_segmentation']:
-            logger.info(f"[PROCESS] 🔍 Segmentation needed")
-            logger.info(f"[PROCESS] 🔍 BEFORE segment_audio() call with input: {processed_audio_path}")
+            print(f"[STDOUT] 🔍 Segmentation needed")
+            sys.stdout.flush()
+            print(f"[STDOUT] 🔍 BEFORE segment_audio() call with input: {processed_audio_path}")
+            sys.stdout.flush()
             try:
                 segments = self.audio_processor.segment_audio(processed_audio_path)
-                logger.info(f"[PROCESS] 🔍 AFTER segment_audio() returned {len(segments)} segments")
+                print(f"[STDOUT] 🔍 AFTER segment_audio() returned {len(segments)} segments")
+                sys.stdout.flush()
                 segments_elapsed = time.time() - segments_start
-                logger.info(f"[PROCESS] ✅ Segmentation completed in {segments_elapsed:.2f}s: {len(segments)} segments")
+                print(f"[STDOUT] ✅ Segmentation completed in {segments_elapsed:.2f}s: {len(segments)} segments")
+                sys.stdout.flush()
                 self._update_job_status("Layer 2: Audio Segmentation Complete", 65)
             except Exception as e:
-                logger.error(f"[PROCESS] ❌ Segmentation error: {e}", exc_info=True)
-                logger.info(f"[PROCESS] Using fallback: single full-audio segment...")
+                print(f"[STDOUT] ❌ Segmentation error: {e}")
+                sys.stdout.flush()
+                print(f"[STDOUT] Using fallback: single full-audio segment...")
+                sys.stdout.flush()
                 segments = []
         else:
-            logger.info(f"[PROCESS] ⏭️  Skipping segmentation (not needed)")
+            print(f"[STDOUT] ⏭️  Skipping segmentation (not needed)")
+            sys.stdout.flush()
         
-        logger.info(f"[PROCESS] ✅ STEP 4 COMPLETE")
-        logger.info(f"[PROCESS] 🚀 ENTERING STEP 5: MUSIC FEATURE EXTRACTION")
+        print(f"[STDOUT] ✅ STEP 4 COMPLETE")
+        sys.stdout.flush()
+        print(f"[STDOUT] 🚀 ENTERING STEP 5: MUSIC FEATURE EXTRACTION")
+        sys.stdout.flush()
         self._update_job_status("Layer 2: Music Feature Extraction", 70)
-        logger.info(f"[PROCESS] 🔍 Extracting from: {Path(original_music_path).name}")
-        logger.info(f"[PROCESS] 🔍 BEFORE extract_features() call")
+        print(f"[STDOUT] 🔍 Extracting from: {Path(original_music_path).name}")
+        sys.stdout.flush()
+        print(f"[STDOUT] 🔍 BEFORE extract_features() call")
+        sys.stdout.flush()
         features_start = time.time()
         try:
-            logger.info(f"[PROCESS] 🔍 Calling extract_features({original_music_path})...")
+            print(f"[STDOUT] 🔍 Calling extract_features({original_music_path})...")
+            sys.stdout.flush()
             music_features = self.music_processor.extract_features(str(original_music_path))
-            logger.info(f"[PROCESS] 🔍 AFTER extract_features() returned successfully")
+            print(f"[STDOUT] 🔍 AFTER extract_features() returned successfully")
+            sys.stdout.flush()
             features_elapsed = time.time() - features_start
-            logger.info(f"[PROCESS] ✅ Feature extraction completed in {features_elapsed:.2f}s: {len(music_features.notes)} notes extracted")
+            print(f"[STDOUT] ✅ Feature extraction completed in {features_elapsed:.2f}s: {len(music_features.notes)} notes extracted")
+            sys.stdout.flush()
             self._update_job_status("Layer 2: Music Feature Extraction Complete", 75)
         except Exception as e:
-            logger.error(f"[PROCESS] ❌ Feature extraction error: {e}", exc_info=True)
+            print(f"[STDOUT] ❌ Feature extraction error: {e}")
+            sys.stdout.flush()
             raise
         
-        logger.info(f"[PROCESS] ✅ STEP 5 COMPLETE")
-        logger.info(f"[PROCESS] 🚀 ENTERING STEP 6: SAVING RESULTS")
+        print(f"[STDOUT] ✅ STEP 5 COMPLETE")
+        sys.stdout.flush()
+        print(f"[STDOUT] 🚀 ENTERING STEP 6: SAVING RESULTS")
+        sys.stdout.flush()
         
         # Create processing result
         result = ProcessingResult(
@@ -876,8 +955,20 @@ class ProcessingLayer:
         logger.info(f"[PROCESS] ✅✅✅ Processing completed successfully in {elapsed_total:.2f}s!")
         self._update_job_status("Layer 2: Processing Complete", 100)
         log_memory_usage("PROCESS_END")
+        print(f"[EMERGENCY] ✅✅✅ PROCESS METHOD COMPLETING NORMALLY")
+        sys.stdout.flush()
         logger.info(f"[PROCESS] 🎵 RETURNING RESULT OBJECT")
         return result
+        
+    except Exception as process_error:
+        print(f"[EMERGENCY] ❌❌❌ EXCEPTION IN PROCESS() METHOD!")
+        print(f"[EMERGENCY] Exception type: {type(process_error).__name__}")
+        print(f"[EMERGENCY] Exception message: {str(process_error)}")
+        print(f"[EMERGENCY] Traceback:")
+        print(traceback.format_exc())
+        sys.stdout.flush()
+        logger.error(f"[PROCESS] ❌ FATAL ERROR IN PROCESS(): {process_error}", exc_info=True)
+        raise
     
     def save_results(self, result: ProcessingResult, base_name: str):
         """Save processing results to separate JSON files"""
