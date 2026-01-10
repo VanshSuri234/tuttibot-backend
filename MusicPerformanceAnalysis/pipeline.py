@@ -203,43 +203,51 @@ class MusicPerformancePipeline:
         Layer 1: Input Standardization
         Validates and standardizes audio and score inputs
         """
-        logger.info("\n[Layer 1: Input Standardization]")
+        logger.info("[INPUT LAYER] Starting input validation and standardization...")
+        layer_start = datetime.now()
         
         try:
             # Import input layer
+            logger.info("[INPUT LAYER] Importing MusicInputLayer...")
             sys.path.insert(0, str(self.layers_dir / "01_input"))
             from input_layer import MusicInputLayer
+            logger.info("[INPUT LAYER] MusicInputLayer imported successfully")
             
             # Process inputs
+            logger.info(f"[INPUT LAYER] Processing audio: {self.audio_path.name}")
+            logger.info(f"[INPUT LAYER] Processing score: {self.score_path.name}")
             input_layer = MusicInputLayer()
             result = input_layer.process_inputs(self.audio_path, self.score_path)
             
             if not result['overall_success']:
-                logger.error("Input validation failed")
+                logger.error("[INPUT LAYER] Input validation FAILED")
                 if not result['audio']['success']:
-                    logger.error(f"  Audio: {result['audio']['message']}")
+                    logger.error(f"[INPUT LAYER] Audio Error: {result['audio']['message']}")
                 if not result['score']['success']:
-                    logger.error(f"  Score: {result['score']['message']}")
+                    logger.error(f"[INPUT LAYER] Score Error: {result['score']['message']}")
                 return False
             
             # Store standardized paths
             if result['audio']['converted']:
                 self.audio_path = Path(result['audio']['output_path'])
-                logger.info(f" Audio standardized: {self.audio_path.name}")
+                logger.info(f"[INPUT LAYER] ✅ Audio standardized: {self.audio_path.name}")
             else:
-                logger.info(f" Audio validated: {self.audio_path.name}")
+                logger.info(f"[INPUT LAYER] ✅ Audio validated: {self.audio_path.name}")
             
             if result['score']['converted']:
                 self.score_path = Path(result['score']['output_path'])
-                logger.info(f" Score standardized: {self.score_path.name}")
+                logger.info(f"[INPUT LAYER] ✅ Score standardized: {self.score_path.name}")
             else:
-                logger.info(f" Score validated: {self.score_path.name}")
+                logger.info(f"[INPUT LAYER] ✅ Score validated: {self.score_path.name}")
             
+            elapsed = (datetime.now() - layer_start).total_seconds()
+            logger.info(f"[INPUT LAYER] ✅ COMPLETE in {elapsed:.2f}s")
             self.status['input'] = True
             return True
             
         except Exception as e:
-            logger.warning(f"Input layer error (continuing): {e}")
+            elapsed = (datetime.now() - layer_start).total_seconds()
+            logger.warning(f"[INPUT LAYER] ⚠️  Error (continuing): {e} - elapsed: {elapsed:.2f}s")
             # Continue even if input layer fails - files may already be in correct format
             return True
     
@@ -248,18 +256,23 @@ class MusicPerformancePipeline:
         Layer 2: Processing
         Noise reduction, normalization, and segmentation
         """
-        logger.info("\n[Layer 2: Audio Processing]")
+        logger.info("[PROCESSING LAYER] Starting audio processing...")
+        layer_start = datetime.now()
         
         try:
             # Import processing layer
+            logger.info("[PROCESSING LAYER] Importing ProcessingLayer...")
             sys.path.insert(0, str(self.layers_dir / "02_processing"))
             from processing_layer import ProcessingLayer
+            logger.info("[PROCESSING LAYER] ProcessingLayer imported successfully")
             
             # Process audio and score
+            logger.info(f"[PROCESSING LAYER] Creating processor with data_dir: {self.processing_dir / 'data'}")
             processing_layer = ProcessingLayer(
                 data_dir=str(self.processing_dir / "data"),
                 shared_output_dir=str(self.processing_dir / "shared")
             )
+            logger.info("[PROCESSING LAYER] Calling processing_layer.process()...")
             
             result = processing_layer.process(
                 str(self.audio_path),
@@ -270,11 +283,12 @@ class MusicPerformancePipeline:
             processed_audio = Path(result.processed_audio_path)
             if processed_audio.exists():
                 self.audio_path = processed_audio
-                logger.info(f" Audio processed: {self.audio_path.name}")
+                logger.info(f"[PROCESSING LAYER] ✅ Audio processed: {self.audio_path.name}")
             else:
-                logger.info(f" Audio processing skipped (not needed)")
+                logger.info(f"[PROCESSING LAYER] ℹ️  Audio processing skipped (not needed)")
             
             # Save processing metadata (convert numpy types)
+            logger.info("[PROCESSING LAYER] Saving processing metadata...")
             metadata_file = self.processing_dir / "processing_metadata.json"
             try:
                 # Convert numpy types to Python types
@@ -299,15 +313,19 @@ class MusicPerformancePipeline:
                 
                 with open(metadata_file, 'w') as f:
                     json.dump(metadata_dict, f, indent=2)
+                logger.info(f"[PROCESSING LAYER] ✅ Metadata saved: {metadata_file}")
             except Exception as e:
-                logger.warning(f"Could not save processing metadata: {e}")
+                logger.warning(f"[PROCESSING LAYER] ⚠️  Could not save metadata: {e}")
             
+            elapsed = (datetime.now() - layer_start).total_seconds()
+            logger.info(f"[PROCESSING LAYER] ✅ COMPLETE in {elapsed:.2f}s")
             self.results['processing_metadata'] = str(metadata_file)
             self.status['processing'] = True
             return True
             
         except Exception as e:
-            logger.warning(f"Processing layer error (continuing): {e}")
+            elapsed = (datetime.now() - layer_start).total_seconds()
+            logger.warning(f"[PROCESSING LAYER] ⚠️  Error (continuing): {e} - elapsed: {elapsed:.2f}s")
             # Continue even if processing fails - use original audio
             return True
     
@@ -316,24 +334,31 @@ class MusicPerformancePipeline:
         Layer 4: Feature Extraction
         Extracts performance and score features (runs in parallel with temporal alignment)
         """
-        logger.info("\n[Layer 4: Feature Extraction]")
+        logger.info("[EXTRACTION LAYER] Starting feature extraction...")
+        layer_start = datetime.now()
         
         try:
             # Import extraction layer
+            logger.info("[EXTRACTION LAYER] Importing ExtractionLayer...")
             sys.path.insert(0, str(self.layers_dir / "04_extraction"))
             from extraction_layer import ExtractionLayer
+            logger.info("[EXTRACTION LAYER] ExtractionLayer imported successfully")
             
             # Create extraction layer
+            logger.info("[EXTRACTION LAYER] Creating ExtractionLayer instance...")
             extraction_layer = ExtractionLayer()
             
             # Get required inputs
             audio_file = str(self.audio_path)
             score_file = str(self.score_path)
+            logger.info(f"[EXTRACTION LAYER] Audio: {audio_file}")
+            logger.info(f"[EXTRACTION LAYER] Score: {score_file}")
             
             # Check if we have segments from processing layer
             segments_file = self.processing_dir / "shared" / "processed" / "audio_segments.json"
             if not segments_file.exists():
                 # Create empty segments file
+                logger.info("[EXTRACTION LAYER] Creating empty segments file...")
                 segments_file.parent.mkdir(parents=True, exist_ok=True)
                 with open(segments_file, 'w') as f:
                     json.dump({"segments": []}, f)
@@ -342,11 +367,13 @@ class MusicPerformancePipeline:
             score_json_file = self.processing_dir / "shared" / "processed" / "music_features.json"
             if not score_json_file.exists():
                 # Create empty score JSON
+                logger.info("[EXTRACTION LAYER] Creating empty score JSON file...")
                 score_json_file.parent.mkdir(parents=True, exist_ok=True)
                 with open(score_json_file, 'w') as f:
                     json.dump({"notes": []}, f)
             
             # Extract features
+            logger.info("[EXTRACTION LAYER] Calling extraction_layer.process_all()...")
             outputs = extraction_layer.process_all(
                 audio_file=audio_file,
                 segments_file=str(segments_file),
@@ -355,15 +382,17 @@ class MusicPerformancePipeline:
                 output_dir=str(self.extraction_dir)
             )
             
+            elapsed = (datetime.now() - layer_start).total_seconds()
+            logger.info(f"[EXTRACTION LAYER] ✅ Feature extraction complete: {elapsed:.2f}s")
             self.results['extraction'] = outputs
             self.status['extraction'] = True
-            logger.info(f" Feature extraction complete")
             return True
             
         except Exception as e:
-            logger.warning(f"Extraction layer error (continuing): {e}")
+            elapsed = (datetime.now() - layer_start).total_seconds()
+            logger.warning(f"[EXTRACTION LAYER] ⚠️  Error (continuing): {e} - elapsed: {elapsed:.2f}s")
             import traceback
-            traceback.print_exc()
+            logger.debug(f"[EXTRACTION LAYER] Traceback: {traceback.format_exc()}")
             # Continue even if extraction fails - may not be needed for grading
             return True
     
@@ -372,49 +401,73 @@ class MusicPerformancePipeline:
         Layer 3: Temporal Alignment
         Runs blocks in sequence: Block 0 → 1 → 4 → Context → 2
         """
-        logger.info("\n[Layer 3: Temporal Alignment]")
+        logger.info("[TEMPORAL ALIGNMENT] Starting temporal alignment (Blocks 0→1→4→Context→2)...")
+        layer_start = datetime.now()
         
         # Import the existing tuttibot_pipeline from TuttiBot_End_To_End
         # This already has all blocks integrated with Context Aligner and PQG-A2SA
         try:
             temporal_alignment_dir = self.layers_dir / "03_temporal_alignment"
             sys.path.insert(0, str(temporal_alignment_dir))
+            logger.info("[TEMPORAL ALIGNMENT] Importing temporal alignment modules...")
             
             # We'll use the integrated pipeline we already created
             # For now, use a simplified approach - call each block
             
             # Block 0: ScoreGraph
+            logger.info("[TEMPORAL ALIGNMENT] Running Block 0: ScoreGraph Generation...")
+            block0_start = datetime.now()
             success = self._run_block_0()
+            block0_time = (datetime.now() - block0_start).total_seconds()
             if not success:
-                logger.error("Block 0 failed - cannot continue temporal alignment")
+                logger.error(f"[TEMPORAL ALIGNMENT] ❌ Block 0 FAILED - {block0_time:.2f}s")
                 return False
+            logger.info(f"[TEMPORAL ALIGNMENT] ✅ Block 0 Complete: {block0_time:.2f}s")
             
             # Block 1: Transcription
+            logger.info("[TEMPORAL ALIGNMENT] Running Block 1: Audio Transcription...")
+            block1_start = datetime.now()
             success = self._run_block_1()
+            block1_time = (datetime.now() - block1_start).total_seconds()
             if not success:
-                logger.error("Block 1 failed - cannot continue temporal alignment")
+                logger.error(f"[TEMPORAL ALIGNMENT] ❌ Block 1 FAILED - {block1_time:.2f}s")
                 return False
+            logger.info(f"[TEMPORAL ALIGNMENT] ✅ Block 1 Complete: {block1_time:.2f}s")
             
             # Block 4: Beat Detection (optional)
             if self.config['temporal_alignment']['block_4_beats']['enabled']:
+                logger.info("[TEMPORAL ALIGNMENT] Running Block 4: Beat Detection (optional)...")
+                block4_start = datetime.now()
                 self._run_block_4()  # Continue even if fails
+                block4_time = (datetime.now() - block4_start).total_seconds()
+                logger.info(f"[TEMPORAL ALIGNMENT] ℹ️  Block 4 (optional): {block4_time:.2f}s")
             
             # Context Aligner (optional)
             if self.config['temporal_alignment']['context_aligner']['enabled']:
+                logger.info("[TEMPORAL ALIGNMENT] Running Context Aligner (optional)...")
+                context_start = datetime.now()
                 self._run_context_aligner()  # Continue even if fails
+                context_time = (datetime.now() - context_start).total_seconds()
+                logger.info(f"[TEMPORAL ALIGNMENT] ℹ️  Context Aligner (optional): {context_time:.2f}s")
             
             # Block 2: DTW Alignment
+            logger.info("[TEMPORAL ALIGNMENT] Running Block 2: DTW Alignment...")
+            block2_start = datetime.now()
             success = self._run_block_2()
+            block2_time = (datetime.now() - block2_start).total_seconds()
             if not success:
-                logger.error("Block 2 failed")
+                logger.error(f"[TEMPORAL ALIGNMENT] ❌ Block 2 FAILED - {block2_time:.2f}s")
                 return False
+            logger.info(f"[TEMPORAL ALIGNMENT] ✅ Block 2 Complete: {block2_time:.2f}s")
             
+            elapsed = (datetime.now() - layer_start).total_seconds()
+            logger.info(f"[TEMPORAL ALIGNMENT] ✅ ALL BLOCKS COMPLETE: {elapsed:.2f}s")
             self.status['temporal_alignment'] = True
-            logger.info(" Temporal alignment complete")
             return True
             
         except Exception as e:
-            logger.error(f"Temporal alignment error: {e}")
+            elapsed = (datetime.now() - layer_start).total_seconds()
+            logger.error(f"[TEMPORAL ALIGNMENT] ❌ ERROR: {e} - elapsed: {elapsed:.2f}s", exc_info=True)
             return False
     
     def _run_block_0(self):
@@ -669,13 +722,15 @@ class MusicPerformancePipeline:
         Layer 5: PQG-A2SA (Parallel with extraction)
         Precise onset/offset detection
         """
-        logger.info("\n[Layer 5: PQG-A2SA]")
+        logger.info("[PQG-A2SA LAYER] Starting PQG-A2SA analysis...")
+        layer_start = datetime.now()
         
         if not self.config['pqg_a2sa']['enabled']:
-            logger.info("PQG-A2SA disabled in config")
+            logger.info("[PQG-A2SA LAYER] ℹ️  PQG-A2SA disabled in config")
             return True
         
         try:
+            logger.info("[PQG-A2SA LAYER] Checking for MIDI score...")
             # PQG-A2SA requires MIDI score
             # Check if original score is MIDI, otherwise use transcribed MIDI from Block 1
             score_midi = None
@@ -683,19 +738,20 @@ class MusicPerformancePipeline:
             if self.score_path.suffix.lower() in ['.mid', '.midi']:
                 # Original score is MIDI - use it directly
                 score_midi = self.score_path
-                logger.info(f"Using original MIDI score: {score_midi.name}")
+                logger.info(f"[PQG-A2SA LAYER] Using original MIDI score: {score_midi.name}")
             elif 'transcription_midi' in self.results:
                 # Use transcribed MIDI from temporal alignment (performance MIDI)
                 # NOTE: This is the performance MIDI, not ideal for PQG-A2SA
                 # TODO: Convert score MusicXML→MIDI in input layer
                 score_midi = Path(self.results['transcription_midi'])
-                logger.warning(f"Using performance MIDI as score (not ideal): {score_midi.name}")
-                logger.warning("TODO: Add MusicXML→MIDI conversion in Layer 1 for proper score MIDI")
+                logger.warning(f"[PQG-A2SA LAYER] ⚠️  Using performance MIDI as score (not ideal): {score_midi.name}")
+                logger.warning("[PQG-A2SA LAYER] TODO: Add MusicXML→MIDI conversion in Layer 1 for proper score MIDI")
             else:
-                logger.warning("No MIDI score available, skipping PQG-A2SA")
+                logger.warning("[PQG-A2SA LAYER] ⚠️  No MIDI score available, skipping PQG-A2SA")
                 return False
             
             # Import PQG-A2SA (using package import to handle relative imports correctly)
+            logger.info("[PQG-A2SA LAYER] Importing PQG-A2SA modules...")
             pqg_dir = self.layers_dir / "05_pqg_a2sa"
             pqg_src_dir = str(pqg_dir / "src")
             
@@ -706,16 +762,20 @@ class MusicPerformancePipeline:
             # Import from the src package (which has proper __init__.py)
             import src as pqg_src
             PQGAligner = pqg_src.PQGAligner
+            logger.info("[PQG-A2SA LAYER] PQGAligner imported successfully")
             
             # Run PQG-A2SA
+            logger.info("[PQG-A2SA LAYER] Creating PQGAligner instance and running alignment...")
             aligner = PQGAligner()
             results = aligner.align(
                 audio_path=str(self.audio_path),
                 midi_path=str(score_midi),
                 verbose=False
             )
+            logger.info("[PQG-A2SA LAYER] ✅ Alignment complete")
             
             # Save results (handle numpy arrays)
+            logger.info("[PQG-A2SA LAYER] Converting results and saving...")
             output_file = self.pqg_dir / "pqg_a2sa_results.json"
             
             def convert_numpy(obj):
@@ -737,13 +797,15 @@ class MusicPerformancePipeline:
             with open(output_file, 'w') as f:
                 json.dump(results_serializable, f, indent=2)
             
-            logger.info(f" PQG-A2SA results saved: {output_file}")
+            elapsed = (datetime.now() - layer_start).total_seconds()
+            logger.info(f"[PQG-A2SA LAYER] ✅ Results saved: {output_file} ({elapsed:.2f}s)")
             self.results['pqg_a2sa'] = str(output_file)
             self.status['pqg_a2sa'] = True
             return True
             
         except Exception as e:
-            logger.warning(f"PQG-A2SA error (optional): {e}")
+            elapsed = (datetime.now() - layer_start).total_seconds()
+            logger.warning(f"[PQG-A2SA LAYER] ⚠️  Error (optional): {e} - elapsed: {elapsed:.2f}s")
             return False
     
     def run_inference(self):
@@ -751,29 +813,34 @@ class MusicPerformancePipeline:
         Layer 6: Inference Core
         Collect data from ALL layers and compute comprehensive metrics
         """
-        logger.info("\n[Layer 6: Inference Core]")
+        logger.info("[INFERENCE LAYER] Starting inference core...")
+        layer_start = datetime.now()
         
         try:
             # Import inference core
+            logger.info("[INFERENCE LAYER] Importing inference modules...")
             inference_dir = self.layers_dir / "06_inference"
             sys.path.insert(0, str(inference_dir))
+            logger.info("[INFERENCE LAYER] Inference modules imported")
             
             # Load alignment results (required)
             alignment_file = self.results.get('alignment')
             if not alignment_file:
-                logger.error("No alignment results for inference")
+                logger.error("[INFERENCE LAYER] ❌ No alignment results for inference")
                 return False
             
+            logger.info(f"[INFERENCE LAYER] Loading alignment results: {alignment_file}")
             with open(alignment_file) as f:
                 alignment_data = json.load(f)
             
             # Extract metrics from alignment results
             grading_metrics = alignment_data.get('grading_metrics', {})
+            logger.info(f"[INFERENCE LAYER] ✅ Alignment metrics loaded ({len(grading_metrics)} items)")
             
             # Load extraction results (optional but recommended)
             extraction_results = {}
             if 'extraction' in self.results:
-                logger.info("Loading extraction features...")
+                logger.info("[INFERENCE LAYER] Loading extraction features...")
                 try:
                     perf_features_file = self.results['extraction'].get('performance_features')
                     score_features_file = self.results['extraction'].get('score_features')
@@ -781,14 +848,14 @@ class MusicPerformancePipeline:
                     if perf_features_file and Path(perf_features_file).exists():
                         with open(perf_features_file) as f:
                             extraction_results['performance'] = json.load(f)
-                        logger.info(f" Performance features loaded")
+                        logger.info(f"[INFERENCE LAYER] ✅ Performance features loaded")
                     
                     if score_features_file and Path(score_features_file).exists():
                         with open(score_features_file) as f:
                             extraction_results['score'] = json.load(f)
-                        logger.info(f" Score features loaded")
+                        logger.info(f"[INFERENCE LAYER] ✅ Score features loaded")
                 except Exception as e:
-                    logger.warning(f"Could not load extraction features: {e}")
+                    logger.warning(f"[INFERENCE LAYER] ⚠️  Could not load extraction features: {e}")
             
             # Load PQG-A2SA results (optional)
             pqg_results = {}
@@ -798,11 +865,12 @@ class MusicPerformancePipeline:
                     try:
                         with open(pqg_file) as f:
                             pqg_results = json.load(f)
-                        logger.info(f" PQG-A2SA metrics loaded")
+                        logger.info(f"[INFERENCE LAYER] ✅ PQG-A2SA metrics loaded")
                     except Exception as e:
-                        logger.warning(f"Could not load PQG-A2SA results: {e}")
+                        logger.warning(f"[INFERENCE LAYER] ⚠️  Could not load PQG-A2SA results: {e}")
             
             # Create comprehensive grading package with ALL metrics
+            logger.info("[INFERENCE LAYER] Creating comprehensive grading package...")
             grading_package = {
                 'timestamp': datetime.now().isoformat(),
                 'audio_path': str(self.audio_path),
@@ -818,17 +886,20 @@ class MusicPerformancePipeline:
             }
             
             # Save grading package
+            logger.info("[INFERENCE LAYER] Saving grading package...")
             output_file = self.inference_dir / "grading_package_master.json"
             with open(output_file, 'w') as f:
                 json.dump(grading_package, f, indent=2)
             
-            logger.info(f" Inference package saved: {output_file}")
+            elapsed = (datetime.now() - layer_start).total_seconds()
+            logger.info(f"[INFERENCE LAYER] ✅ Inference package saved: {output_file} ({elapsed:.2f}s)")
             self.results['grading_package'] = str(output_file)
             self.status['inference'] = True
             return True
             
         except Exception as e:
-            logger.error(f"Inference error: {e}")
+            elapsed = (datetime.now() - layer_start).total_seconds()
+            logger.error(f"[INFERENCE LAYER] ❌ Error: {e} - elapsed: {elapsed:.2f}s", exc_info=True)
             return False
     
     def run_grading(self):
@@ -836,30 +907,38 @@ class MusicPerformancePipeline:
         Layer 7: Grading Layer
         Compute final grade from metrics
         """
-        logger.info("\n[Layer 7: Grading Layer]")
+        logger.info("[GRADING LAYER] Starting final grading layer...")
+        layer_start = datetime.now()
         
         try:
             # Import grading layer
+            logger.info("[GRADING LAYER] Importing grading modules...")
             grading_dir = self.layers_dir / "07_grading"
             sys.path.insert(0, str(grading_dir))
+            logger.info("[GRADING LAYER] Grading modules imported")
             
             # Load grading package
+            logger.info("[GRADING LAYER] Loading grading package...")
             package_file = self.results.get('grading_package')
             if not package_file:
-                logger.error("No grading package for grading layer")
+                logger.error("[GRADING LAYER] ❌ No grading package for grading layer")
                 return False
             
+            logger.info(f"[GRADING LAYER] Loading: {package_file}")
             with open(package_file) as f:
                 package = json.load(f)
             
             # Extract metrics from the grading_metrics structure
+            logger.info("[GRADING LAYER] Extracting metrics from package...")
             all_metrics = package.get('alignment_metrics', {})
             extraction_features = package.get('extraction_features', {})
             
             # Apply PQG-A2SA weights
             weights = self.config['grading']['pqg_a2sa_weights']
+            logger.info(f"[GRADING LAYER] Using weights: {weights}")
             
             # Compute weighted score
+            logger.info("[GRADING LAYER] Computing component scores...")
             score = 0.0
             components = {}
             
@@ -991,26 +1070,31 @@ class MusicPerformancePipeline:
             }
             
             # Save results
+            logger.info("[GRADING LAYER] Saving final grade JSON...")
             output_file = self.grading_dir / "final_grade.json"
             with open(output_file, 'w') as f:
                 json.dump(final_grade, f, indent=2)
             
             # Create text report
+            logger.info("[GRADING LAYER] Generating performance report...")
             report = self._generate_report(final_grade, all_metrics)
             report_file = self.grading_dir / "performance_report.txt"
             with open(report_file, 'w') as f:
                 f.write(report)
             
-            logger.info(f" Final grade: {final_score:.1f}/100")
-            logger.info(f" Grade saved: {output_file}")
-            logger.info(f" Report saved: {report_file}")
+            elapsed = (datetime.now() - layer_start).total_seconds()
+            logger.info(f"[GRADING LAYER] ✅ Final grade: {final_score:.1f}/100")
+            logger.info(f"[GRADING LAYER] ✅ Grade saved: {output_file}")
+            logger.info(f"[GRADING LAYER] ✅ Report saved: {report_file}")
+            logger.info(f"[GRADING LAYER] ✅ COMPLETE in {elapsed:.2f}s")
             
             self.results['final_grade'] = str(output_file)
             self.status['grading'] = True
             return True
             
         except Exception as e:
-            logger.error(f"Grading error: {e}")
+            elapsed = (datetime.now() - layer_start).total_seconds()
+            logger.error(f"[GRADING LAYER] ❌ Error: {e} - elapsed: {elapsed:.2f}s", exc_info=True)
             return False
     
     def _get_letter_grade(self, score):
@@ -1187,90 +1271,183 @@ class MusicPerformancePipeline:
     
     def run_pipeline(self):
         """Run complete pipeline"""
-        logger.info("\n" + "="*70)
-        print("reached")
-        logger.info("  MUSIC PERFORMANCE ANALYSIS PIPELINE")
-        logger.info("="*70)
-        logger.info(f"  Audio: {self.audio_path.name}")
-        logger.info(f"  Score: {self.score_path.name}")
-        logger.info(f"  Output: {self.output_dir.name}")
-        logger.info("="*70)
+        logger.info("\n" + "="*80)
+        logger.info("  🎵 MUSIC PERFORMANCE ANALYSIS PIPELINE - EXECUTION START")
+        logger.info("="*80)
+        logger.info(f"  📁 Audio File: {self.audio_path.name} ({self.audio_path})")
+        logger.info(f"  🎼 Score File: {self.score_path.name} ({self.score_path})")
+        logger.info(f"  📤 Output Dir: {self.output_dir} ({self.output_dir.name})")
+        logger.info(f"  ⏰ Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}")
+        logger.info("="*80 + "\n")
         
         # Initialize process monitor
         process = psutil.Process(os.getpid())
-        log_memory_info("START", process)
+        log_memory_info("PIPELINE_START", process)
         
         start_time = datetime.now()
+        layer_times = {}
         
         # Layer 1 - Input Standardization
-        logger.info("\n[Layer 1: Input Standardization]")
-        log_memory_info("BEFORE_L1", process)
-        if not self.run_input_layer():
-            logger.warning("Input layer had issues (continuing)")
-        log_memory_info("AFTER_L1", process)
+        logger.info("\n" + "-"*80)
+        logger.info("[LAYER 1️⃣  INPUT STANDARDIZATION] Starting...")
+        logger.info("-"*80)
+        layer_start = datetime.now()
+        log_memory_info("LAYER_1_START", process)
+        try:
+            if not self.run_input_layer():
+                logger.warning("⚠️  Layer 1: Input validation had issues (continuing)")
+            layer_times['L1'] = (datetime.now() - layer_start).total_seconds()
+            log_memory_info("LAYER_1_END", process)
+            logger.info(f"✅ Layer 1 Complete: {layer_times['L1']:.2f}s\n")
+        except Exception as e:
+            logger.error(f"❌ Layer 1 Exception: {e}", exc_info=True)
+            layer_times['L1'] = (datetime.now() - layer_start).total_seconds()
         
         # Layer 2 - Processing (noise reduction, normalization, segmentation)
-        logger.info("\n[Layer 2: Audio Processing]")
-        log_memory_info("BEFORE_L2", process)
-        if not self.run_processing_layer():
-            logger.warning("Processing layer had issues (continuing)")
-        log_memory_info("AFTER_L2", process)
+        logger.info("-"*80)
+        logger.info("[LAYER 2️⃣  AUDIO PROCESSING] Starting...")
+        logger.info("   - Noise reduction, normalization, segmentation (auditok)")
+        logger.info("-"*80)
+        layer_start = datetime.now()
+        log_memory_info("LAYER_2_START", process)
+        try:
+            if not self.run_processing_layer():
+                logger.warning("⚠️  Layer 2: Processing had issues (continuing)")
+            layer_times['L2'] = (datetime.now() - layer_start).total_seconds()
+            log_memory_info("LAYER_2_END", process)
+            logger.info(f"✅ Layer 2 Complete: {layer_times['L2']:.2f}s\n")
+        except Exception as e:
+            logger.error(f"❌ Layer 2 Exception: {e}", exc_info=True)
+            layer_times['L2'] = (datetime.now() - layer_start).total_seconds()
         
         # Layer 3 - Temporal Alignment
-        logger.info("\n[Layer 3: Temporal Alignment]")
-        log_memory_info("BEFORE_L3", process)
-        if not self.run_temporal_alignment():
-            logger.error("Temporal alignment failed - stopping pipeline")
+        logger.info("-"*80)
+        logger.info("[LAYER 3️⃣  TEMPORAL ALIGNMENT] Starting...")
+        logger.info("   - Blocks: Scoregraph → Transcription → DTW → Beat Detection")
+        logger.info("-"*80)
+        layer_start = datetime.now()
+        log_memory_info("LAYER_3_START", process)
+        try:
+            if not self.run_temporal_alignment():
+                logger.error("❌ Layer 3: Temporal alignment failed - stopping pipeline")
+                return False
+            layer_times['L3'] = (datetime.now() - layer_start).total_seconds()
+            log_memory_info("LAYER_3_END", process)
+            logger.info(f"✅ Layer 3 Complete: {layer_times['L3']:.2f}s\n")
+        except Exception as e:
+            logger.error(f"❌ Layer 3 Exception: {e}", exc_info=True)
+            layer_times['L3'] = (datetime.now() - layer_start).total_seconds()
             return False
-        log_memory_info("AFTER_L3", process)
         
         # Layer 4 - Extraction (parallel with PQG-A2SA)
-        # Note: In full implementation, this would run in parallel with Layer 3
-        logger.info("\n[Layer 4: Feature Extraction]")
-        log_memory_info("BEFORE_L4", process)
-        if not self.run_extraction_layer():
-            logger.warning("Extraction layer had issues (continuing)")
-        log_memory_info("AFTER_L4", process)
+        logger.info("-"*80)
+        logger.info("[LAYER 4️⃣  FEATURE EXTRACTION] Starting...")
+        logger.info("   - Performance + Score features extraction")
+        logger.info("-"*80)
+        layer_start = datetime.now()
+        log_memory_info("LAYER_4_START", process)
+        try:
+            if not self.run_extraction_layer():
+                logger.warning("⚠️  Layer 4: Extraction had issues (continuing)")
+            layer_times['L4'] = (datetime.now() - layer_start).total_seconds()
+            log_memory_info("LAYER_4_END", process)
+            logger.info(f"✅ Layer 4 Complete: {layer_times['L4']:.2f}s\n")
+        except Exception as e:
+            logger.error(f"❌ Layer 4 Exception: {e}", exc_info=True)
+            layer_times['L4'] = (datetime.now() - layer_start).total_seconds()
         
         # Layer 5 - PQG-A2SA (optional, parallel with extraction)
-        logger.info("\n[Layer 5: PQG-A2SA Analysis]")
-        log_memory_info("BEFORE_L5", process)
-        self.run_pqg_a2sa()  # Continue even if fails
-        log_memory_info("AFTER_L5", process)
+        logger.info("-"*80)
+        logger.info("[LAYER 5️⃣  PQG-A2SA ANALYSIS] Starting...")
+        logger.info("   - Onset/Offset precision analysis (optional)")
+        logger.info("-"*80)
+        layer_start = datetime.now()
+        log_memory_info("LAYER_5_START", process)
+        try:
+            self.run_pqg_a2sa()  # Continue even if fails
+            layer_times['L5'] = (datetime.now() - layer_start).total_seconds()
+            log_memory_info("LAYER_5_END", process)
+            logger.info(f"✅ Layer 5 Complete: {layer_times['L5']:.2f}s\n")
+        except Exception as e:
+            logger.warning(f"⚠️  Layer 5 Optional Error: {e}")
+            layer_times['L5'] = (datetime.now() - layer_start).total_seconds()
         
         # Layer 6 - Inference Core
-        logger.info("\n[Layer 6: Inference Core]")
-        log_memory_info("BEFORE_L6", process)
-        if not self.run_inference():
-            logger.error("Inference failed - stopping pipeline")
+        logger.info("-"*80)
+        logger.info("[LAYER 6️⃣  INFERENCE CORE] Starting...")
+        logger.info("   - Metric computation and analysis")
+        logger.info("-"*80)
+        layer_start = datetime.now()
+        log_memory_info("LAYER_6_START", process)
+        try:
+            if not self.run_inference():
+                logger.error("❌ Layer 6: Inference failed - stopping pipeline")
+                return False
+            layer_times['L6'] = (datetime.now() - layer_start).total_seconds()
+            log_memory_info("LAYER_6_END", process)
+            logger.info(f"✅ Layer 6 Complete: {layer_times['L6']:.2f}s\n")
+        except Exception as e:
+            logger.error(f"❌ Layer 6 Exception: {e}", exc_info=True)
+            layer_times['L6'] = (datetime.now() - layer_start).total_seconds()
             return False
-        log_memory_info("AFTER_L6", process)
         
         # Layer 7 - Grading Layer
-        logger.info("\n[Layer 7: Final Grading]")
-        log_memory_info("BEFORE_L7", process)
-        if not self.run_grading():
-            logger.error("Grading failed")
+        logger.info("-"*80)
+        logger.info("[LAYER 7️⃣  FINAL GRADING] Starting...")
+        logger.info("   - Performance evaluation and grading")
+        logger.info("-"*80)
+        layer_start = datetime.now()
+        log_memory_info("LAYER_7_START", process)
+        try:
+            if not self.run_grading():
+                logger.error("❌ Layer 7: Grading failed")
+                return False
+            layer_times['L7'] = (datetime.now() - layer_start).total_seconds()
+            log_memory_info("LAYER_7_END", process)
+            logger.info(f"✅ Layer 7 Complete: {layer_times['L7']:.2f}s\n")
+        except Exception as e:
+            logger.error(f"❌ Layer 7 Exception: {e}", exc_info=True)
+            layer_times['L7'] = (datetime.now() - layer_start).total_seconds()
             return False
-        log_memory_info("AFTER_L7", process)
         
-        logger.info("\n[Final Step: Generating Chatbot Context]")
-        log_memory_info("BEFORE_CONTEXT", process)
-        self.get_chatbot_context()
-        log_memory_info("AFTER_CONTEXT", process)
+        # Final Context Generation
+        logger.info("-"*80)
+        logger.info("[FINAL STEP] Generating Chatbot Context...")
+        logger.info("-"*80)
+        context_start = datetime.now()
+        log_memory_info("CONTEXT_START", process)
+        try:
+            self.get_chatbot_context()
+            context_time = (datetime.now() - context_start).total_seconds()
+            log_memory_info("CONTEXT_END", process)
+            logger.info(f"✅ Chatbot Context Generated: {context_time:.2f}s\n")
+        except Exception as e:
+            logger.error(f"⚠️  Context generation error: {e}")
         
-        # Create pipeline summary
-        self._save_summary(start_time)
+        # Create pipeline summary with layer times
+        logger.info("-"*80)
+        logger.info("[SAVING] Pipeline Summary...")
+        self._save_summary(start_time, layer_times)
+        logger.info("✅ Pipeline Summary Saved\n")
         
-        log_memory_info("END", process)
-        logger.info("\n" + "="*70)
-        logger.info("   PIPELINE COMPLETE")
-        logger.info("="*70)
+        # Final statistics
+        total_time = (datetime.now() - start_time).total_seconds()
+        log_memory_info("PIPELINE_END", process)
+        
+        logger.info("="*80)
+        logger.info("  ✨ PIPELINE EXECUTION COMPLETE ✨")
+        logger.info("="*80)
+        logger.info("\n📊 LAYER EXECUTION TIMES:")
+        for layer, time_val in layer_times.items():
+            logger.info(f"   {layer}: {time_val:.2f}s")
+        logger.info(f"\n⏱️  TOTAL TIME: {total_time:.2f}s")
+        logger.info(f"⏰ Completed: {datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]}")
+        logger.info("="*80 + "\n")
         
         return True
     
-    def _save_summary(self, start_time):
-        """Save pipeline summary"""
+    def _save_summary(self, start_time, layer_times=None):
+        """Save pipeline summary with layer execution times"""
         end_time = datetime.now()
         duration = (end_time - start_time).total_seconds()
         
@@ -1278,6 +1455,7 @@ class MusicPerformancePipeline:
             'start_time': start_time.isoformat(),
             'end_time': end_time.isoformat(),
             'duration_seconds': duration,
+            'layer_execution_times': layer_times or {},
             'status': self.status,
             'results': self.results,
             'inputs': {

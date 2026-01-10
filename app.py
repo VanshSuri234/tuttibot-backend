@@ -317,6 +317,10 @@ def trigger_robot_leds(score_data):
 
 def run_analysis(job_id, audio_path, score_path):
     log_system_status(f"RUN_ANALYSIS_START_{job_id}")
+    logger.info(f"\n{'='*80}")
+    logger.info(f"[EXECUTION_START] Job: {job_id}")
+    logger.info(f"[INPUTS] Audio: {audio_path} | Score: {score_path}")
+    logger.info(f"{'='*80}\n")
     start_time = datetime.now()
     
     with job_lock:
@@ -326,8 +330,10 @@ def run_analysis(job_id, audio_path, score_path):
     try:
         job_output_dir = Path(app.config['RESULTS_FOLDER']) / job_id
         job_output_dir.mkdir(exist_ok=True)
+        logger.info(f"[OUTPUT_DIR] {job_output_dir}")
 
         # Write initial status to disk
+        logger.info(f"[STATUS_UPDATE] Layer 0: Initializing")
         save_job_status(job_id, {
             'status': JobStatus.PROCESSING,
             'current_layer': 'Layer 0: Initializing',
@@ -339,12 +345,16 @@ def run_analysis(job_id, audio_path, score_path):
         success = False
         try:
             if MusicPerformancePipeline:
-                logger.info(f"[PIPELINE_START] job {job_id}: {audio_path}")
-                log_system_status(f"BEFORE_PIPELINE__{job_id}")
+                logger.info(f"\n[CHECKPOINT] Importing MusicPerformancePipeline")
+                logger.info(f"[PIPELINE_INIT] Creating pipeline object for job {job_id}")
+                log_system_status(f"BEFORE_PIPELINE_INIT__{job_id}")
                 
                 pipeline_obj = MusicPerformancePipeline(audio_path, score_path, str(job_output_dir))
+                logger.info(f"[PIPELINE_INIT_COMPLETE] Pipeline object created successfully")
+                log_system_status(f"AFTER_PIPELINE_INIT__{job_id}")
                 
                 # Update status to Layer 1
+                logger.info(f"[STATUS_UPDATE] Layer 1: Input Standardization")
                 save_job_status(job_id, {
                     'status': JobStatus.PROCESSING,
                     'current_layer': 'Layer 1: Input Standardization',
@@ -352,11 +362,14 @@ def run_analysis(job_id, audio_path, score_path):
                     'timestamp': datetime.now().isoformat()
                 })
                 
-                logger.info(f"[PIPELINE_RUNNING] job {job_id}")
+                logger.info(f"\n[PIPELINE_EXECUTION_START] Calling pipeline.run_pipeline() for job {job_id}")
+                log_system_status(f"BEFORE_RUN_PIPELINE__{job_id}")
+                
                 success = pipeline_obj.run_pipeline()
+                
                 elapsed = (datetime.now() - start_time).total_seconds()
-                logger.info(f"[PIPELINE_END] job {job_id}: success={success}, elapsed={elapsed:.2f}s")
-                log_system_status(f"AFTER_PIPELINE__{job_id}")
+                logger.info(f"\n[PIPELINE_EXECUTION_END] Status: {success} | Total Time: {elapsed:.2f}s")
+                log_system_status(f"AFTER_RUN_PIPELINE__{job_id}")
                 
                 # --- UPDATED: GENERATE CHATBOT CONTEXT ---
                 if success and hasattr(pipeline_obj, 'get_chatbot_context'):
