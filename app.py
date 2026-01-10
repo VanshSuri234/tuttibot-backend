@@ -4,6 +4,8 @@ TuttiBot Web API
 ================
 Flask web server providing REST API endpoints for TuttiBot music analysis.
 Integrates with Unitree G1 Robot and Layer-Aware Groq AI Chat.
+
+BUILD_TRIGGER: Force rebuild on Render to deploy Layer 2 hanging fixes
 """
 
 import os
