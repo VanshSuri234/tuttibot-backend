@@ -9,7 +9,8 @@
 # 3. It causes build failures even with --prefer-binary flag
 # 4. The pipeline processes audio files, doesn't play them
 #
-# auditok 0.3.0+ now depends on pyaudio, so we pin it to 0.2.1 in requirements.txt
+# auditok 0.3.0 has a hard dependency on pyaudio, so we pin it to 0.2.0 in requirements.txt
+# Versions 0.1.x and 0.2.0 do NOT depend on pyaudio
 # pydub and audioread work fine without PyAudio (they have FFmpeg/other backends)
 
 # Explicitly exclude PyAudio
