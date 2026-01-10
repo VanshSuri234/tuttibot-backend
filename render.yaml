@@ -3,7 +3,7 @@ services:
     name: tuttibot-backend
     runtime: python
     pythonVersion: 3.10
-    preBuildCommand: apt-get update && apt-get install -y libportaudio2 libportaudiocpp0 portaudio19-dev 2>&1 | tail -5 || echo "PortAudio headers installation attempted"
+    preBuildCommand: apt-get update && apt-get install -y libportaudio2 libportaudiocpp0 portaudio19-dev openjdk-11-jre ffmpeg 2>&1 | tail -5 || echo "System dependencies installation attempted"
     buildCommand: bash build.sh
     startCommand: gunicorn -w 2 -b 0.0.0.0:$PORT --timeout 600 --graceful-timeout 30 --keep-alive 75 app:app
     envVars:

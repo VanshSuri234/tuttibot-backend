@@ -282,7 +282,7 @@ class AudioProcessor:
                 
                 auditok_thread = Thread(target=run_auditok, daemon=True)
                 auditok_thread.start()
-                auditok_thread.join(timeout=5.0)  # Wait max 5 seconds
+                auditok_thread.join(timeout=2.0)  # REDUCED from 5s to 2s - fail fast if slow
                 
                 if audio_events is not None:
                     # Auditok succeeded
@@ -555,19 +555,33 @@ class ProcessingLayer:
         intermediate_files = []
         
         # Apply audio processing steps as needed
+        elapsed_checkpoint = time.time()
         if audio_analysis['needs_noise_reduction']:
+            logger.info(f"[PROCESS] ▶️ Step 1: Applying noise reduction...")
             noise_reduced_path = self.processed_dir / f"{base_name}_denoised.wav"
             if self.audio_processor.reduce_noise(current_audio_path, str(noise_reduced_path)):
                 intermediate_files.append(str(noise_reduced_path))
                 current_audio_path = str(noise_reduced_path)
+                elapsed = time.time() - elapsed_checkpoint
+                logger.info(f"[PROCESS] ✅ Noise reduction completed in {elapsed:.2f}s")
+                elapsed_checkpoint = time.time()
+        else:
+            logger.info(f"[PROCESS] ⏭️  Skipping noise reduction (not needed)")
         
         if audio_analysis['needs_normalization']:
+            logger.info(f"[PROCESS] ▶️ Step 2: Applying normalization...")
             normalized_path = self.processed_dir / f"{base_name}_normalized.wav"
             if self.audio_processor.normalize_audio(current_audio_path, str(normalized_path)):
                 intermediate_files.append(str(normalized_path))
                 current_audio_path = str(normalized_path)
+                elapsed = time.time() - elapsed_checkpoint
+                logger.info(f"[PROCESS] ✅ Normalization completed in {elapsed:.2f}s")
+                elapsed_checkpoint = time.time()
+        else:
+            logger.info(f"[PROCESS] ⏭️  Skipping normalization (not needed)")
         
         # Always save the final processed audio with a consistent name
+        logger.info(f"[PROCESS] ▶️ Step 3: Saving final processed audio...")
         final_processed_path = self.processed_dir / f"{base_name}_processed.wav"
         shared_processed_audio_path = self.shared_processed_dir / f"{base_name}_processed.wav"
         
@@ -577,37 +591,43 @@ class ProcessingLayer:
             shutil.copy2(current_audio_path, final_processed_path)
             shutil.copy2(current_audio_path, shared_processed_audio_path)
             processed_audio_path = str(final_processed_path)
-            print(f"Final processed audio saved to: {processed_audio_path}")
-            print(f"Final processed audio saved to shared directory: {shared_processed_audio_path}")
+            logger.info(f"[PROCESS] ✅ Final processed audio saved to: {processed_audio_path}")
+            logger.info(f"[PROCESS] ✅ Final processed audio saved to shared directory: {shared_processed_audio_path}")
         else:
             # No processing was needed, but still create a copy for consistency
             import shutil
             shutil.copy2(str(original_audio_path), final_processed_path)
             shutil.copy2(str(original_audio_path), shared_processed_audio_path)
             processed_audio_path = str(final_processed_path)
-            print(f"Original audio copied to: {processed_audio_path}")
-            print(f"Original audio copied to shared directory: {shared_processed_audio_path}")
+            logger.info(f"[PROCESS] ⏭️  Original audio copied (no processing needed): {processed_audio_path}")
+            logger.info(f"[PROCESS] ✅ Original audio copied to shared directory: {shared_processed_audio_path}")
         
         # Clean up intermediate files automatically
         for intermediate_file in intermediate_files:
             try:
                 os.remove(intermediate_file)
-                print(f"Cleaned up intermediate file: {intermediate_file}")
+                logger.info(f"[PROCESS] 🗑️  Cleaned up intermediate file: {intermediate_file}")
             except Exception as e:
-                print(f"Warning: Could not remove intermediate file {intermediate_file}: {e}")
+                logger.warning(f"[PROCESS] ⚠️  Could not remove intermediate file {intermediate_file}: {e}")
         
         # Segment audio using the final processed version
-        print(f"[DEBUG] Starting audio segmentation. needs_segmentation={audio_analysis['needs_segmentation']}")
+        logger.info(f"[PROCESS] ▶️ Step 4: Starting audio segmentation (auditok)...")
+        segments_start = time.time()
         segments = []
         if audio_analysis['needs_segmentation']:
-            print(f"[DEBUG] Calling segment_audio({processed_audio_path})")
+            logger.info(f"[PROCESS] Calling segment_audio({processed_audio_path})...")
             segments = self.audio_processor.segment_audio(processed_audio_path)
-            print(f"[DEBUG] Segmentation completed: {len(segments)} segments")
+            segments_elapsed = time.time() - segments_start
+            logger.info(f"[PROCESS] ✅ Segmentation completed in {segments_elapsed:.2f}s: {len(segments)} segments")
+        else:
+            logger.info(f"[PROCESS] ⏭️  Skipping segmentation (not needed)")
         
         # Extract music features
-        print(f"[DEBUG] Starting feature extraction from {original_music_path}")
+        logger.info(f"[PROCESS] ▶️ Step 5: Extracting music features from {Path(original_music_path).name}...")
+        features_start = time.time()
         music_features = self.music_processor.extract_features(str(original_music_path))
-        print(f"[DEBUG] Feature extraction completed: {len(music_features.notes)} notes extracted")
+        features_elapsed = time.time() - features_start
+        logger.info(f"[PROCESS] ✅ Feature extraction completed in {features_elapsed:.2f}s: {len(music_features.notes)} notes extracted")
         
         # Create processing result
         result = ProcessingResult(
@@ -629,9 +649,12 @@ class ProcessingLayer:
         )
         
         # Save results as separate JSON files
+        logger.info(f"[PROCESS] ▶️ Step 6: Saving processing results...")
         self.save_results(result, base_name)
         
-        print("Processing completed successfully!")
+        elapsed_total = time.time() - start_time
+        logger.info(f"[PROCESS] ✅ Processing completed successfully in {elapsed_total:.2f}s!")
+        log_memory_usage("PROCESS_END")
         return result
     
     def save_results(self, result: ProcessingResult, base_name: str):
