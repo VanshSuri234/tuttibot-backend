@@ -613,81 +613,133 @@ class ProcessingLayer:
             ProcessingResult containing all extracted data
         """
         try:
-            logger.info(f"[PROCESS] 🚀 PROCESS METHOD STARTED")
+            #logger.info(f"[PROCESS] 🚀 PROCESS METHOD STARTED")
             start_time = time.time()
-            logger.info(f"[PROCESS] Input: audio={audio_path}, music={music_path}")
-            logger.info(f"[PROCESS] Starting processing for audio: {audio_path}, music: {music_path}")
+            #logger.info(f"[PROCESS] Input: audio={audio_path}, music={music_path}")
+            #logger.info(f"[PROCESS] Starting processing for audio: {audio_path}, music: {music_path}")
             log_memory_usage("PROCESS_START")
         
         # Create organized directory structure and copy input files
-        logger.info(f"[PROCESS] ▶️  Step 0a: Preparing directory structure...")
+        #logger.info(f"[PROCESS] ▶️  Step 0a: Preparing directory structure...")
+        print(f"[STDOUT] ▶️  Step 0a: Preparing directory structure...")
+        sys.stdout.flush()
         audio_filename = Path(audio_path).name
         music_filename = Path(music_path).name
-        logger.info(f"[PROCESS] Audio filename: {audio_filename}, Music filename: {music_filename}")
+        #logger.info(f"[PROCESS] Audio filename: {audio_filename}, Music filename: {music_filename}")
+        print(f"[STDOUT] Audio filename: {audio_filename}, Music filename: {music_filename}")
+        sys.stdout.flush()
         
         # Copy input files to original data directory
         import shutil
         original_audio_path = self.original_dir / audio_filename
         original_music_path = self.original_dir / music_filename
         
-        logger.info(f"[PROCESS] ▶️  Step 0b: Copying files...")
+        #logger.info(f"[PROCESS] ▶️  Step 0b: Copying files...")
+        print(f"[STDOUT] ▶️  Step 0b: Copying files...")
+        sys.stdout.flush()
         if not original_audio_path.exists():
             shutil.copy2(audio_path, original_audio_path)
-            logger.info(f"[PROCESS] ✅ Audio file copied to: {original_audio_path}")
+            #logger.info(f"[PROCESS] ✅ Audio file copied to: {original_audio_path}")
+            print(f"[STDOUT] ✅ Audio file copied to: {original_audio_path}")
+            sys.stdout.flush()
         else:
-            logger.info(f"[PROCESS] ⏭️  Audio file already exists at: {original_audio_path}")
+            #logger.info(f"[PROCESS] ⏭️  Audio file already exists at: {original_audio_path}")
+            print(f"[STDOUT] ⏭️  Audio file already exists at: {original_audio_path}")
+            sys.stdout.flush()
 
         if not original_music_path.exists():
             shutil.copy2(music_path, original_music_path)
-            logger.info(f"[PROCESS] ✅ Music file copied to: {original_music_path}")
+            #logger.info(f"[PROCESS] ✅ Music file copied to: {original_music_path}")
+            print(f"[STDOUT] ✅ Music file copied to: {original_music_path}")
+            sys.stdout.flush()
         else:
-            logger.info(f"[PROCESS] ⏭️  Music file already exists at: {original_music_path}")
+            #logger.info(f"[PROCESS] ⏭️  Music file already exists at: {original_music_path}")
+            print(f"[STDOUT] ⏭️  Music file already exists at: {original_music_path}")
+            sys.stdout.flush()
         
         # Also copy to shared directory for other layers to access
         shared_audio_path = self.shared_original_dir / audio_filename
         shared_music_path = self.shared_original_dir / music_filename
         
-        logger.info(f"[PROCESS] 🔍 Copying to shared directory: {self.shared_original_dir}")
-        logger.info(f"[PROCESS] 🔍 About to copy audio to: {shared_audio_path}")
+        #logger.info(f"[PROCESS] 🔍 Copying to shared directory: {self.shared_original_dir}")
+        #logger.info(f"[PROCESS] 🔍 About to copy audio to: {shared_audio_path}")
+        print(f"[STDOUT] 🔍 Copying to shared directory and about to copy audio to: {shared_audio_path}")
+        sys.stdout.flush()
         if not shared_audio_path.exists():
-            logger.info(f"[PROCESS] 🔍 Shared audio doesn't exist, copying...")
+            #logger.info(f"[PROCESS] 🔍 Shared audio doesn't exist, copying...")
+            print(f"[STDOUT] 🔍 Shared audio doesn't exist, copying...")
+            sys.stdout.flush()
             shutil.copy2(audio_path, shared_audio_path)
-            logger.info(f"[PROCESS] ✅ Audio copied to shared successfully")
+            #logger.info(f"[PROCESS] ✅ Audio copied to shared successfully")
+            print(f"[STDOUT] ✅ Audio copied to shared successfully")
+            sys.stdout.flush()
             print(f"Audio file copied to shared directory: {shared_audio_path}")
+            sys.stdout.flush()
         else:
-            logger.info(f"[PROCESS] ⏭️  Shared audio already exists")
+            #logger.info(f"[PROCESS] ⏭️  Shared audio already exists")
+            print(f"[STDOUT] ⏭️  Shared audio already exists")
+            sys.stdout.flush()
         
-        logger.info(f"[PROCESS] 🔍 About to copy music to: {shared_music_path}")
+        #logger.info(f"[PROCESS] 🔍 About to copy music to: {shared_music_path}")
+        print(f"[STDOUT] 🔍 About to copy music to: {shared_music_path}")
+        sys.stdout.flush()
         if not shared_music_path.exists():
-            logger.info(f"[PROCESS] 🔍 Shared music doesn't exist, copying...")
+            #logger.info(f"[PROCESS] 🔍 Shared music doesn't exist, copying...")
+            print(f"[STDOUT] 🔍 Shared music doesn't exist, copying...")
+            sys.stdout.flush()
             shutil.copy2(music_path, shared_music_path)
-            logger.info(f"[PROCESS] ✅ Music copied to shared successfully")
+            #logger.info(f"[PROCESS] ✅ Music copied to shared successfully")
+            print(f"[STDOUT] ✅ Music copied to shared successfully")
+            sys.stdout.flush()
             print(f"Music file copied to shared directory: {shared_music_path}")
+            sys.stdout.flush()
         else:
-            logger.info(f"[PROCESS] ⏭️  Shared music already exists")
+            #logger.info(f"[PROCESS] ⏭️  Shared music already exists")
+            print(f"[STDOUT] ⏭️  Shared music already exists")
+            sys.stdout.flush()
         
-        logger.info(f"[PROCESS] ✅ File copying to shared directory COMPLETE")
+        #logger.info(f"[PROCESS] ✅ File copying to shared directory COMPLETE")
+        print(f"[STDOUT] ✅ File copying to shared directory COMPLETE")
+        sys.stdout.flush()
         
         # Validate input files
-        logger.info(f"[PROCESS] ▶️  Step 0c: Validating input files...")
-        logger.info(f"[PROCESS] 🔍 Checking if audio exists: {original_audio_path}")
+        #logger.info(f"[PROCESS] ▶️  Step 0c: Validating input files...")
+        print(f"[STDOUT] ▶️  Step 0c: Validating input files...")
+        sys.stdout.flush()
+        #logger.info(f"[PROCESS] 🔍 Checking if audio exists: {original_audio_path}")
+        print(f"[STDOUT] 🔍 Checking if audio exists: {original_audio_path}")
+        sys.stdout.flush()
         if not original_audio_path.exists():
-            logger.error(f"[PROCESS] ❌ Audio file not found: {original_audio_path}")
+            #logger.error(f"[PROCESS] ❌ Audio file not found: {original_audio_path}")
+            print(f"[STDOUT] ❌ Audio file not found: {original_audio_path}")
+            sys.stdout.flush()
             raise FileNotFoundError(f"Audio file not found: {original_audio_path}")
-        logger.info(f"[PROCESS] ✅ Audio file exists")
+        #logger.info(f"[PROCESS] ✅ Audio file exists")
+        print(f"[STDOUT] ✅ Audio file exists")
+        sys.stdout.flush()
         
-        logger.info(f"[PROCESS] 🔍 Checking if music exists: {original_music_path}")
+        #logger.info(f"[PROCESS] 🔍 Checking if music exists: {original_music_path}")
+        print(f"[STDOUT] 🔍 Checking if music exists: {original_music_path}")
+        sys.stdout.flush()
         if not original_music_path.exists():
-            logger.error(f"[PROCESS] ❌ Music file not found: {original_music_path}")
+            #logger.error(f"[PROCESS] ❌ Music file not found: {original_music_path}")
+            print(f"[STDOUT] ❌ Music file not found: {original_music_path}")
+            sys.stdout.flush()
             raise FileNotFoundError(f"Music file not found: {original_music_path}")
-        logger.info(f"[PROCESS] ✅ Music file exists")
-        logger.info(f"[PROCESS] ✅ Step 0c VALIDATION COMPLETE")
+        #logger.info(f"[PROCESS] ✅ Music file exists")
+        print(f"[STDOUT] ✅ Music file exists")
+        sys.stdout.flush()
+        #logger.info(f"[PROCESS] ✅ Step 0c VALIDATION COMPLETE")
+        print(f"[STDOUT] ✅ Step 0c VALIDATION COMPLETE")
+        sys.stdout.flush()
         
         # Check audio processing requirements
-        logger.info(f"[PROCESS] ▶️  Step 0d: Analyzing audio quality...")
-        logger.info(f"[PROCESS] About to call check_audio_quality on {original_audio_path}")
-        logger.info(f"[PROCESS] 🔍 BEFORE check_audio_quality() call")
-        print(f"[EMERGENCY] 🔍 BEFORE check_audio_quality() call")
+        #logger.info(f"[PROCESS] ▶️  Step 0d: Analyzing audio quality...")
+        print(f"[STDOUT] ▶️  Step 0d: Analyzing audio quality...")
+        sys.stdout.flush()
+        #logger.info(f"[PROCESS] About to call check_audio_quality on {original_audio_path}")
+        #logger.info(f"[PROCESS] 🔍 BEFORE check_audio_quality() call")
+        print(f"[STDOUT] 🔍 BEFORE check_audio_quality() call")
         sys.stdout.flush()
         
         try:
@@ -700,10 +752,14 @@ class ProcessingLayer:
             sys.stdout.flush()
             raise
         
-        logger.info(f"[PROCESS] 🔍 AFTER check_audio_quality() returned")
-        logger.info(f"[PROCESS] ✅ Audio analysis result: {audio_analysis}")
-        print(f"Audio analysis: {audio_analysis}")
-        logger.info(f"[PROCESS] ✅ Audio analysis completed successfully")
+        print(f"[STDOUT] 🔍 AFTER check_audio_quality() returned")
+        sys.stdout.flush()
+        print(f"[STDOUT] ✅ Audio analysis result: {audio_analysis}")
+        sys.stdout.flush()
+        print(f"[STDOUT] Analysis: {audio_analysis}")
+        sys.stdout.flush()
+        print(f"[STDOUT] ✅ Audio analysis completed successfully")
+        sys.stdout.flush()
         print(f"[EMERGENCY] ✅ About to prepare output paths")
         sys.stdout.flush()
         
