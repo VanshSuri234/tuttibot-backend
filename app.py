@@ -612,9 +612,18 @@ def debug_info():
     })
 
 if __name__ == '__main__':
+    # IMPORTANT: This should NEVER be reached in production!
+    # On Render, Gunicorn runs directly: gunicorn app:app
+    # This code only runs locally for development
+    
+    # Safety check: Prevent Flask dev server in production
+    if os.getenv("FLASK_ENV") == "production":
+        logging.error("ERROR: Flask development server should not run in production!")
+        logging.error("Use: gunicorn -w 2 --timeout 600 app:app")
+        sys.exit(1)
+    
     logging.basicConfig(level=logging.INFO)
     port = int(os.getenv("PORT", 5000))
-    debug_mode = os.getenv("FLASK_ENV", "development") != "production"
-    print("TuttiBot Web API Ready")
-    app.run(host="0.0.0.0", port=port, debug=debug_mode, threaded=True)
+    print("TuttiBot Web API Ready - Flask Dev Server (LOCAL ONLY)")
+    app.run(host="0.0.0.0", port=port, debug=True, threaded=True)
 
